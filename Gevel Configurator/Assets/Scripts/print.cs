@@ -22,7 +22,7 @@ public class print : MonoBehaviour {
 
 
 	public void PrintButton() {
-		Debug.Log("Spwan button Pressed!");
+		Debug.Log("Spawn button Pressed!");
 		GameObject.Instantiate(Sphere, location, rotation);
 		location.y += 5;
 	}
