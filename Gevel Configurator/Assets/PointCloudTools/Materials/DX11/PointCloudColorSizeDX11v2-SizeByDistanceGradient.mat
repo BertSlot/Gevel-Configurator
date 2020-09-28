@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: PointCloudColorSizeDX11v2-SizeByDistanceGradient
+  m_Shader: {fileID: 4800000, guid: 071975f6f24bb414188d5e4d37197ecb, type: 3}
+  m_ShaderKeywords: _CIRCLE_ON _FILTER_OFF
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _GradientMap:
+        m_Texture: {fileID: 2800000, guid: 1d4465e6c27a3994aa4360fdfc0c5c41, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Alpha: 1
+    - _Circle: 1
+    - _Filter: 0
+    - _FilterDistance: 4
+    - _MaxDist: 50
+    - _MaxSize: 0.1
+    - _MinDist: 4
+    - _MinSize: 0.01
+    - _Size: 0.01
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Origin: {r: 0, g: 0, b: 0, a: 1}
+    - _Position: {r: 0, g: 0, b: 0, a: 1}
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}
