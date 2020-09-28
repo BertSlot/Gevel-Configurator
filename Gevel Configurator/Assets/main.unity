@@ -682,7 +682,7 @@ GameObject:
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -745,7 +745,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 61, y: 44, z: -115}
+  m_LocalPosition: {x: 92, y: 44, z: -11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -766,7 +766,7 @@ MonoBehaviour:
   target: {fileID: 963194228}
   maxOffsetDistance: 2000
   orbitSpeed: 2
-  panSpeed: 5
+  panSpeed: 5.05
   zoomSpeed: 100
   mainSpeed: 100
   shiftAdd: 250
