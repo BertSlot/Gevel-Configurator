@@ -12,6 +12,7 @@
 [Oo]bj/
 [Tt]emp/
 [Uu]nityGenerated/
+[Ii]mport/       
 */.vs
 
 # file on crash reports
@@ -20,6 +21,16 @@ sysinfo.txt
 *.pidb.meta
 *.meta
 
+
+# Point cloud files We don't want these on github ;)
+*.las 
+*.laz 
+*.xyz 
+*.ply
+*.xyzrgb
+*.cgo
+*.asc 
+*.pts
 
 ###
 # VS/MD solution and project files
