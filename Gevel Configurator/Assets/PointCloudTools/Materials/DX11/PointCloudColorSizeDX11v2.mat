@@ -20,7 +20,7 @@ Material:
     m_TexEnvs: []
     m_Floats:
     - _Alpha: 1
-    - _Size: 0.025
+    - _Size: 0.0125
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}

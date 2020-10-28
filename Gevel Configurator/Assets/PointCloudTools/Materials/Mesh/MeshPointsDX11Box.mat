@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: MeshPointsDX11Box
   m_Shader: {fileID: 4800000, guid: 62a4ab3590e56314d86a58e4ce0d6d8a, type: 3}
   m_ShaderKeywords: 
@@ -19,6 +20,6 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - _Size: 1
+    - _Size: 0.16
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

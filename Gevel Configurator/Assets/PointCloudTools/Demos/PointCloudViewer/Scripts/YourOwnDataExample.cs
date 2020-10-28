@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using unitycodercom_PointCloudBinaryViewer;
+﻿using unitycodercom_PointCloudBinaryViewer;
 using UnityEngine;
 
 namespace unitycoder_examples
@@ -31,7 +29,6 @@ namespace unitycoder_examples
                     var c = Random.ColorHSV(0, 1, 0, 1, 0, 1);
                     randomColors[i] = new Vector3(c.r, c.g, c.b);
                 }
-
 
                 // after you have your own data, send them into viewer
                 binaryViewerDX11.points = randomPoints;

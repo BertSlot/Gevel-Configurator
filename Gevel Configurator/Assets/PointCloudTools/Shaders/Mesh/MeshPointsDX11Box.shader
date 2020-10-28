@@ -68,7 +68,7 @@ Shader "Custom/PointMeshSizeDX11Box"
 				triStream.Append(newVert);
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(width,height,_Size,0));
 				triStream.Append(newVert);
-				triStream.RestartStrip();
+				//triStream.RestartStrip();
 
 				// back face 8
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(width,height,-_Size,0));
@@ -79,7 +79,7 @@ Shader "Custom/PointMeshSizeDX11Box"
 				triStream.Append(newVert);
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(-width,-height,-_Size,0));
 				triStream.Append(newVert);
-				triStream.RestartStrip();
+				//triStream.RestartStrip();
 
 				// left face 12
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(_Size,-width,-height,0));
@@ -90,7 +90,7 @@ Shader "Custom/PointMeshSizeDX11Box"
 				triStream.Append(newVert);
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(_Size,width,height,0));
 				triStream.Append(newVert);
-				triStream.RestartStrip();
+				//triStream.RestartStrip();
 
 				// right face 16
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(-_Size,width,height,0));
@@ -101,7 +101,7 @@ Shader "Custom/PointMeshSizeDX11Box"
 				triStream.Append(newVert);
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(-_Size,-width,-height,0));
 				triStream.Append(newVert);
-				triStream.RestartStrip();
+				//triStream.RestartStrip();
 
 				// top face 20
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(_Size,_Size,_Size,0));
@@ -112,7 +112,7 @@ Shader "Custom/PointMeshSizeDX11Box"
 				triStream.Append(newVert);
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(-_Size,_Size,-_Size,0));
 				triStream.Append(newVert);
-				triStream.RestartStrip();
+				//triStream.RestartStrip();
 
 				// bottom face 24
 				newVert.pos = UnityObjectToClipPos(vertPos + float4(-_Size,-_Size,-_Size,0));

@@ -4,13 +4,15 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: VertexcolorsDisplacePseudoLight
   m_Shader: {fileID: 4800000, guid: f7cba4cab430f094292fe3c648f24648, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -22,5 +24,5 @@ Material:
     - _LightLimit: 15
     - _Limit: 5
     m_Colors:
-    - _LightPos: {r: 4.61286, g: 0.8041759, b: 10.672755, a: 1}
-    - _Pos: {r: 4.61286, g: 0.8041759, b: 10.672755, a: 1}
+    - _LightPos: {r: 3.2039378, g: 0.4636035, b: 0.28044793, a: 1}
+    - _Pos: {r: 3.2039378, g: 0.4636035, b: 0.28044793, a: 1}

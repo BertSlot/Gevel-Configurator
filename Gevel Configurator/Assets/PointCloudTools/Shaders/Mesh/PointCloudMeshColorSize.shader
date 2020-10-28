@@ -6,7 +6,6 @@
 
 Shader "UnityCoder/PointCloud/Mesh/ColorSize"
 {
-
     Properties 
     {
         _PointSize("PointSize", Float) = 1

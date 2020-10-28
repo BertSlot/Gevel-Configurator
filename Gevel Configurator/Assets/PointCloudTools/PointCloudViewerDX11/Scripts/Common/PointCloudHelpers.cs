@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using UnityEngine;
 
@@ -161,6 +162,29 @@ namespace PointCloudHelpers
             Debug.DrawLine(p2, p6, Color.gray, delay);
             Debug.DrawLine(p3, p7, Color.green, delay);
             Debug.DrawLine(p4, p8, Color.cyan, delay);
+        }
+
+        // https://stackoverflow.com/a/48000498/5452781
+        public static string HumanReadableCount(this long num)
+        {
+            if (num > 999999999 || num < -999999999)
+            {
+                return num.ToString("0,,,.###B", CultureInfo.InvariantCulture);
+            }
+            else
+            if (num > 999999 || num < -999999)
+            {
+                return num.ToString("0,,.##M", CultureInfo.InvariantCulture);
+            }
+            else
+            if (num > 999 || num < -999)
+            {
+                return num.ToString("0,.#K", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                return num.ToString(CultureInfo.InvariantCulture);
+            }
         }
 
     }

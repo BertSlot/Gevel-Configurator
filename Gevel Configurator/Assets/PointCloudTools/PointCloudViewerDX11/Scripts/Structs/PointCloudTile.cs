@@ -40,7 +40,10 @@ public struct PointCloudTile
     public Vector3[] points;
     public Vector3[] colors;
 
+    // TEST if meshrendering
+    public PointCloudMeshTile meshTile;
+
     // TODO no need these, just use index start-end from root
-    public string filename;
-    public string filenameRGB;
+    //public string filename;
+    //public string filenameRGB;
 }

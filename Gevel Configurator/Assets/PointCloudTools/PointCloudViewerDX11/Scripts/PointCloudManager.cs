@@ -12,7 +12,7 @@ namespace PointCloudViewer
 {
     public class PointCloudManager : MonoBehaviour
     {
-        public PointCloudViewerDX11[] viewers;
+        public List<PointCloudViewerDX11> viewers = new List<PointCloudViewerDX11>();
         public int slices = 16;
 
         [Header("Advanced Options")]
@@ -37,26 +37,55 @@ namespace PointCloudViewer
 
             if (UnityLibrary.MainThread.instanceCount == 0)
             {
-                for (int i = 0; i < viewers.Length; i++)
+                if (viewers != null)
                 {
-                    viewers[i].FixMainThreadHelper();
+                    for (int i = 0; i < viewers.Count; i++)
+                    {
+                        if (viewers[i] != null) viewers[i].FixMainThreadHelper();
+                    }
                 }
             }
 
             clouds = new List<Cloud>();
 
             // wait for loading complete event (for automatic registration)
-            for (int i = 0; i < viewers.Length; i++)
+            if (viewers != null)
             {
-                viewers[i].OnLoadingComplete -= CloudIsReady;
-                viewers[i].OnLoadingComplete += CloudIsReady;
+                for (int i = 0; i < viewers.Count; i++)
+                {
+                    if (viewers[i] != null) viewers[i].OnLoadingComplete -= CloudIsReady;
+                    if (viewers[i] != null) viewers[i].OnLoadingComplete += CloudIsReady;
+                }
             }
         }
 
-        void CloudIsReady(object cloudFilePath)
+        public void RegisterCloudManually(PointCloudViewerDX11 newViewer)
         {
-            Debug.Log("Cloud is ready for picking: " + (string)cloudFilePath);
+            for (int i = 0; i < viewers.Count; i++)
+            {
+                // remove previous same instance cloud, if already in the list  
+                for (int vv = 0, viewerLen = viewers.Count; vv < viewerLen; vv++)
+                {
+                    if (viewers[vv].fileName == newViewer.fileName)
+                    {
+                        Debug.Log("Removed duplicate cloud from viewers: " + newViewer.fileName);
+                        clouds.RemoveAt(vv);
+                        break;
+                    }
+                }
+            }
+
+            // add new cloud
+            viewers.Add(newViewer);
+
+            // manually call cloud to be processed
+            CloudIsReady(newViewer.fileName);
+        }
+
+        public void CloudIsReady(object cloudFilePath)
+        {
             ProcessCloud((string)cloudFilePath);
+            Debug.Log("Cloud is ready for picking: " + (string)cloudFilePath);
         }
 
         void ProcessCloud(string cloudPath)
@@ -66,7 +95,7 @@ namespace PointCloudViewer
 
             int viewerIndex = -1;
             // find index
-            for (int vv = 0, viewerLen = viewers.Length; vv < viewerLen; vv++)
+            for (int vv = 0, viewerLen = viewers.Count; vv < viewerLen; vv++)
             {
                 if (viewers[vv].fileName == cloudPath)
                 {
@@ -325,11 +354,10 @@ namespace PointCloudViewer
 
         public static float Distance(Vector3 a, Vector3 b)
         {
-            Vector3 vec;
-            vec.x = a.x - b.x;
-            vec.y = a.y - b.y;
-            vec.z = a.z - b.z;
-            return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
+            float vecx = a.x - b.x;
+            float vecy = a.y - b.y;
+            float vecz = a.z - b.z;
+            return vecx * vecx + vecy * vecy + vecz * vecz;
         }
 
         // checks if give AABB box collides with any point (point is inside the given box)

@@ -1,21 +1,19 @@
 ﻿// Point Cloud Binary Viewer DX11 for runtime parsing
 // http://unitycoder.com
 
-// dev
-
-#if !UNITY_SAMSUNGTV && !UNITY_WEBGL
-
 using UnityEngine;
 using System.Collections;
-using System.IO;
 using unitycodercom_PointCloudHelpers;
 using Debug = UnityEngine.Debug;
 using PointCloudHelpers;
 using UnityEngine.Rendering;
 using UnityEngine.EventSystems;
-using System.Threading;
 using System;
 using UnityLibrary;
+#if !UNITY_SAMSUNGTV && !UNITY_WEBGL
+using System.Threading;
+using System.IO;
+#endif
 
 namespace PointCloudRuntimeViewer
 {
@@ -36,6 +34,8 @@ namespace PointCloudRuntimeViewer
 
     public class RuntimeViewerDX11 : MonoBehaviour
     {
+#if !UNITY_SAMSUNGTV && !UNITY_WEBGL
+
         [Header("Settings")]
         public string fullPath = "raw.xyz";
         public bool loadAtStart = false;
@@ -103,6 +103,7 @@ namespace PointCloudRuntimeViewer
         public bool useManualOffset = false;
         public Vector3 manualOffset = Vector3.zero;
         public bool plyHasNormals = false;
+        private bool plyHasDensity = false;
 
         bool hasLoadedPointCloud = false;
         private long masterPointCount = 0;
@@ -122,7 +123,6 @@ namespace PointCloudRuntimeViewer
         public bool cacheBinFile = false;
         [Tooltip("If cache file exists, don't save again")]
         public bool overrideExistingCacheFile = false;
-
 
         private void Awake()
         {
@@ -187,10 +187,9 @@ namespace PointCloudRuntimeViewer
             if (enablePicking) SelectClosestPoint();
         }
 
-
-
         bool abortReaderThread = false;
         Thread importerThread;
+
         public void CallImporterThreaded(string fullPath)
         {
             // if not full path, try streaming assets
@@ -200,7 +199,7 @@ namespace PointCloudRuntimeViewer
             }
             if (File.Exists(fullPath) == false)
             {
-                Debug.LogError("File not found:" + fullPath);
+                Debug.LogError("File not found: " + fullPath);
                 return;
             }
 
@@ -326,7 +325,7 @@ namespace PointCloudRuntimeViewer
 
                     case PointCloudFormat.PLY_ASCII: // PLY (ASCII)
                         {
-                            headerCheck = PeekHeader.PeekHeaderPLY(streamReader, readRGB, ref masterPointCount, ref plyHasNormals);
+                            headerCheck = PeekHeader.PeekHeaderPLY(streamReader, readRGB, ref masterPointCount, ref plyHasNormals, ref plyHasDensity);
                             if (!headerCheck.readSuccess) { streamReader.Close(); return; }
                         }
                         break;
@@ -574,15 +573,21 @@ namespace PointCloudRuntimeViewer
                                         // TODO: need to fix PLY CloudCompare normals, they are before RGB
                                         if (plyHasNormals == true)
                                         {
-                                            r = float.Parse(row[6]) / 255f;
-                                            g = float.Parse(row[7]) / 255f;
-                                            b = float.Parse(row[8]) / 255f;
+                                            r = LUT255[int.Parse(row[6])];
+                                            g = LUT255[int.Parse(row[7])];
+                                            b = LUT255[int.Parse(row[8])];
                                         }
-                                        else
-                                        { // no normals
-                                            r = float.Parse(row[3]) / 255f;
-                                            g = float.Parse(row[4]) / 255f;
-                                            b = float.Parse(row[5]) / 255f;
+                                        else if (plyHasDensity == false) // no normals or density
+                                        {
+                                            r = LUT255[int.Parse(row[3])];
+                                            g = LUT255[int.Parse(row[4])];
+                                            b = LUT255[int.Parse(row[5])];
+                                        }
+                                        else // no normals, but have density
+                                        {
+                                            r = LUT255[int.Parse(row[4])];
+                                            g = LUT255[int.Parse(row[5])];
+                                            b = LUT255[int.Parse(row[6])];
                                         }
                                         //a = float.Parse(row[6])/255; // TODO: alpha not supported yet
                                     }
@@ -1109,8 +1114,8 @@ namespace PointCloudRuntimeViewer
             isBuildingMesh = false;
         }
 
+#endif
 
     } // class
 } // namespace
 
-#endif

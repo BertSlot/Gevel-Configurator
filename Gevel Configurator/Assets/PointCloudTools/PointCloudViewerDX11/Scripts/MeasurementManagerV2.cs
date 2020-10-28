@@ -41,7 +41,6 @@ namespace PointCloudExtras
             // subscribe to event listener
             PointCloudManager.PointWasSelected -= PointSelected; // unsubscribe just in case
             PointCloudManager.PointWasSelected += PointSelected;
-
         }
 
         // draw line between selected points
@@ -83,13 +82,13 @@ namespace PointCloudExtras
         void PointSelected(Vector3 pos)
         {
             // debug lines only
-            HighLightPoint(pos);
+            PointCloudMath.DebugHighLightPointGreen(pos);
 
             // was this the first selection
             if (isFirstPoint == true)
             {
                 startPos = pos;
-                distanceUIText.text = "Measure: Select 2nd point";
+                if (distanceUIText != null) distanceUIText.text = "Measure: Select 2nd point";
                 haveFirstPoint = true;
                 haveSecondPoint = false;
             }
@@ -99,7 +98,7 @@ namespace PointCloudExtras
                 haveSecondPoint = true;
 
                 var distance = Vector3.Distance(previousPoint, pos);
-                distanceUIText.text = "Distance:" + distance.ToString();
+                if (distanceUIText != null) distanceUIText.text = "Distance:" + distance.ToString();
                 Debug.Log("Distance:" + distance);
             }
 
@@ -107,24 +106,10 @@ namespace PointCloudExtras
             isFirstPoint = !isFirstPoint; // flip boolean
         }
 
-
         private void OnDestroy()
         {
             // unsubscribe
             PointCloudManager.PointWasSelected -= PointSelected;
         }
-
-        public static void HighLightPoint(Vector3 p)
-        {
-            Debug.DrawRay(p, Vector3.up * 0.1f, Color.green, 33);
-            Debug.DrawRay(p, -Vector3.up * 0.1f, Color.green, 33);
-            Debug.DrawRay(p, Vector3.right * 0.1f, Color.green, 33);
-            Debug.DrawRay(p, -Vector3.right * 0.1f, Color.green, 33);
-            Debug.DrawRay(p, Vector3.forward * 0.1f, Color.green, 33);
-            Debug.DrawRay(p, -Vector3.forward * 0.1f, Color.green, 33);
-        }
-
-        // old highlight
-        // GLDebug.DrawSquare(results[closestIndex], rot, Vector3.one * 0.075f, Color.green);
     }
 }

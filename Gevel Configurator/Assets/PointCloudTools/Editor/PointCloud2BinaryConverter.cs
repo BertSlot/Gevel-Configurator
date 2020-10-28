@@ -12,6 +12,8 @@ using unitycodercom_PointCloudHelpers;
 using System.Text;
 using PointCloudHelpers;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 
 namespace unitycodercom_PointCloud2Binary
 {
@@ -44,6 +46,7 @@ namespace unitycodercom_PointCloud2Binary
         private Vector3 manualOffset = Vector3.zero;
         private Vector3 autoOffset = Vector3.zero;
         private bool plyHasNormals = false;
+        private bool plyHasDensity = false;
 
         bool useBinFormatV2 = false;
         bool useBinFormatV3 = false;
@@ -54,6 +57,9 @@ namespace unitycodercom_PointCloud2Binary
 
         static bool limitPointCount = false;
         int maxPointCount = 100000;
+
+        // pcache testing
+        bool exportPCache = false;
 
         const string sep = "|";
 
@@ -79,6 +85,15 @@ namespace unitycodercom_PointCloud2Binary
             window.minSize = new Vector2(380, 544);
             window.maxSize = new Vector2(380, 548);
             //SceneView.onSceneGUIDelegate += OnSceneUpdate;
+
+            // force comma as decimal separator
+            string CultureName = Thread.CurrentThread.CurrentCulture.Name;
+            CultureInfo ci = new CultureInfo(CultureName);
+            if (ci.NumberFormat.NumberDecimalSeparator != ".")
+            {
+                ci.NumberFormat.NumberDecimalSeparator = ".";
+                Thread.CurrentThread.CurrentCulture = ci;
+            }
         }
 
         /*
@@ -214,6 +229,8 @@ namespace unitycodercom_PointCloud2Binary
             minimumPointCount = (int)Mathf.Clamp(EditorGUILayout.FloatField(new GUIContent("Cell minimum point count", null, "Skip tiles with points less than this amount"), minimumPointCount), 1, 1000000);
             GUI.enabled = true;
 
+            exportPCache = EditorGUILayout.ToggleLeft(new GUIContent("Export to .pCache (ascii)", null, "Used in Unity VFX tools"), exportPCache);
+
             GUI.enabled = sourceFile == null ? false : true;
             // extras
             //compressed = EditorGUILayout.ToggleLeft(new GUIContent("Compress colors",null,"Compresses RGB into single float"), compressed);
@@ -222,7 +239,7 @@ namespace unitycodercom_PointCloud2Binary
             // convert button
             if (GUILayout.Button(new GUIContent("Convert to Binary", "Convert source to custom binary"), GUILayout.Height(40)))
             {
-                if (useBinFormatV2)
+                if (useBinFormatV2 == true)
                 {
                     if (readRGB == false)
                     {
@@ -235,18 +252,22 @@ namespace unitycodercom_PointCloud2Binary
                 {
                     if (useBinFormatV3)
                     {
-                        if (readRGB == false)
+                        if (readRGB == false && readIntensity == false)
                         {
-                            Debug.LogError(appName + "> V3 format requires Read RGB enabled");
+                            Debug.LogError(appName + "> V3 format requires Read RGB or ReadIntensity enabled");
                             return;
                         }
+                        ConvertBinaryV2();
+                    }
+                    else if (exportPCache == true)
+                    {
+                        // pcache exporter in v2 converter
                         ConvertBinaryV2();
                     }
                     else
                     {
                         ConvertBinaryV1();
                     }
-
                 }
             }
             GUI.enabled = true;
@@ -342,7 +363,7 @@ namespace unitycodercom_PointCloud2Binary
 
                     case "PLY (ASCII)": // PLY (ASCII)
                         {
-                            headerCheck = PeekHeader.PeekHeaderPLY(streamReader, readRGB, ref masterPointCount, ref plyHasNormals);
+                            headerCheck = PeekHeader.PeekHeaderPLY(streamReader, readRGB, ref masterPointCount, ref plyHasNormals, ref plyHasDensity);
                             if (!headerCheck.readSuccess) { streamReader.Close(); return; }
                             readRGB = headerCheck.hasRGB;
                             //lines = headerCheck.linesRead;
@@ -520,9 +541,9 @@ namespace unitycodercom_PointCloud2Binary
                                         skippedRows++;
                                         continue;
                                     }
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0], CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1], CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2], CultureInfo.InvariantCulture);
                                     if (readRGB == true)
                                     {
                                         r = LUT255[int.Parse(row[3])];
@@ -537,9 +558,9 @@ namespace unitycodercom_PointCloud2Binary
                                         skippedRows++;
                                         continue;
                                     }
-                                    x = double.Parse(row[0].Replace(",", "."));
-                                    y = double.Parse(row[1].Replace(",", "."));
-                                    z = double.Parse(row[2].Replace(",", "."));
+                                    x = double.Parse(row[0].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2].Replace(",", "."), CultureInfo.InvariantCulture);
                                     break;
 
                                 case "CATIA ASC": // CATIA ASC (with header and Point Format           = 'X %f Y %f Z %f')
@@ -548,16 +569,16 @@ namespace unitycodercom_PointCloud2Binary
                                         skippedRows++;
                                         continue;
                                     }
-                                    x = double.Parse(row[1]);
-                                    y = double.Parse(row[3]);
-                                    z = double.Parse(row[5]);
+                                    x = double.Parse(row[1], CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[3], CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[5], CultureInfo.InvariantCulture);
                                     break;
 
                                 case "XYZRGB":
                                 case "XYZ": // XYZ RGB(INT)
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0], CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1], CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2], CultureInfo.InvariantCulture);
                                     if (readRGB == true)
                                     {
                                         r = LUT255[int.Parse(row[3])];
@@ -567,9 +588,11 @@ namespace unitycodercom_PointCloud2Binary
                                     break;
 
                                 case "PTS": // PTS (INT) (RGB)
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2].Replace(",", "."), CultureInfo.InvariantCulture);
+
+                                    //if (rowCount < 10) Debug.Log(row[0].Replace(",", ".") + "," + row[1].Replace(",", ".") + "," + row[2].Replace(",", ".") + "    " + x + "," + y + "," + z);
 
                                     if (readRGB == true)
                                     {
@@ -597,7 +620,7 @@ namespace unitycodercom_PointCloud2Binary
                                             }
                                             else
                                             {
-                                                r = Remap(float.Parse(row[3]), -2048, 2047, 0, 1);
+                                                r = Remap(float.Parse(row[3], CultureInfo.InvariantCulture), -2048, 2047, 0, 1);
                                             }
                                             g = r;
                                             b = r;
@@ -606,9 +629,9 @@ namespace unitycodercom_PointCloud2Binary
                                     break;
 
                                 case "PLY (ASCII)": // PLY (ASCII)
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0], CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1], CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2], CultureInfo.InvariantCulture);
 
                                     /*
                                     // normals
@@ -635,15 +658,21 @@ namespace unitycodercom_PointCloud2Binary
                                     {
                                         if (plyHasNormals == true)
                                         {
-                                            r = float.Parse(row[6]) / 255f;
-                                            g = float.Parse(row[7]) / 255f;
-                                            b = float.Parse(row[8]) / 255f;
+                                            r = LUT255[int.Parse(row[6])];
+                                            g = LUT255[int.Parse(row[7])];
+                                            b = LUT255[int.Parse(row[8])];
                                         }
-                                        else
-                                        { // no normals
-                                            r = float.Parse(row[3]) / 255f;
-                                            g = float.Parse(row[4]) / 255f;
-                                            b = float.Parse(row[5]) / 255f;
+                                        else if (plyHasDensity == false) // no normals or density
+                                        {
+                                            r = LUT255[int.Parse(row[3])];
+                                            g = LUT255[int.Parse(row[4])];
+                                            b = LUT255[int.Parse(row[5])];
+                                        }
+                                        else // no normals, but have density
+                                        {
+                                            r = LUT255[int.Parse(row[4])];
+                                            g = LUT255[int.Parse(row[5])];
+                                            b = LUT255[int.Parse(row[6])];
                                         }
                                         //a = float.Parse(row[6])/255; // TODO: alpha not supported yet
                                     }
@@ -652,16 +681,16 @@ namespace unitycodercom_PointCloud2Binary
                                     break;
 
                                 case "PCD (ASCII)": // PCD (ASCII)
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0], CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1], CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2], CultureInfo.InvariantCulture);
 
                                     if (readRGB == true)
                                     {
                                         // TODO: would need to check both rgb formats, this is for single value only
                                         if (row.Length == 4)
                                         {
-                                            var rgb = (int)decimal.Parse(row[3], System.Globalization.NumberStyles.Float);
+                                            var rgb = (int)decimal.Parse(row[3], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
 
                                             r = (rgb >> 16) & 0x0000ff;
                                             g = (rgb >> 8) & 0x0000ff;
@@ -673,9 +702,9 @@ namespace unitycodercom_PointCloud2Binary
                                         }
                                         else if (row.Length == 6)
                                         {
-                                            r = LUT255[int.Parse(row[3])];
-                                            g = LUT255[int.Parse(row[4])];
-                                            b = LUT255[int.Parse(row[5])];
+                                            r = LUT255[int.Parse(row[3], CultureInfo.InvariantCulture)];
+                                            g = LUT255[int.Parse(row[4], CultureInfo.InvariantCulture)];
+                                            b = LUT255[int.Parse(row[5], CultureInfo.InvariantCulture)];
                                         }
                                     }
                                     else if (readIntensity == true)
@@ -814,7 +843,11 @@ namespace unitycodercom_PointCloud2Binary
                     fileOnly = Path.GetFileNameWithoutExtension(saveFilePath);
                     baseFolder = Path.GetDirectoryName(saveFilePath);
                 }
-                else // orig format
+                else if (exportPCache == true)
+                {
+                    saveFilePath = EditorUtility.SaveFilePanelInProject("Output pCache", sourceFile.name + ".pcache", "pcache", "");
+                }
+                else
                 {
                     saveFilePath = EditorUtility.SaveFilePanelInProject("Output binary v1 file", sourceFile.name + ".bin", "bin", "");
                 }
@@ -891,7 +924,7 @@ namespace unitycodercom_PointCloud2Binary
 
                     case "PLY (ASCII)": // PLY (ASCII)
                         {
-                            headerCheck = PeekHeader.PeekHeaderPLY(streamReader, readRGB, ref masterPointCount, ref plyHasNormals);
+                            headerCheck = PeekHeader.PeekHeaderPLY(streamReader, readRGB, ref masterPointCount, ref plyHasNormals, ref plyHasDensity);
                             if (!headerCheck.readSuccess) { streamReader.Close(); return; }
                             readRGB = headerCheck.hasRGB;
                         }
@@ -915,8 +948,7 @@ namespace unitycodercom_PointCloud2Binary
                 {
                     autoOffset = -new Vector3((float)headerCheck.x, (float)headerCheck.y, (float)headerCheck.z);
                     // scaling enabled, scale offset too
-                    //                    if (useScaling == true) autoOffset *= scaleValue;
-                    Debug.Log("(converter) autoOffset=" + autoOffset);
+                    Debug.Log("(Converter) autoOffset=" + autoOffset);
 
                 }
 
@@ -1099,6 +1131,8 @@ namespace unitycodercom_PointCloud2Binary
                     {
                         // trim duplicate spaces
                         line = line.Replace("   ", " ").Replace("  ", " ").Trim();
+                        //                        line = line.Replace(",", "."); // mostly for cgo/catia asc/pts
+
                         row = line.Split(' ');
 
                         if (row.Length > 2)
@@ -1111,9 +1145,9 @@ namespace unitycodercom_PointCloud2Binary
                                         skippedRows++;
                                         continue;
                                     }
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2].Replace(",", "."), CultureInfo.InvariantCulture);
                                     if (readRGB == true)
                                     {
                                         // TODO skip this, use bytes
@@ -1129,9 +1163,9 @@ namespace unitycodercom_PointCloud2Binary
                                         skippedRows++;
                                         continue;
                                     }
-                                    x = double.Parse(row[0].Replace(",", "."));
-                                    y = double.Parse(row[1].Replace(",", "."));
-                                    z = double.Parse(row[2].Replace(",", "."));
+                                    x = double.Parse(row[0].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2].Replace(",", "."), CultureInfo.InvariantCulture);
                                     break;
 
                                 case "CATIA ASC": // CATIA ASC (with header and Point Format           = 'X %f Y %f Z %f')
@@ -1140,16 +1174,16 @@ namespace unitycodercom_PointCloud2Binary
                                         skippedRows++;
                                         continue;
                                     }
-                                    x = double.Parse(row[1]);
-                                    y = double.Parse(row[3]);
-                                    z = double.Parse(row[5]);
+                                    x = double.Parse(row[1], CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[3], CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[5], CultureInfo.InvariantCulture);
                                     break;
 
                                 case "XYZRGB":
                                 case "XYZ": // XYZ RGB(INT)
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0], CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1], CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2], CultureInfo.InvariantCulture);
                                     if (readRGB == true)
                                     {
                                         r = LUT255[int.Parse(row[3])];
@@ -1159,9 +1193,9 @@ namespace unitycodercom_PointCloud2Binary
                                     break;
 
                                 case "PTS": // PTS (INT) (RGB)
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2].Replace(",", "."), CultureInfo.InvariantCulture);
 
                                     if (readRGB == true)
                                     {
@@ -1189,7 +1223,7 @@ namespace unitycodercom_PointCloud2Binary
                                             }
                                             else
                                             {
-                                                r = Remap(float.Parse(row[3]), -2048, 2047, 0, 1);
+                                                r = Remap(float.Parse(row[3], CultureInfo.InvariantCulture), -2048, 2047, 0, 1);
                                             }
                                             g = r;
                                             b = r;
@@ -1198,9 +1232,9 @@ namespace unitycodercom_PointCloud2Binary
                                     break;
 
                                 case "PLY (ASCII)": // PLY (ASCII)
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2].Replace(",", "."), CultureInfo.InvariantCulture);
 
                                     /*
                                     // normals
@@ -1227,16 +1261,23 @@ namespace unitycodercom_PointCloud2Binary
                                     {
                                         if (plyHasNormals == true)
                                         {
-                                            r = float.Parse(row[6]) / 255f;
-                                            g = float.Parse(row[7]) / 255f;
-                                            b = float.Parse(row[8]) / 255f;
+                                            r = LUT255[int.Parse(row[6])];
+                                            g = LUT255[int.Parse(row[7])];
+                                            b = LUT255[int.Parse(row[8])];
                                         }
-                                        else
-                                        { // no normals
+                                        else if (plyHasDensity == false) // no normals or density
+                                        {
                                             r = LUT255[int.Parse(row[3])];
                                             g = LUT255[int.Parse(row[4])];
                                             b = LUT255[int.Parse(row[5])];
                                         }
+                                        else // no normals, but have density
+                                        {
+                                            r = LUT255[int.Parse(row[4])];
+                                            g = LUT255[int.Parse(row[5])];
+                                            b = LUT255[int.Parse(row[6])];
+                                        }
+
                                         //a = float.Parse(row[6])/255; // TODO: alpha not supported yet
                                     }
                                     /*
@@ -1244,9 +1285,9 @@ namespace unitycodercom_PointCloud2Binary
                                     break;
 
                                 case "PCD (ASCII)": // PCD (ASCII)
-                                    x = double.Parse(row[0]);
-                                    y = double.Parse(row[1]);
-                                    z = double.Parse(row[2]);
+                                    x = double.Parse(row[0].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    y = double.Parse(row[1].Replace(",", "."), CultureInfo.InvariantCulture);
+                                    z = double.Parse(row[2].Replace(",", "."), CultureInfo.InvariantCulture);
 
                                     if (readRGB == true)
                                     {
@@ -1274,7 +1315,7 @@ namespace unitycodercom_PointCloud2Binary
                                     {
                                         if (row.Length == 4) // XYZI only
                                         {
-                                            r = float.Parse(row[3]);
+                                            r = float.Parse(row[3], CultureInfo.InvariantCulture);
                                             g = r;
                                             b = r;
                                         }
@@ -1363,6 +1404,7 @@ namespace unitycodercom_PointCloud2Binary
                     }
                 } // while loop reading whole file
 
+                // output to file
                 if (useBinFormatV2 == true)
                 {
                     if (randomizePoints == true)
@@ -1415,7 +1457,7 @@ namespace unitycodercom_PointCloud2Binary
 
                     Debug.Log(appName + "> Binary file saved: " + saveFilePath + " (" + masterPointCount + " points)");
                 }
-                else // v3 BETA
+                else if (useBinFormatV3 == true) // v3
                 {
                     int v3Version = 1; // initial basic version
 
@@ -1436,7 +1478,7 @@ namespace unitycodercom_PointCloud2Binary
                     var nodes = new Dictionary<string, List<int>>();
 
                     // no need to collect, if each node is fixed grid?
-                    List<PointCloudTile> nodeBounds = new List<PointCloudTile>();
+                    List<PointCloudTileEditor> nodeBounds = new List<PointCloudTileEditor>();
 
                     Debug.Log("(v3 converter) Randomizing array..");
                     //PointCloudTools.Shuffle(new System.Random(), ref points, ref colors);
@@ -1575,7 +1617,7 @@ namespace unitycodercom_PointCloud2Binary
                         bsColors.Dispose();
 
                         // collect node bounds, name and pointcount
-                        var cb = new PointCloudTile();
+                        var cb = new PointCloudTileEditor();
                         cb.filename = fullpathFileOnly;//.Replace("Assets/StreamingAssets/", "");
                         cb.totalPoints = indexes.Count;
 
@@ -1640,7 +1682,33 @@ namespace unitycodercom_PointCloud2Binary
                     {
                         Debug.LogError("Actually, no tiles found! You should probably enable scale values to make your cloud to smaller size? Or make gridsize bigger, or set minimum point count smaller.");
                     }
-                } // v3
+                }
+                else if (exportPCache == true)
+                {
+                    Debug.Log("PCACHE output: " + saveFilePath);
+
+                    var writer = new StreamWriter(File.Open(saveFilePath, FileMode.Create));
+
+                    // write header
+                    writer.WriteLine("pcache");
+                    writer.WriteLine("comment PCACHE file Exported from UnityCoder PointCloud Tools");
+                    writer.WriteLine("format ascii 1.0");
+                    writer.WriteLine("elements " + pointsX.Length);
+                    writer.WriteLine("property float position.x");
+                    writer.WriteLine("property float position.y");
+                    writer.WriteLine("property float position.z");
+                    writer.WriteLine("property float color.r");
+                    writer.WriteLine("property float color.g");
+                    writer.WriteLine("property float color.b");
+                    writer.WriteLine("end_header");
+
+                    //// save data
+                    for (int i = 0, len = pointsX.Length; i < len; i++)
+                    {
+                        writer.WriteLine(pointsX[i] + " " + pointsY[i] + " " + pointsZ[i] + " " + colorsR[i] + " " + colorsG[i] + " " + colorsB[i]);
+                    }
+                    writer.Close();
+                }
 
                 EditorUtility.ClearProgressBar();
             } // using reader

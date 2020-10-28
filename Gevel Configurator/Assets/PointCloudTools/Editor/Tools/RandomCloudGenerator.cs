@@ -4,6 +4,8 @@
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using System.Threading;
+using System.Globalization;
 
 namespace unitycodercom_RandomCloudGenerator
 {
@@ -29,14 +31,16 @@ namespace unitycodercom_RandomCloudGenerator
             window.titleContent = new GUIContent(appName);
             window.minSize = new Vector2(340, 280);
             window.maxSize = new Vector2(340, 284);
-        }
 
-        // window closed
-        void OnDestroy()
-        {
-            // could do cleaning up here, if needed
+            // force dot as decimal separator
+            string CultureName = Thread.CurrentThread.CurrentCulture.Name;
+            CultureInfo ci = new CultureInfo(CultureName);
+            if (ci.NumberFormat.NumberDecimalSeparator != ".")
+            {
+                ci.NumberFormat.NumberDecimalSeparator = ".";
+                Thread.CurrentThread.CurrentCulture = ci;
+            }
         }
-
 
         // main loop
         void OnGUI()
@@ -254,6 +258,8 @@ namespace unitycodercom_RandomCloudGenerator
             {
                 saveFilePath = EditorUtility.SaveFilePanel("Save XYZ file", "Assets/", "random.xyz", "xyz");
             }
+
+            if (saveFilePath == null) return;
 
             float x = 0, y = 0, z = 0;//,r=0,g=0,b=0; //,nx=0,ny=0,nz=0;; // init vals
             float progress = 0;

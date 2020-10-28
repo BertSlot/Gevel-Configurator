@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace unitycodercom_PointCloudHelpers
 {
@@ -261,9 +262,8 @@ namespace unitycodercom_PointCloudHelpers
             ph.linesRead++;
 
             line = line.Replace("   ", " ").Replace("  ", " ").Trim();
+            line = line.Replace(',', '.');
             line = Regex.Replace(line, "[^0-9]", ""); // remove non-numeric chars
-
-            //Debug.Log("line=" + line);
 
             if (IsNullOrEmptyLine(line)) { ph.readSuccess = false; return ph; }
 
@@ -278,26 +278,27 @@ namespace unitycodercom_PointCloudHelpers
             ph.linesRead++;
 
             line = line.Replace("   ", " ").Replace("  ", " ").Trim();
+            line = line.Replace(',', '.');
 
             string[] row = line.Split(' ');
-            //			Debug.Log(row.Length);
 
             if (readRGB) { if (row.Length < 6) { Debug.LogError("No RGB data founded, disabling readRGB"); readRGB = false; } }
             if (readIntensity) { if (row.Length != 4 && row.Length != 7) { Debug.LogError("No Intensity data founded, disabling readIntensity"); readIntensity = false; } }
 
             // take first point pos
-            ph.x = double.Parse(row[0]);
-            ph.y = double.Parse(row[1]);
-            ph.z = double.Parse(row[2]);
+            ph.x = double.Parse(row[0], CultureInfo.InvariantCulture);
+            ph.y = double.Parse(row[1], CultureInfo.InvariantCulture);
+            ph.z = double.Parse(row[2], CultureInfo.InvariantCulture);
 
             ph.readSuccess = true;
 
             return ph;
         }
 
-        public static PeekHeaderData PeekHeaderPLY(StreamReader reader, bool readRGB, ref long masterPointCount, ref bool plyHasNormals)
+        public static PeekHeaderData PeekHeaderPLY(StreamReader reader, bool readRGB, ref long masterPointCount, ref bool plyHasNormals, ref bool plyHasDensity)
         {
             PeekHeaderData ph = new PeekHeaderData();
+            plyHasDensity = false;
             string line = reader.ReadLine();
             ph.linesRead++;
             line = line.Replace("   ", " ").Replace("  ", " ").Trim();
@@ -319,42 +320,74 @@ namespace unitycodercom_PointCloudHelpers
                 return ph;
             }
 
-            // read comment line, TODO: check if comment
-            line = reader.ReadLine();
-            if (string.IsNullOrEmpty(line) == false)
-            {
-                if (line.ToLower().Contains("comment") == false) Debug.LogError("PLY: Not comment line..");
-            }
-            ph.linesRead++;
-
-            // get vertex count
-            line = reader.ReadLine();
-            if (line.ToLower().Contains("comment") == true)
+            // look for element vertex count, try max 100 rows, or until end header
+            bool foundVertexCount = false;
+            for (int i = 0, len = 100; i < len; i++)
             {
                 line = reader.ReadLine();
                 ph.linesRead++;
+                if (string.IsNullOrEmpty(line) == false)
+                {
+                    if (line.ToLower().Contains("element vertex"))
+                    {
+                        // this has vertex count, lets exit
+                        foundVertexCount = true;
+                        break;
+                    }
+
+                    if (reader.EndOfStream == true)
+                    {
+                        Debug.LogError("PLY Header: Unexpected end of header (1).. Failed!");
+                        ph.readSuccess = false;
+                        return ph;
+                    }
+                }
             }
 
-            ph.linesRead++;
-            if (line.ToLower().Contains("element vertex"))
+            if (foundVertexCount == false)
             {
-                // this has vertex count
-            }
-            else // something else, maybe cloudcompare comment obj_info
-            {
-                line = reader.ReadLine();
-                ph.linesRead++;
+                Debug.LogError("PLY Header: Cannot find row 'element vertex .....' - Import failed!");
+                ph.readSuccess = false;
+                return ph;
             }
 
             string[] row = line.Split(' ');
-            masterPointCount = long.Parse(row[2]);
+            masterPointCount = long.Parse(row[2], NumberStyles.Integer);
             Debug.Log("(Converter) Reading " + masterPointCount + " points..");
+
+            // loop until x,y,z data
+            bool foundXYZ = false;
+            for (int i = 0, len = 100; i < len; i++)
+            {
+                line = reader.ReadLine();
+                ph.linesRead++;
+                if (string.IsNullOrEmpty(line) == false)
+                {
+                    if (line.ToLower().Contains("property float x") || line.ToLower().Contains("property double x"))
+                    {
+                        foundXYZ = true;
+                        break;
+                    }
+
+                    if (reader.EndOfStream == true)
+                    {
+                        Debug.LogError("PLY Header: Unexpected end of header (2).. Failed!");
+                        ph.readSuccess = false;
+                        return ph;
+                    }
+                }
+            }
+
+            if (foundXYZ == false)
+            {
+                Debug.LogError("PLY Header: Cannot find XYZ properties in header - Import failed!");
+                ph.readSuccess = false;
+                return ph;
+            }
 
             if (masterPointCount < 1) { Debug.LogError("Header error #3: ply vertex count < 1"); ph.readSuccess = false; return ph; }
 
             // check properties
-            line = reader.ReadLine();
-            ph.linesRead++;
             if (line.ToLower() != "property float x" && line.ToLower() != "property double x") { Debug.LogError("Header error #4a: property x error"); ph.readSuccess = false; return ph; }
             line = reader.ReadLine();
             ph.linesRead++;
@@ -363,11 +396,16 @@ namespace unitycodercom_PointCloudHelpers
             ph.linesRead++;
             if (line.ToLower() != "property float z" && line.ToLower() != "property double z") { Debug.LogWarning("Header error #4c: property z error"); ph.readSuccess = false; return ph; }
 
-            // check for normal data
-            //if (readNormals)
-            //{
+            // check if density row
             line = reader.ReadLine();
             ph.linesRead++;
+            if (line.ToLower() == "property float density")
+            {
+                // skip density row
+                plyHasDensity = true;
+                line = reader.ReadLine();
+                ph.linesRead++;
+            }
 
             if (line.ToLower() == "property float nx")
             {
@@ -416,6 +454,7 @@ namespace unitycodercom_PointCloudHelpers
                 }
                 else
                 { // no color vals or normals either
+                    Debug.LogWarning("PLY Header: No RGB data found in header, disabling RGB import");
                     readRGB = false;
                 }
             }
@@ -452,9 +491,9 @@ namespace unitycodercom_PointCloudHelpers
             row = line.Split(' ');
             if (readRGB) { if (row.Length < 5) { Debug.LogError("No RGB data founded, disabling readRGB!"); readRGB = false; } }
 
-            ph.x = double.Parse(row[0]);
-            ph.y = double.Parse(row[1]);
-            ph.z = double.Parse(row[2]);
+            ph.x = double.Parse(row[0], CultureInfo.InvariantCulture);
+            ph.y = double.Parse(row[1], CultureInfo.InvariantCulture);
+            ph.z = double.Parse(row[2], CultureInfo.InvariantCulture);
             ph.readSuccess = true;
             ph.hasRGB = readRGB;
 

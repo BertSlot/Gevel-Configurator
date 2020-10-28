@@ -39,7 +39,7 @@ Shader "UnityCoder/Mesh/MeshQuad-Normals-DirectionalLight"
 
 			struct FS_INPUT {
 				float4 pos : SV_POSITION;
-				fixed4 color : COLOR0;
+				fixed4 color : COLOR;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
@@ -49,7 +49,7 @@ Shader "UnityCoder/Mesh/MeshQuad-Normals-DirectionalLight"
 				GS_INPUT o = (GS_INPUT)0;
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-				o.pos = mul(unity_ObjectToWorld, v.vertex);
+				o.pos = v.vertex;//mul(unity_ObjectToWorld, v.vertex);
 				half3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
                 fixed4 light = nl * _LightColor0;
@@ -84,7 +84,8 @@ Shader "UnityCoder/Mesh/MeshQuad-Normals-DirectionalLight"
 				triStream.Append(newVert);
 				newVert.pos =  UnityObjectToClipPos(v[3]);
 				newVert.color = p[0].color;
-				triStream.Append(newVert);										
+				triStream.Append(newVert);
+				//triStream.RestartStrip();
 			}
 
 			fixed4 frag (FS_INPUT IN) : SV_Target

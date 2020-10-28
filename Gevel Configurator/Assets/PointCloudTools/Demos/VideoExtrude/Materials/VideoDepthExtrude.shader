@@ -56,7 +56,7 @@ Shader "UnityCoder/Extras/VideoDepthExtrude"
 		{
 			half4 col = tex2D (_MainTex, IN.uv_MainTex)*_Color;
 			o.Albedo = col.rgb;
-			o.Alpha = col.r;
+			o.Alpha = 1;// col.r;
 		}
 
 		ENDCG

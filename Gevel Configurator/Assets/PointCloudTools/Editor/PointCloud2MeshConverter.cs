@@ -9,6 +9,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Linq;
 using UnityEngine.Rendering;
+using System.Threading;
+using System.Globalization;
 
 #pragma warning disable 0219 // disable unused var warnings
 
@@ -71,6 +73,15 @@ namespace unitycodercom_PointCloud2MeshConverter
             window.titleContent = new GUIContent(appName);
             window.minSize = new Vector2(340, 630);
             window.maxSize = new Vector2(340, 634);
+
+            // force dot as decimal separator
+            string CultureName = Thread.CurrentThread.CurrentCulture.Name;
+            CultureInfo ci = new CultureInfo(CultureName);
+            if (ci.NumberFormat.NumberDecimalSeparator != ".")
+            {
+                ci.NumberFormat.NumberDecimalSeparator = ".";
+                Thread.CurrentThread.CurrentCulture = ci;
+            }
         }
 
         // main loop
@@ -94,8 +105,7 @@ namespace unitycodercom_PointCloud2MeshConverter
             readRGB = readIntensity ? false : readRGB;
             EditorGUILayout.EndHorizontal();
 
-
-            readNormals = EditorGUILayout.ToggleLeft(new GUIContent("Read Normal values (PLY)", null, "Only for .PLY files"), readNormals);
+            readNormals = EditorGUILayout.ToggleLeft(new GUIContent("Read Normal values (PLY)", null, "Only for .PLY files (and most shaders do not support Vertex Normals)"), readNormals);
 
             // extra options
             EditorGUILayout.Space();
@@ -123,7 +133,7 @@ namespace unitycodercom_PointCloud2MeshConverter
             gridSize = EditorGUILayout.FloatField(new GUIContent("Grid cell size (m)", null, ""), Mathf.Clamp(gridSize, 0.5f, 100f));
             minPointCount = EditorGUILayout.IntField(new GUIContent("min. cell point count", null, "Discards cells with less points"), (int)Mathf.Clamp(minPointCount, 1, Mathf.Infinity));
             //			forceRecalculateNormals = EditorGUILayout.ToggleLeft(new GUIContent("Force RecalculateNormals()",null,"Note: Uses builtin RecalculateNormals(), it wont give correct normals"), forceRecalculateNormals);
-            createLODS = EditorGUILayout.ToggleLeft(new GUIContent("Create LODS", null, ""), createLODS);
+            createLODS = EditorGUILayout.ToggleLeft(new GUIContent("Create LODS", null, "Note: Works better with SortPoints or Split2Grid"), createLODS);
             GUI.enabled = createLODS;
             lodLevels = EditorGUILayout.IntSlider(new GUIContent("LOD levels:", null, "Including LOD0 (main) mesh level"), lodLevels, 2, 4);
             //minLodVertexCount = EditorGUILayout.IntSlider(new GUIContent("Minimum LOD point count:",null,"How many points in the last (furthest) LOD mesh"), minLodVertexCount, 1, Mathf.Clamp(vertCount-1,1,65000));
@@ -146,7 +156,7 @@ namespace unitycodercom_PointCloud2MeshConverter
             MaxVertexCountPerMesh = Mathf.Clamp(EditorGUILayout.IntField(new GUIContent("Vertices per mesh", null, "How many verts per mesh (max 65k). !Warning: Low values will create millions of files!"), MaxVertexCountPerMesh), 1000, 65000);
 #endif
 
-            meshMaterial = (Material)EditorGUILayout.ObjectField(new GUIContent("Mesh material", null, "Material & Shader for the meshes"), meshMaterial, typeof(Material), true);
+            meshMaterial = (Material)EditorGUILayout.ObjectField(new GUIContent("Mesh material", null, "Material & Shader for generated meshes *Use MeshPointsDX11QuadOffset.mat if this is for DX11 or later"), meshMaterial, typeof(Material), true);
 
             // TODO:
             //addToScene = EditorGUILayout.ToggleLeft(new GUIContent("Add meshes to current scene", null, ""), addToScene);
@@ -294,7 +304,7 @@ namespace unitycodercom_PointCloud2MeshConverter
                 int commentLines = 0;
 
                 // formats
-                bool replaceCommas = false; // for cgo, catia asc (depends on pc regional settings)
+                bool replaceCommas = false; // for cgo, catia asc (depends also on pc regional settings, comma doesnt work dot works always?)
 
                 // find first line of point data
                 bool comments = true;
@@ -402,8 +412,7 @@ namespace unitycodercom_PointCloud2MeshConverter
                         headerData = false;
                     }
 
-
-                    //					rawLine = origRawLine.Replace(",","."); // for cgo/catia asc
+                    rawLine = origRawLine.Replace(",", "."); // for cgo/catia asc/pts
                     rawLine = Regex.Replace(origRawLine, "[^.0-9 ]+[^e\\-\\d]", ""); // cleanup non numeric
                     rawLine = rawLine.Replace("   ", " ").Replace("  ", " ").Trim();
 
@@ -421,11 +430,14 @@ namespace unitycodercom_PointCloud2MeshConverter
                     else // actual data, get first row
                     {
                         if (replaceCommas == false && rawLine.Contains(",")) replaceCommas = true;
-                        if (replaceCommas == true) rawLine = rawLine.Replace(",", "."); // for cgo/catia asc
+                        if (replaceCommas == true) rawLine = rawLine.Replace(",", "."); // for cgo/catia asc/pts
 
                         lineSplitted = rawLine.Split(' ');
 
-                        if (readRGB && lineSplitted.Length < 6) { Debug.LogError("No RGB data founded after XYZ, disabling readRGB"); readRGB = false; }
+                        if (readRGB && lineSplitted.Length < 6)
+                        {
+                            if (fileExtension != ".pcd") Debug.LogError("No RGB data founded after XYZ, disabling readRGB"); readRGB = false;
+                        }
 
                         if (readIntensity == true && (lineSplitted.Length != 4 && lineSplitted.Length != 7)) { Debug.LogError("No Intensity data founded after XYZ, disabling readIntensity"); readIntensity = false; }
 
@@ -538,7 +550,7 @@ namespace unitycodercom_PointCloud2MeshConverter
 
                         // check if data is valid
                         // skip comments
-                        if (rawLine.IndexOf("!") == 0) continue;
+                        if (rawLine.IndexOf("!") == 0) continue; // catia asc
                         if (rawLine.IndexOf("*") == 0) continue;
                         if (rawLine.IndexOf("#") == 0) continue;
                         if (replaceCommas == true) rawLine = origRawLine.Replace(",", ".");
@@ -564,6 +576,7 @@ namespace unitycodercom_PointCloud2MeshConverter
                     }
                 }
 
+
                 masterPointCount = lines;
 
                 vertexArray = new Vector3[masterPointCount];
@@ -575,6 +588,7 @@ namespace unitycodercom_PointCloud2MeshConverter
                 long rowCount = 0;
                 bool readMore = true;
                 double tempVal = 0;
+                bool maybeCatiaAsc = fileExtension == ".asc";
 
                 //read all point cloud data here
                 for (rowCount = 0; rowCount < masterPointCount - 1; rowCount++)
@@ -590,18 +604,25 @@ namespace unitycodercom_PointCloud2MeshConverter
 
                     // trim duplicate spaces
                     rawLine = rawLine.Replace("   ", " ").Replace("  ", " ").Trim();
+                    rawLine = rawLine.Replace(",", "."); // mostly for cgo/catia asc/pts
+
+
+                    // cleanup non numeric, needed for catia asc
+                    if (maybeCatiaAsc == true) rawLine = Regex.Replace(rawLine, "[^.0-9 ]+[^e\\-\\d]", "").Trim();
+
                     lineSplitted = rawLine.Split(' ');
 
                     // have same amount of columns in data?
                     if (lineSplitted.Length == dataCount)
                     {
-                        rawLine = rawLine.Replace(",", "."); // mostly for cgo/catia asc
-                        // cleanup non numeric
-                        rawLine = Regex.Replace(rawLine, "[^.0-9 ]+[^e\\-\\d]", "").Trim();
+                        if (!double.TryParse(lineSplitted[0], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out x)) skipRow = true;
+                        if (!double.TryParse(lineSplitted[1], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out y)) skipRow = true;
+                        if (!double.TryParse(lineSplitted[2], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out z)) skipRow = true;
+                        //if (!double.TryParse(lineSplitted[0], out x)) skipRow = true;
+                        //if (!double.TryParse(lineSplitted[1], out y)) skipRow = true;
+                        //if (!double.TryParse(lineSplitted[2], out z)) skipRow = true;
 
-                        if (!double.TryParse(lineSplitted[0], out x)) skipRow = true;
-                        if (!double.TryParse(lineSplitted[1], out y)) skipRow = true;
-                        if (!double.TryParse(lineSplitted[2], out z)) skipRow = true;
+                        //if (rowCount < 10) Debug.Log(lineSplitted[0] + "," + lineSplitted[1] + "," + lineSplitted[2] + "    " + x + "," + y + "," + z);
 
                         if (readRGB == true)
                         {
@@ -757,6 +778,11 @@ namespace unitycodercom_PointCloud2MeshConverter
                 // loop all points
                 for (int i = 0, len = vertexArray.Length; i < len; i++)
                 {
+                    if (decimatePoints == true)
+                    {
+                        if (i % removeEveryNth == 0) continue;
+                    }
+
                     // get point
                     var p = vertexArray[indexArray[i]];
 
@@ -989,10 +1015,12 @@ namespace unitycodercom_PointCloud2MeshConverter
                     if (i < 10) pad = "000";
                     string save = savePath + "_" + pcCounter + "_" + pad + i + ".prefab";
                     // save mesh inside prefab http://answers.unity.com/answers/1464552/view.html
-#if UNITY_2019_1_OR_NEWER
+#if UNITY_2018_4_OR_NEWER
+                    // need to delete old one, otherwise mesh gets appended
+                    AssetDatabase.DeleteAsset(save);
                     var rootPrefab = PrefabUtility.SaveAsPrefabAsset(folder.transform.GetChild(i).gameObject, save);
 #else
-                        var rootPrefab = PrefabUtility.CreatePrefab(save, folder.transform.GetChild(i).gameObject);
+                    var rootPrefab = PrefabUtility.CreatePrefab(save, folder.transform.GetChild(i).gameObject);
 #endif
                     var mf = rootPrefab.GetComponent<MeshFilter>();
                     if (mf != null)
@@ -1158,10 +1186,10 @@ namespace unitycodercom_PointCloud2MeshConverter
                     string save = savePath + "_" + pcCounter + "_" + pad + i + ".prefab";
 
                     // save mesh inside prefab http://answers.unity.com/answers/1464552/view.html
-#if UNITY_2019_1_OR_NEWER
+#if UNITY_2018_4_OR_NEWER
                     var rootPrefab = PrefabUtility.SaveAsPrefabAsset(folder.transform.GetChild(i).gameObject, save);
 #else
-                        var rootPrefab = PrefabUtility.CreatePrefab(save, folder.transform.GetChild(i).gameObject);
+                    var rootPrefab = PrefabUtility.CreatePrefab(save, folder.transform.GetChild(i).gameObject);
 #endif
                     var mf = rootPrefab.GetComponent<MeshFilter>();
                     if (mf != null)
@@ -1518,10 +1546,10 @@ namespace unitycodercom_PointCloud2MeshConverter
                     string save = savePath + "_" + pcCounter + "_" + pad + i + ".prefab";
 
                     // save mesh inside prefab http://answers.unity.com/answers/1464552/view.html
-#if UNITY_2019_1_OR_NEWER
+#if UNITY_2018_4_OR_NEWER
                     var rootPrefab = PrefabUtility.SaveAsPrefabAsset(folder.transform.GetChild(i).gameObject, save);
 #else
-                        var rootPrefab = PrefabUtility.CreatePrefab(save, folder.transform.GetChild(i).gameObject);
+                    var rootPrefab = PrefabUtility.CreatePrefab(save, folder.transform.GetChild(i).gameObject);
 #endif
                     var mf = rootPrefab.GetComponent<MeshFilter>();
                     if (mf != null)
@@ -1550,11 +1578,13 @@ namespace unitycodercom_PointCloud2MeshConverter
 #if UNITY_2017_3_OR_NEWER
             mesh.indexFormat = IndexFormat.UInt32;
 #endif
+            // main mesh gameobject
             targetGO.isStatic = true;
+
             mf.mesh = mesh;
             targetGO.transform.name = "PC_" + meshCounter;
             mr.sharedMaterial = meshMaterial;
-            mr.receiveShadows = false;
+            mr.receiveShadows = false; // NOTE have to enable shadows in mesh, if needed
             mr.shadowCastingMode = ShadowCastingMode.Off;
 #if UNITY_5_6_OR_NEWER
             mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
@@ -1563,12 +1593,11 @@ namespace unitycodercom_PointCloud2MeshConverter
 #endif
             mr.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
 
-            // disable ligtmap static 
-
-#if UNITY_2018_2_OR_NEWER
+            // disable ligtmap static (causes warning spam)
+#if UNITY_2019_2_OR_NEWER
             GameObjectUtility.SetStaticEditorFlags(targetGO, ~StaticEditorFlags.ContributeGI);
 #else
-            GameObjectUtility.SetStaticEditorFlags(targetGO, ~StaticEditorFlags.LightmapStatic);
+            GameObjectUtility.SetStaticEditorFlags(targetGO, ~StaticEditorFlags.LightmapStatic & ~StaticEditorFlags.ReflectionProbeStatic);
 #endif
             // fix offset for pivot
             if (bounds != null)
@@ -1678,17 +1707,20 @@ namespace unitycodercom_PointCloud2MeshConverter
                     var mf = go.AddComponent<MeshFilter>();
                     var mr = go.AddComponent<MeshRenderer>();
 
+                    // create new mesh
                     Mesh mesh = new Mesh();
                     mesh.Clear();
                     mf.mesh = mesh;
 #if UNITY_2017_3_OR_NEWER
-                    mesh.indexFormat = IndexFormat.UInt32;
+                    mesh.indexFormat = verts.Length > 65535 ? IndexFormat.UInt32 : IndexFormat.UInt16;
 #endif
+                    // main gameobject
                     mainGO.isStatic = true;
                     go.transform.name = "PC_" + meshCounter + "_" + i.ToString();
                     mr.sharedMaterial = meshMaterial;
                     mr.receiveShadows = false;
                     mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
 #if UNITY_5_6_OR_NEWER
                     mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
 #else
@@ -1696,9 +1728,12 @@ namespace unitycodercom_PointCloud2MeshConverter
 #endif
                     mr.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
 
-#if UNITY_2018_2_OR_NEWER
+#if UNITY_2019_2_OR_NEWER
                     GameObjectUtility.SetStaticEditorFlags(mainGO, ~StaticEditorFlags.ContributeGI);
                     GameObjectUtility.SetStaticEditorFlags(go, ~StaticEditorFlags.ContributeGI);
+#else
+                    GameObjectUtility.SetStaticEditorFlags(mainGO, ~StaticEditorFlags.LightmapStatic & ~StaticEditorFlags.ReflectionProbeStatic);
+                    GameObjectUtility.SetStaticEditorFlags(go, ~StaticEditorFlags.LightmapStatic & ~StaticEditorFlags.ReflectionProbeStatic);
 #endif
 
                     lerpVal -= lerpStep;

@@ -104,6 +104,10 @@ namespace unitycodercom_PointCloudBinaryViewer
         Material depthMaterial;
         [Tooltip("Changing CameraEvent takes effect only at Start(). Default value: AfterDepthTexture")]
         public CameraEvent camDepthPass = CameraEvent.AfterDepthTexture;
+#if UNITY_EDITOR
+        [Tooltip("Forces CommandBuffer to be rendered in Scene window also")]
+        public bool commandBufferToSceneCamera = false;
+#endif
         internal CommandBuffer commandBufferDepth;
         Vector3 transformPos;
         Matrix4x4 Matrix4x4identity = Matrix4x4.identity;
@@ -129,7 +133,6 @@ namespace unitycodercom_PointCloudBinaryViewer
         // init
         void Start()
         {
-
             transformPos = transform.position;
 
             cam = Camera.main;
@@ -138,6 +141,11 @@ namespace unitycodercom_PointCloudBinaryViewer
             {
                 commandBuffer = new CommandBuffer();
                 cam.AddCommandBuffer(camDrawPass, commandBuffer);
+
+#if UNITY_EDITOR
+                if (commandBufferToSceneCamera == true) UnityEditor.SceneView.GetAllSceneCameras()[0].AddCommandBuffer(camDrawPass, commandBuffer);
+#endif
+
             }
 
             if (forceDepthBufferPass == true)
@@ -536,6 +544,7 @@ namespace unitycodercom_PointCloudBinaryViewer
             cloudBounds = new Bounds(new Vector3((minX + maxX) * 0.5f, (minY + maxY) * 0.5f, (minZ + maxZ) * 0.5f), new Vector3((maxX - minX), (maxY - minY), (maxZ - minZ)));
 
             points = new Vector3[totalPoints];
+            if (showDebug) Debug.Log("cloudBounds=" + cloudBounds);
 
 
             if (showDebug && !isLoadingNewData) Debug.Log("Loading new (V2) format: " + totalPoints + " points..");
@@ -752,22 +761,6 @@ namespace unitycodercom_PointCloudBinaryViewer
 
             if (containsRGB == true) pointColors = new Vector3[totalPoints];
 
-            // marshal = 1200ms, regular = 3500ms..but drawing is 2-4x slower?
-            /*
-            //var data = new byte[size * 4 * 3]; // 1 float = 4 bytes, vector3 = 12 bytes
-            GCHandle vectorPointer = GCHandle.Alloc(points, GCHandleType.Pinned);
-            IntPtr pV = vectorPointer.AddrOfPinnedObject();
-            Marshal.Copy(data, byteIndex, pV, data.Length - byteIndex);
-            //Debug.Log("points: " + points[0].x);
-            */
-            //memcpy(dstData.Scan0, srcData.Scan0, new UIntPtr((uint)height * (uint)srcData.Stride));
-
-
-            // 2018.x
-            // UnsafeUtility.MemCpyStride
-
-            // 50m = 54fps, 1x25m = 110fps, 2x25m = 54fps
-
             byteArrayToFloats = new float[(data.Length - byteIndex) / 4];
             System.Buffer.BlockCopy(data, byteIndex, byteArrayToFloats, 0, data.Length - byteIndex);
 
@@ -776,13 +769,10 @@ namespace unitycodercom_PointCloudBinaryViewer
             {
                 x = byteArrayToFloats[dataIndex] + transformPos.x;
                 dataIndex++;
-                //                byteIndex += byteSize;
                 y = byteArrayToFloats[dataIndex] + transformPos.y;
                 dataIndex++;
-                //                byteIndex += byteSize;
                 z = byteArrayToFloats[dataIndex] + transformPos.z;
                 dataIndex++;
-                //                byteIndex += byteSize;
 
                 points[i].x = x;
                 points[i].y = y;
@@ -800,13 +790,10 @@ namespace unitycodercom_PointCloudBinaryViewer
                 if (containsRGB == true)
                 {
                     r = byteArrayToFloats[dataIndex];
-                    //                    byteIndex += byteSize;
                     dataIndex++;
                     g = byteArrayToFloats[dataIndex];
-                    //                    byteIndex += byteSize;
                     dataIndex++;
                     b = byteArrayToFloats[dataIndex];
-                    //                    byteIndex += byteSize;
                     dataIndex++;
 
                     pointColors[i].x = r;
@@ -819,7 +806,6 @@ namespace unitycodercom_PointCloudBinaryViewer
                     return;
                 }
             } // for all points
-
 
             // for testing load timer
             //            stopwatch.Stop();
@@ -1203,6 +1189,14 @@ namespace unitycodercom_PointCloudBinaryViewer
             isInitializingBuffers = false;
         }
 
+        // can try enabling this, if your cloud disappears on alt tab
+        //void OnApplicationFocus(bool focused)
+        //{
+        //    Debug.Log("focus = "+focused);
+        //    if (focused) InitDX11Buffers();
+        //}
+
+
         public void ReleaseDX11Buffers()
         {
             if (bufferPoints != null) bufferPoints.Release();
@@ -1277,6 +1271,8 @@ namespace unitycodercom_PointCloudBinaryViewer
 
             // dont display while loading, it slows down with huge clouds
             if (isLoading == true || displayPoints == false || useCommandBuffer == true) return;
+            //Debug.Log("123");
+
             cloudMaterial.SetPass(0);
 
 #if UNITY_2019_1_OR_NEWER
@@ -1284,13 +1280,13 @@ namespace unitycodercom_PointCloudBinaryViewer
 #else
             Graphics.DrawProcedural(MeshTopology.Points, totalPoints);
 #endif
+
         }
 
 
         // called after some file load operation has finished
         void OnLoadingCompleteCallBack(System.Object a)
         {
-
             //PointCloudTools.DrawBounds(GetBounds(), 99);
 
             //Debug.Log("OnLoadingCompleteCallBack");

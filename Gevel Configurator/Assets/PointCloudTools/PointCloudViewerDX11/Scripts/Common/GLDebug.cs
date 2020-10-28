@@ -1,8 +1,6 @@
 ﻿// http://www.unity3d-france.com/unity/phpBB3/viewtopic.php?f=24&t=5409
 
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using UnityEngine;
 
 public class GLDebug : MonoBehaviour
@@ -70,13 +68,14 @@ public class GLDebug : MonoBehaviour
 
         if (!displayLines)
         {
-            Stopwatch timer = Stopwatch.StartNew();
-
-            linesZOn = linesZOn.Where(l => !l.DurationElapsed(false)).ToList();
-            linesZOff = linesZOff.Where(l => !l.DurationElapsed(false)).ToList();
-
-            timer.Stop();
-            //            milliseconds = timer.Elapsed.Ticks / 10000f;
+            for (int i = linesZOn.Count - 1; i >= 0; i--)
+            {
+                if (linesZOn[i].DurationElapsed(false)) linesZOn.RemoveAt(i);
+            }
+            for (int i = linesZOff.Count - 1; i >= 0; i--)
+            {
+                if (linesZOff[i].DurationElapsed(false)) linesZOff.RemoveAt(i);
+            }
         }
     }
 
@@ -103,20 +102,30 @@ public class GLDebug : MonoBehaviour
     {
         if (!displayLines) return;
 
-        Stopwatch timer = Stopwatch.StartNew();
-
         matZOn.SetPass(0);
         GL.Begin(GL.LINES);
-        linesZOn = linesZOn.Where(l => !l.DurationElapsed(true)).ToList();
+        for (int i = linesZOn.Count - 1; i >= 0; i--)
+        {
+            if (linesZOn[i].DurationElapsed(true)) linesZOn.RemoveAt(i);
+        }
+        for (int i = linesZOff.Count - 1; i >= 0; i--)
+        {
+            if (linesZOff[i].DurationElapsed(true)) linesZOff.RemoveAt(i);
+        }
         GL.End();
 
         matZOff.SetPass(0);
         GL.Begin(GL.LINES);
-        linesZOff = linesZOff.Where(l => !l.DurationElapsed(true)).ToList();
+        for (int i = linesZOn.Count - 1; i >= 0; i--)
+        {
+            if (linesZOn[i].DurationElapsed(true)) linesZOn.RemoveAt(i);
+        }
+        for (int i = linesZOff.Count - 1; i >= 0; i--)
+        {
+            if (linesZOff[i].DurationElapsed(true)) linesZOff.RemoveAt(i);
+        }
         GL.End();
 
-        timer.Stop();
-        //milliseconds = timer.Elapsed.Ticks / 10000f;
     }
 
     private static void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0, bool depthTest = false)

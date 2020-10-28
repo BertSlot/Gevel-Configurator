@@ -12,6 +12,8 @@ namespace PointCloudRuntimeViewer
 
         public void StartLoadingPointCloud()
         {
+#if !UNITY_SAMSUNGTV && !UNITY_WEBGL
+
             // Set variables that you want to use for loading
             runtimeViewerDX11.fullPath = filePathField.text;
 
@@ -47,6 +49,7 @@ namespace PointCloudRuntimeViewer
             stopwatch.Stop();
             //Debug.Log("Loaded in: " + stopwatch.ElapsedMilliseconds + "ms");
             stopwatch.Reset();
+#endif        
         }
 
     }

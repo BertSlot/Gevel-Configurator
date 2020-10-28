@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿// Loads texture from Streaming Assets folder, with options for format/filter/target field
+
+using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-// Loads texture from Streaming Assets folder, with options for format/filter/target field
+#if !UNITY_SAMSUNGTV && !UNITY_WEBGL
 
 namespace UnityLibrary
 {
@@ -69,3 +71,5 @@ namespace UnityLibrary
         }
     }
 }
+
+#endif

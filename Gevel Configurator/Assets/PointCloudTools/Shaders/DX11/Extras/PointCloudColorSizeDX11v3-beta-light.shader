@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced '_LightMatrix0' with 'unity_WorldToLight'
+
 Shader "UnityCoder/PointCloud/DX11/ColorSizeV3-beta-light" 
 {
 	Properties 
@@ -20,8 +22,7 @@ Shader "UnityCoder/PointCloud/DX11/ColorSizeV3-beta-light"
 			#pragma fragmentoption ARB_precision_hint_fastest
             #pragma multi_compile_fwdadd_fullshadows
 			#include "AutoLight.cginc"
-			#include "UnityCG.cginc"
-
+			#include "Lighting.cginc"
 												
 			StructuredBuffer<half3> buf_Points;
 			StructuredBuffer<fixed3> buf_Colors;
@@ -54,7 +55,6 @@ Shader "UnityCoder/PointCloud/DX11/ColorSizeV3-beta-light"
 				col = col*col; // linear
 				#endif
 				o.color = col;
-                //TRANSFER_VERTEX_TO_FRAGMENT(o);
 				o._LightCoord.xy = mul(unity_WorldToLight, mul(unity_ObjectToWorld, float4(buf_Points[id],1))).xy;
 				TRANSFER_SHADOW(o);
 				return o;

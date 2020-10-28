@@ -8,6 +8,7 @@ Shader "UnityCoder/Mesh/MeshQuadAligned-Normals-DirectionalLight"
 	{ 
 		Tags { "Queue" = "Geometry" "RenderType"="Opaque" }
 		LOD 200
+		// NOTE you can disable culling if want to show backfacing points also
 		Cull Off
 
 		Pass 
@@ -51,7 +52,7 @@ Shader "UnityCoder/Mesh/MeshQuadAligned-Normals-DirectionalLight"
 				GS_INPUT o = (GS_INPUT)0;
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-				o.pos = mul(unity_ObjectToWorld, v.vertex);
+				o.pos = v.vertex;
 				half3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
                 fixed3 light = nl * _LightColor0.rgb;
@@ -62,14 +63,16 @@ Shader "UnityCoder/Mesh/MeshQuadAligned-Normals-DirectionalLight"
 				#endif
 
 				o.color = col*light;
-				o.normal = worldNormal;
+				//o.normal = worldNormal;
+				o.normal = v.normal;
+
 				return o;
 			}
 
 			[maxvertexcount(4)]
 			void geom(point GS_INPUT p[1], inout TriangleStream<FS_INPUT> triStream)
 			{
-				float3 worldUp = float3(0,0,1);
+				float3 worldUp = normalize(cross(float3(0,0,1),p[0].normal));
 				float3 normalDirection = p[0].normal;
 				float3 perpendicular = normalize(cross(worldUp, normalDirection));
 

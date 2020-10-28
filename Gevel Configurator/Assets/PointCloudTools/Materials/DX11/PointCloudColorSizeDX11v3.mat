@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: PointCloudColorSizeDX11v3
   m_Shader: {fileID: 4800000, guid: f822e3b5aaaf2e244b058d2f673a2c75, type: 3}
   m_ShaderKeywords: 

@@ -1,7 +1,7 @@
-﻿using unitycodercom_PointCloudBinaryViewer;
-using UnityEngine;
+﻿// NOTE: Point cloud data should be randomized, to evenly hide points. Otherwise they are hidden in scan order
 
-// NOTE: Point cloud data should be randomized, to evenly hide points. Otherwise they are hidden in scan order
+using unitycodercom_PointCloudBinaryViewer;
+using UnityEngine;
 
 namespace PointCloudRuntimeViewer
 {
@@ -37,6 +37,13 @@ namespace PointCloudRuntimeViewer
                     }
                 }
             }
+
+            // check viewer
+            if (viewer.useCommandBuffer == true)
+            {
+                Debug.LogError("PointCloudDynamicResolution doesnt work when CommandBuffer is enabled!");
+            }
+
         }
 
         int amount = 0;

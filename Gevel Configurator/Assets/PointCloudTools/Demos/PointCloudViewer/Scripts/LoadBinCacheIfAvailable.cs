@@ -1,10 +1,12 @@
-﻿using unitycodercom_PointCloudBinaryViewer;
+﻿// example script to check if cached .bin file exits
+// and then load using PointCloudViewerDX11 instead of RuntimeViewerDX11
+
+using unitycodercom_PointCloudBinaryViewer;
 using PointCloudRuntimeViewer;
 using UnityEngine;
+#if !UNITY_SAMSUNGTV && !UNITY_WEBGL
 using System.IO;
-
-// example script to check if cached .bin file exits
-// and then load using PointCloudViewerDX11 instead of RuntimeViewerDX11
+#endif
 
 namespace unitycoder_examples
 {
@@ -15,9 +17,10 @@ namespace unitycoder_examples
         [Tooltip("If this file has .bin cached file, we use PointCloudViewerDX11 instead of parsing with RuntimeViewerDX11")]
         public string fileName = "StreamingAssets/PointCloudViewerSampleData/sample.xyz";
 
-        public RuntimeViewerDX11 runtimeViewerDX11;
         public PointCloudViewerDX11 pointCloudViewerDX11;
+        public RuntimeViewerDX11 runtimeViewerDX11;
 
+#if !UNITY_SAMSUNGTV && !UNITY_WEBGL
         void Start()
         {
             if (loadAtStart == true)
@@ -31,7 +34,7 @@ namespace unitycoder_examples
                 var cacheFile = fileName + ".bin";
                 if (File.Exists(cacheFile) == true)
                 {
-                    Debug.Log("Loading cached file:" + cacheFile);
+                    Debug.Log("Loading cached file: " + cacheFile);
                     pointCloudViewerDX11.CallReadPointCloudThreaded(cacheFile);
                 }
                 else
@@ -41,5 +44,8 @@ namespace unitycoder_examples
                 }
             }
         }
-    }
-}
+#endif
+
+    } // class
+} // namespace
+

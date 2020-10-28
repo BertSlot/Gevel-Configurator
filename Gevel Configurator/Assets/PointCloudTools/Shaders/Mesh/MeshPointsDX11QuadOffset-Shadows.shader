@@ -23,7 +23,6 @@ Shader "UnityCoder/Mesh/PointMeshSizeDX11(Shadows)"
             #include "AutoLight.cginc"
 			#include "UnityCG.cginc"
 
-
 			struct appdata
 			{
 				float4 vertex : POSITION;
