@@ -90,39 +90,21 @@ namespace RTG {
 			_objectUniversalGizmo.Gizmo.SetEnabled(false);
 
 			// Link the selected objects list to the gizmos
-			// Note: The 'SetTargetObjects' function will instruct the gizmo to store
-			//       a direct reference to the '_selecteObjects' list. This means that
-			//       when you add or remove objects from this list, the gizmos will have
-			//       access to the most recent/updated collection. You don't need to call
-			//       'SetTargetObjects' again when the list changes.
 			_objectMoveGizmo.SetTargetObjects(_selectedObjects);
 			_objectRotationGizmo.SetTargetObjects(_selectedObjects);
 			_objectScaleGizmo.SetTargetObjects(_selectedObjects);
 			_objectUniversalGizmo.SetTargetObjects(_selectedObjects);
 
-			// We initialize the work gizmo to the move gizmo by default. This means
-			// that the first time an object is clicked, the move gizmo will appear.
-			// You can change the default gizmo, by simply changing these 2 lines of
-			// code. For example, if you wanted the scale gizmo to be the default work
-			// gizmo, replace '_objectMoveGizmo' with '_objectScaleGizmo' and GizmoId.Move
-			// with GizmoId.Scale.
+			// We initialize the work gizmo to the move gizmo by default.
 			_workGizmo = _objectMoveGizmo;
 			_workGizmoId = GizmoId.Move;
 		}
 
 		/// <summary>
-		/// Called every frame to perform all necessary updates. In this tutorial,
-		/// we listen to user input and take action. 
+		/// Called every frame to perform all necessary updates.
 		/// </summary>
 		private void Update() {
 			// Check if the left mouse button was pressed in the current frame.
-			// Note: Something that was left out of the video tutorial by mistake. We 
-			//       only take the mouse click into account if no gizmo is currently 
-			//       hovered. When a gizmo is hovered, we ignore clicks because in that
-			//       case a click usually represents the intent of clicking and dragging
-			//       the gizmo handles. If we didn't perform this check, clicking on a
-			//       gizmo might actually disable it instead if the click does not hover
-			//       a game object (i.e. thin air click).
 			if (Input.GetMouseButtonDown(0) &&
 				RTGizmosEngine.Get.HoveredGizmo == null) {
 				// Pick a game object
@@ -191,10 +173,6 @@ namespace RTG {
 			// We will change the pivot type when the P key is pressed
 			if (Input.GetKeyDown(KeyCode.P)) {
 				// Retrieve the current transform pivot and activate the other one instead.
-				// Note: In order to retrieve the current transform pivot, it is enough to
-				//       use the 'TransformPivot' property of one of our gizmos. This works
-				//       because all gizmos use the same transform pivot in this example. We
-				//       make sure of that inside the 'SetTransformPivot' function.
 				GizmoObjectTransformPivot currentPivot = _objectMoveGizmo.TransformPivot;
 				if (currentPivot == GizmoObjectTransformPivot.ObjectGroupCenter)
 					SetTransformPivot(GizmoObjectTransformPivot.ObjectMeshPivot);
@@ -203,7 +181,6 @@ namespace RTG {
 			}
 
 			// Switch between different gizmo types using the W,E,R,T keys.
-			// Note: We use the 'SetWorkGizmoId' function to perform the switch.
 			if (Input.GetKeyDown(KeyCode.W))
 				SetWorkGizmoId(GizmoId.Move);
 			else if (Input.GetKeyDown(KeyCode.E))
@@ -224,9 +201,6 @@ namespace RTG {
 			guiStyle.normal.textColor = Color.green;
 
 			// Draw the transform space label.
-			// Note: In order to get access to the current transform space, we use the 'TransformSpace'
-			//       property of the move gizmo. Any gizmo would do because all of them use the same
-			//       transform space. We make sure of that inside the 'SetTransformSpace' function.
 			GUILayout.Label("Transform Space: " + _objectMoveGizmo.TransformSpace.ToString(), guiStyle);
 
 			// Same for transform pivot
@@ -235,8 +209,8 @@ namespace RTG {
 
 
 
-		/// <summary
-		/// This function instantiates the objects stored in the _clipboard<GameObject,Transform> Dictionary.
+		/// <summary>
+		/// This function instantiates the objects stored in the _clipboard <GameObject,Transform> Dictionary.
 		/// </summary>
 		private List<GameObject> Paste() {
 			List<GameObject> instantiatedObjects = new List<GameObject>();
@@ -308,8 +282,7 @@ namespace RTG {
 
 			// If we have any selected objects, we need to make sure the work gizmo is enabled
 			if (_selectedObjects.Count != 0) {
-				// Make sure the work gizmo is enabled. There is no need to check if the gizmo is already
-				// enabled. The 'SetEnabled' call will simply be ignored if that is the case.
+				// Make sure the work gizmo is enabled.
 				_workGizmo.Gizmo.SetEnabled(true);
 
 				// When working with transform spaces and pivots, the gizmos need to know about the pivot object. 
@@ -326,7 +299,7 @@ namespace RTG {
 
 		/// <summary>
 		/// Called from the 'Update' function whenever the '_selectedObjects' list
-		/// changes. It is responsible for updating the gizmos accordingly.
+		/// changes. It is responsible for updating the gizmos.
 		/// </summary>
 		private void OnSelectionChanged() {
 			// If we have any selected objects, we need to make sure the work gizmo is enabled
@@ -338,19 +311,10 @@ namespace RTG {
 				// enabled. The 'SetEnabled' call will simply be ignored if that is the case.
 				_workGizmo.Gizmo.SetEnabled(true);
 
-				// When working with transform spaces and pivots, the gizmos need to know about the pivot object. 
-				// This piece of information is necessary when the transform space is set to local because in that 
-				// case the gizmo will have its rotation synchronized with the target objects rotation. But because 
-				// there is more than one target object, we need to tell the gizmo which object to use. This is the 
-				// role if the pivot object in this case. This pivot object is also useful when the transform pivot 
-				// is set to 'ObjectMeshPivot' because it will be used to adjust the position of the gizmo. 
+				// Last object that is selected will be used as the pivot object
 				_workGizmo.SetTargetPivotObject(_selectedObjects[_selectedObjects.Count - 1]);
 
-				// The last step we need to perform is to make sure that the work gizmo is positioned
-				// and rotated correctly. This is because the gizmos (as will become more clear in 
-				// later tutorials) have 2 properties such as transform space and transform pivot and
-				// when the selected objects change, these 2 properties will dictate how the gizmo should
-				// be positioned and rotated. In order to ensure that the correct position and rotation
+				// In order to ensure that the correct position and rotation
 				// are used, we need to call 'RefreshPositionAndRotation'.
 				_workGizmo.RefreshPositionAndRotation();
 			} else {
@@ -363,12 +327,20 @@ namespace RTG {
 			}
 		}
 
+		/// <summary>
+		/// This function removes highlights from all objects in a list
+		/// </summary>
+		/// <param name="objects"></param>
 		private void RemoveHighlights(List<GameObject> objects) {
 			foreach (var obj in objects) {
 				RemoveHighlight(obj);
 			}
 		}
 
+		/// <summary>
+		/// This function removes the highlight of a single object
+		/// </summary>
+		/// <param name="obj"></param>
 		private void RemoveHighlight(GameObject obj) {
 			if (obj.GetComponent<Outline>() != null) {
 				Outline outline = obj.GetComponent<Outline>();
@@ -376,6 +348,10 @@ namespace RTG {
 			}
 		}
 
+		/// <summary>
+		/// This function sets highlights for a list of objects
+		/// </summary>
+		/// <param name="objects"></param>
 		private void SetHighlights(List<GameObject> objects) {
 
 			foreach (var obj in objects) {
@@ -383,6 +359,11 @@ namespace RTG {
 			}
 		}
 
+		/// <summary>
+		/// This function sets the highlight for a single object. 
+		/// If the object already has the outline script attached it only enables it.
+		/// </summary>
+		/// <param name="obj"></param>
 		private void SetHighlight(GameObject obj) {
 			if (obj.GetComponent<Outline>() == null) {
 				Outline outline = obj.AddComponent<Outline>();
