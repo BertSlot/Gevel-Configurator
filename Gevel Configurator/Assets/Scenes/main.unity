@@ -10786,7 +10786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight_color: {r: 0, g: 1, b: 0, a: 1}
-  highlight_width: 4
+  highlight_width: 5
 --- !u!1 &1426868122
 GameObject:
   m_ObjectHideFlags: 0
@@ -17586,8 +17586,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1827633484}
-  m_LocalRotation: {x: -0, y: -0.12721467, z: -0, w: 0.9918753}
-  m_LocalPosition: {x: 2951, y: 2172, z: -228}
+  m_LocalRotation: {x: -0, y: -0.12721474, z: -0, w: 0.9918753}
+  m_LocalPosition: {x: 2951.0007, y: 2172, z: -228}
   m_LocalScale: {x: 23.957817, y: 180.4335, z: 154.5591}
   m_Children: []
   m_Father: {fileID: 2106418029}

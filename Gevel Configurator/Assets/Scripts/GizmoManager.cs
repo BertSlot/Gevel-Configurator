@@ -157,6 +157,7 @@ namespace RTG {
 				}
 			} else if (Input.GetKeyDown(KeyCode.V)) {
 				if (_clipboard.Count != 0) {
+					RemoveHighlights(_selectedObjects);
 					_selectedObjects.Clear();
 					_selectedObjects.AddRange(Paste());
 					OnSelectionChanged();
