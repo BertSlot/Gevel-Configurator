@@ -201,11 +201,17 @@ namespace RTG {
 			var guiStyle = new GUIStyle();
 			guiStyle.normal.textColor = Color.green;
 
+
+			guiStyle.margin.top = Screen.height - 105;
+
+			GUILayout.Label(" ", guiStyle);
 			// Draw the transform space label.
-			GUILayout.Label("Transform Space: " + _objectMoveGizmo.TransformSpace.ToString(), guiStyle);
+
+			string label = "Transform Space: " + _objectMoveGizmo.TransformSpace.ToString() + "\n" + "Transform Pivot: " + _objectMoveGizmo.TransformPivot.ToString();
+			GUILayout.Label(label, guiStyle);
 
 			// Same for transform pivot
-			GUILayout.Label("Transform Pivot: " + _objectMoveGizmo.TransformPivot.ToString(), guiStyle);
+			//GUILayout.Label("Transform Pivot: " + _objectMoveGizmo.TransformPivot.ToString(), guiStyle);
 		}
 
 
