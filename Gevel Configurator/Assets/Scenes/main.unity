@@ -4464,7 +4464,7 @@ GameObject:
   - component: {fileID: 492097940}
   - component: {fileID: 492097939}
   m_Layer: 5
-  m_Name: ExportButton
+  m_Name: SettingsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15616,7 +15616,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Export
+  m_Text: Settings
 --- !u!222 &1678543554
 CanvasRenderer:
   m_ObjectHideFlags: 0
