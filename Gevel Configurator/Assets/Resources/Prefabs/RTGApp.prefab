@@ -59,7 +59,7 @@ MonoBehaviour:
       _text: Scale gizmo
     - _tooltip: Allows you to change universal gizmo settings.
       _text: Universal gizmo
-    _activeTabIndex: 0
+    _activeTabIndex: 1
   _settings:
     _canBeDisplayed: 1
     _isExpanded: 1
@@ -223,10 +223,10 @@ MonoBehaviour:
       _numSphereBorderPoints: 100
       _color: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 1}
       _hoveredColor: {r: 0.96470594, g: 0.9490197, b: 0.19607845, a: 1}
-    _screenCorner: 1
-    _screenOffset: {x: 0, y: 0}
+    _screenCorner: 3
+    _screenOffset: {x: 0, y: 90}
     _axesLabelTint: {r: 1, g: 1, b: 1, a: 1}
-    _camPrjSwitchLabelTint: {r: 1, g: 1, b: 1, a: 0.7}
+    _camPrjSwitchLabelTint: {r: 0, g: 0, b: 0, a: 1}
     _isCamPrjSwitchLabelVisible: 1
   _moveGizmoSettings2D:
     _canBeDisplayed: 1

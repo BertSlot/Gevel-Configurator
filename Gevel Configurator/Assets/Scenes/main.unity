@@ -7855,7 +7855,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.079379976, y: -0.6319719, z: 0.06530795, w: 0.768144}
   m_LocalPosition: {x: 12923.9, y: 1028, z: -2349}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1.0000001}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -16315,41 +16315,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2059944644897033300, guid: 11492f5c803004e4994fc006391d0f89,
-        type: 3}
-      propertyPath: _mainToolbar._activeTabIndex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2059944644897033300, guid: 11492f5c803004e4994fc006391d0f89,
-        type: 3}
-      propertyPath: _sceneGizmoLookAndFeel._screenOffset.y
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 2059944644897033300, guid: 11492f5c803004e4994fc006391d0f89,
-        type: 3}
-      propertyPath: _sceneGizmoLookAndFeel._screenCorner
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2059944644897033300, guid: 11492f5c803004e4994fc006391d0f89,
-        type: 3}
-      propertyPath: _sceneGizmoLookAndFeel._camPrjSwitchLabelTint.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2059944644897033300, guid: 11492f5c803004e4994fc006391d0f89,
-        type: 3}
-      propertyPath: _sceneGizmoLookAndFeel._camPrjSwitchLabelTint.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2059944644897033300, guid: 11492f5c803004e4994fc006391d0f89,
-        type: 3}
-      propertyPath: _sceneGizmoLookAndFeel._camPrjSwitchLabelTint.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2059944644897033300, guid: 11492f5c803004e4994fc006391d0f89,
-        type: 3}
-      propertyPath: _sceneGizmoLookAndFeel._camPrjSwitchLabelTint.a
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2059944644923751517, guid: 11492f5c803004e4994fc006391d0f89,
         type: 3}
       propertyPath: _targetCamera
