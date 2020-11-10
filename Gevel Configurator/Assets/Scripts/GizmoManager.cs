@@ -202,7 +202,7 @@ namespace RTG {
 			guiStyle.normal.textColor = Color.green;
 
 
-			guiStyle.margin.top = Screen.height - 105;
+			guiStyle.margin.top = Screen.height - 105; // dit blijft net boven de spawn knop
 
 			GUILayout.Label(" ", guiStyle);
 			// Draw the transform space label.
