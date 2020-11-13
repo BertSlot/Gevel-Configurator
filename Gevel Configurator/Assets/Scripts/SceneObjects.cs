@@ -5,8 +5,20 @@ using UnityEngine.UI;
 
 public class SceneObjects : MonoBehaviour
 {
-    public GameObject assetsView;
-    public GameObject ObjectsList;
+    /// <summary>
+    /// This scroll view object is serialized to set the object height
+    /// </summary>
+    public GameObject objectList;
+
+    /// <summary>
+    /// This object is a child of GameObject 'objectList' containing the list of child objects
+    /// </summary>
+    public GameObject objectListContent;
+
+    /// <summary>
+    /// From this object all child objects are retrieved
+    /// </summary>
+    public GameObject parentObject;
 
     // Start is called before the first frame update
     void Start()
@@ -14,10 +26,10 @@ public class SceneObjects : MonoBehaviour
         int counter = 0;
         int position = -10;
 
-        foreach (GameObject go in GameObject.FindObjectsOfType(typeof(GameObject)))
+        foreach (Transform go in parentObject.transform)
         {
             GameObject childObject = new GameObject("Object" + counter, typeof(RectTransform));
-            childObject.transform.SetParent(this.assetsView.transform);
+            childObject.transform.SetParent(this.objectListContent.transform);
 
             // Position of object item
             RectTransform rt = childObject.GetComponent<RectTransform>();
@@ -41,7 +53,7 @@ public class SceneObjects : MonoBehaviour
         // Calculate height for objects list
         int assetsViewHeight = (20 * counter) + 20;
 
-        RectTransform AssetsViewRt = assetsView.GetComponent<RectTransform>();
+        RectTransform AssetsViewRt = objectListContent.GetComponent<RectTransform>();
         AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
     }
 

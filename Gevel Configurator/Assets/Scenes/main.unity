@@ -13002,8 +13002,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 904ca4189a54dd148bc4344b9efc1e36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assetsView: {fileID: 1666569900}
-  ObjectsList: {fileID: 476416099}
+  objectList: {fileID: 476416099}
+  objectListContent: {fileID: 1666569900}
+  parentObject: {fileID: 2106418028}
 --- !u!1 &1165585496
 GameObject:
   m_ObjectHideFlags: 0
@@ -15266,7 +15267,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e9a7fa59a98e7c46a5592a6dc3ee02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectUserInterface: {fileID: 541119177}
   highlight_color: {r: 0, g: 1, b: 0, a: 1}
   highlight_width: 4
 --- !u!1 &1426868122
