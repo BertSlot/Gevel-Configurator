@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SceneObjects : MonoBehaviour
 {
     public GameObject assetsView;
+    public GameObject ObjectsList;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,7 @@ public class SceneObjects : MonoBehaviour
 
             // Position of object item
             RectTransform rt = childObject.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(150, 20);
+            rt.sizeDelta = new Vector2(240, 20);
             rt.anchoredPosition = new Vector2(0, position);
 
             rt.anchorMin = new Vector2(0.5f, 1);

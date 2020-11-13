@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine.Animations;
+using UnityEngine.EventSystems;
 
 namespace RTG {
 	/// <summary>
@@ -57,7 +58,6 @@ namespace RTG {
 		/// the objects that will be instantiated on the paste command
 		/// </summary>
 		private List<GameObject> _clipboard = new List<GameObject>();
-
 
 		/// <summary>
 		/// Color of the outline for the selected objects
@@ -247,15 +247,19 @@ namespace RTG {
 		/// Objects must have colliders attached.
 		/// </remarks>
 		private GameObject PickGameObject() {
-			// Build a ray using the current mouse cursor position
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+				// Build a ray using the current mouse cursor position
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-			// Check if the ray intersects a game object. If it does, return it
-			RaycastHit rayHit;
-			if (Physics.Raycast(ray, out rayHit, float.MaxValue))
-				return rayHit.collider.gameObject;
+				// Check if the ray intersects a game object. If it does, return it
+				RaycastHit rayHit;
+				if (Physics.Raycast(ray, out rayHit, float.MaxValue))
+					return rayHit.collider.gameObject;
 
-			// No object is intersected by the ray. Return null.
+				// No object is intersected by the ray. Return null.
+				return null;
+			}
 			return null;
 		}
 
