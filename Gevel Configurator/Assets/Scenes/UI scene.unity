@@ -6984,9 +6984,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67706a395828b4040b02ab729923b7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Sphere: {fileID: 1970760978819117008, guid: 534a8a1bb2227844aa94a2cca2e2605c, type: 3}
-  location: {x: 100, y: 50, z: 400}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
+  Cam: {fileID: 0}
+  Object: {fileID: 0}
+  ParentObject: {fileID: 0}
 --- !u!114 &716422273
 MonoBehaviour:
   m_ObjectHideFlags: 0
