@@ -2010,7 +2010,7 @@ GameObject:
   - component: {fileID: 180985888}
   - component: {fileID: 180985887}
   m_Layer: 0
-  m_Name: RTGApp (1)
+  m_Name: RTGApp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4099,9 +4099,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 457372215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37ad4145a24bcaf4f810dc23bffd34eb, type: 3}
+  m_Script: {fileID: 11500000, guid: b161a2f4a1f2a944f8105dd5c2c1b5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Panel: {fileID: 2113839126}
 --- !u!114 &457372218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5529,9 +5530,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 582041313}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37ad4145a24bcaf4f810dc23bffd34eb, type: 3}
+  m_Script: {fileID: 11500000, guid: b161a2f4a1f2a944f8105dd5c2c1b5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Panel: {fileID: 1347253115}
 --- !u!114 &582041316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7130,9 +7132,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 733180859}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 904ca4189a54dd148bc4344b9efc1e36, type: 3}
+  m_Script: {fileID: 11500000, guid: c9cbfe3cabe1c8544a5453f7e07cc513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectList: {fileID: 1488002409}
+  objectListContent: {fileID: 919791366}
+  parentObject: {fileID: 793512328}
 --- !u!114 &733180862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7638,7 +7643,7 @@ GameObject:
   - component: {fileID: 766990098}
   - component: {fileID: 766990097}
   m_Layer: 0
-  m_Name: EventSystem (1)
+  m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9048,9 +9053,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 864764426}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de851b52aa579cf45bfa2dae91682369, type: 3}
+  m_Script: {fileID: 11500000, guid: 3828730badad50f4caef5f69f4206daf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EditMode: {fileID: 1904511709}
+  PresentMode: {fileID: 1819754373}
 --- !u!114 &864764429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10160,7 +10167,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 999991879}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8728921fffcd32d408e72c61478cdf88, type: 3}
+  m_Script: {fileID: 11500000, guid: 89bdb552c58a69f459044a6ee1e3ff4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &999991882
@@ -12005,7 +12012,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1162144000}
   m_Layer: 0
-  m_Name: PointClouds and Objects (1)
+  m_Name: PointClouds and Objects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14556,7 +14563,7 @@ GameObject:
   - component: {fileID: 1476535669}
   - component: {fileID: 1476535668}
   m_Layer: 0
-  m_Name: Directional Light (1)
+  m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17884,7 +17891,7 @@ GameObject:
   - component: {fileID: 1819754375}
   - component: {fileID: 1819754374}
   m_Layer: 5
-  m_Name: UI Present Mode (1)
+  m_Name: UI Present Mode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18747,7 +18754,7 @@ GameObject:
   - component: {fileID: 1904511711}
   - component: {fileID: 1904511710}
   m_Layer: 5
-  m_Name: UI Edit Mode (1)
+  m_Name: UI Edit Mode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21399,9 +21406,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2096079509}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37ad4145a24bcaf4f810dc23bffd34eb, type: 3}
+  m_Script: {fileID: 11500000, guid: b161a2f4a1f2a944f8105dd5c2c1b5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Panel: {fileID: 826289787}
 --- !u!114 &2096079512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21762,7 +21770,7 @@ GameObject:
   - component: {fileID: 2134157680}
   - component: {fileID: 2134157679}
   m_Layer: 0
-  m_Name: Main Camera (1)
+  m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

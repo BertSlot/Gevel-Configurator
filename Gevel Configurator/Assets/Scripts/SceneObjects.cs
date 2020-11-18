@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//using UnityEngine.s
 
 public class SceneObjects : MonoBehaviour
 {
@@ -45,6 +46,9 @@ public class SceneObjects : MonoBehaviour
             childText.text = go.name;
             childText.color = Color.black;
             childText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+
+            // Add script
+            childObject.AddComponent(typeof(SelectObject));
             
             counter++;
             position += -20;
