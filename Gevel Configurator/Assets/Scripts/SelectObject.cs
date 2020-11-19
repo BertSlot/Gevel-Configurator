@@ -6,10 +6,14 @@ using UnityEngine.EventSystems;
 
 public class SelectObject : MonoBehaviour, IPointerClickHandler
 {
+    private GameObject selectedObject;
+    private GameObject sideMenu;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        selectedObject = gameObject;
+        sideMenu = GameObject.Find("SideMenu");
     }
 
     // Update is called once per frame
@@ -20,8 +24,18 @@ public class SelectObject : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        Debug.Log(this.transform);
-        Text childText = this.transform.GetComponent<Text>();
+        SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
+
+        if (scene.lastSelected)
+        {
+            scene.DeselectObject();
+        }
+
+        // Set last selected object in SceneObject script
+        scene.lastSelected = selectedObject;
+
+        Debug.Log(selectedObject);
+        Text childText = selectedObject.GetComponent<Text>();
         childText.color = Color.white;
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//using UnityEngine.s
 
 public class SceneObjects : MonoBehaviour
 {
@@ -20,6 +19,11 @@ public class SceneObjects : MonoBehaviour
     /// From this object all child objects are retrieved
     /// </summary>
     public GameObject parentObject;
+
+    /// <summary>
+    /// Last selected object
+    /// </summary>
+    public GameObject lastSelected;
 
     // Start is called before the first frame update
     void Start()
@@ -65,5 +69,11 @@ public class SceneObjects : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void DeselectObject()
+    {
+        Text childText = lastSelected.GetComponent<Text>();
+        childText.color = Color.black;
     }
 }
