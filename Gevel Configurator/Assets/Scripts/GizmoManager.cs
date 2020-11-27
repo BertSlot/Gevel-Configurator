@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine.UI;
 using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 
@@ -72,6 +73,11 @@ namespace RTG {
 		public float highlight_width = 4f;
 
 		/// <summary>
+        /// Side menu objects
+        /// </summary>
+		private GameObject sideMenu;
+
+		/// <summary>
 		/// Performs all necessary initializations.
 		/// </summary>
 		private void Start() {
@@ -98,6 +104,9 @@ namespace RTG {
 			// We initialize the work gizmo to the move gizmo by default.
 			_workGizmo = _objectMoveGizmo;
 			_workGizmoId = GizmoId.Move;
+
+			// Find side menu
+			sideMenu = GameObject.Find("SideMenu");
 		}
 
 		/// <summary>
@@ -112,8 +121,26 @@ namespace RTG {
 				GameObject pickedObject = PickGameObject();
 
 				if (pickedObject != null) {
+					SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
+
 					HighlightGameObject(pickedObject);
-				} else {
+
+					if (scene.lastSelected)
+					{
+						scene.DeselectObject();
+					}
+
+					string objectName = pickedObject.name;
+					GameObject objectList = scene.objectListContent;
+
+					// Set last selected object in SceneObject script
+					GameObject childObject = objectList.transform.Find(objectName).gameObject;
+
+					scene.lastSelected = childObject;
+					Text childText = childObject.GetComponent<Text>();
+					childText.color = Color.white;
+				}
+				else {
 					// If we reach this point, it means no object was picked. This means that we clicked
 					// in thin air, so we just clear the selected objects list.
 					RemoveHighlights(_selectedObjects);

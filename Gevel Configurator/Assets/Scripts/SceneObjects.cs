@@ -33,7 +33,7 @@ public class SceneObjects : MonoBehaviour
 
         foreach (Transform go in parentObject.transform)
         {
-            GameObject childObject = new GameObject("Object" + counter, typeof(RectTransform));
+            GameObject childObject = new GameObject(go.name, typeof(RectTransform));
             childObject.transform.SetParent(this.objectListContent.transform);
 
             // Position of object item

@@ -20260,6 +20260,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlight_color: {r: 0, g: 1, b: 0, a: 1}
   highlight_width: 4
+  objectListContent: {fileID: 919791366}
 --- !u!1 &1750620377
 GameObject:
   m_ObjectHideFlags: 0

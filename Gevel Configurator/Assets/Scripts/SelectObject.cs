@@ -44,7 +44,6 @@ public class SelectObject : MonoBehaviour, IPointerClickHandler
         // Set last selected object in SceneObject script
         scene.lastSelected = selectedObject;
 
-        //Debug.Log(selectedObject);
         Text childText = selectedObject.GetComponent<Text>();
         childText.color = Color.white;
     }
