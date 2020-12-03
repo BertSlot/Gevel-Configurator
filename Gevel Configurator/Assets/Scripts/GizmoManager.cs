@@ -247,8 +247,7 @@ namespace RTG {
 		/// Objects must have colliders attached.
 		/// </remarks>
 		private GameObject PickGameObject() {
-            if (!EventSystem.current.IsPointerOverGameObject())
-            {
+			if (!EventSystem.current.IsPointerOverGameObject()) {
 				// Build a ray using the current mouse cursor position
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
