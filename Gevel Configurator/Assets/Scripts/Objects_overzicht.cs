@@ -31,7 +31,7 @@ public class Objects_overzicht : MonoBehaviour {
 	private void Update() {
 
 		//Debug.Log(objects[0]);
-		//AddSurfaceGroupToList(parentObject.GetAllChildren(), "North");
+		AddSurfaceGroupToList(parentObject.GetAllChildren(), "North");
 		surfaceGroupTotals = TotalSurfaceAreaPerGroup(parentObject.GetAllChildren());
 
 	}
@@ -115,7 +115,7 @@ public class Objects_overzicht : MonoBehaviour {
 	/// <returns></returns>
 	public static Dictionary<string, float> TotalSurfaceAreaPerGroup(List<GameObject> objList) { // this function will use the calculatesurfaceArea function
 
-		Dictionary<string, float> groupTotals = null;
+		Dictionary<string, float> groupTotals = new Dictionary<string, float>();
 		List<string> groups;
 		foreach (GameObject obj in objList) {
 

@@ -4,66 +4,61 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class SelectObject : MonoBehaviour, IPointerClickHandler
-{
-    private GameObject selectedObject;
-    private GameObject sideMenu;
-    private GameObject gizmo;
-    private GameObject objectsList;
+public class SelectObject : MonoBehaviour, IPointerClickHandler {
+	private GameObject selectedObject;
+	private GameObject sideMenu;
+	private GameObject gizmo;
+	private GameObject objectsList;
 
-    // Dimension input field objects in properties menu
-    private GameObject xInputObject;
-    private GameObject yInputObject;
-    private GameObject zInputObject;
+	// Dimension input field objects in properties menu
+	private GameObject xInputObject;
+	private GameObject yInputObject;
+	private GameObject zInputObject;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        selectedObject = gameObject;
-        sideMenu = GameObject.Find("SideMenu");
-        gizmo = GameObject.Find("RTGizmoManager");
-        objectsList = GameObject.Find("Objects");
+	// Start is called before the first frame update
+	void Start() {
+		selectedObject = gameObject;
+		sideMenu = GameObject.Find("SideMenu");
+		gizmo = GameObject.Find("RTGizmoManager");
+		objectsList = GameObject.Find("Objects");
 
-        // Find dimensions fields
-        xInputObject = GameObject.Find("XInput");
-        yInputObject = GameObject.Find("YInput");
-        zInputObject = GameObject.Find("ZInput");
-    }
+		// Find dimensions fields
+		xInputObject = GameObject.Find("XInput");
+		yInputObject = GameObject.Find("YInput");
+		zInputObject = GameObject.Find("ZInput");
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	// Update is called once per frame
+	void Update() {
 
-    public void OnPointerClick(PointerEventData pointerEventData)
-    {
-        SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
-        RTG.GizmoManager manager = gizmo.GetComponent<RTG.GizmoManager>();
+	}
 
-        string objectName = selectedObject.GetComponent<Text>().text;
-        GameObject childObject = objectsList.transform.Find(objectName).gameObject;
+	public void OnPointerClick(PointerEventData pointerEventData) {
+		SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
+		RTG.GizmoManager manager = gizmo.GetComponent<RTG.GizmoManager>();
 
-        // Higlight gameobject in editor
-        manager.HighlightGameObject(childObject);
+		string objectName = selectedObject.GetComponent<Text>().text;
+		GameObject childObject = objectsList.transform.Find(objectName).gameObject;
 
-        if (scene.lastSelected)
-        {
-            scene.DeselectObject();
-        }
+		// Higlight gameobject in editor
+		manager.HighlightGameObject(childObject);
 
-        // Set last selected object in SceneObject script
-        scene.lastSelected = selectedObject;
+		if (scene.lastSelected) {
+			scene.DeselectObject();
+		}
 
-        // Hightlight gameobject in side menu
-        Text childText = selectedObject.GetComponent<Text>();
-        childText.color = Color.white;
+		// Set last selected object in SceneObject script
+		scene.lastSelected = selectedObject;
 
-        Renderer objectRenderer = childObject.GetComponent<Renderer>();
+		// Hightlight gameobject in side menu
+		Text childText = selectedObject.GetComponent<Text>();
+		childText.color = Color.white;
 
-        // Set dimensions in properties menu
-        xInputObject.GetComponent<InputField>().text = childObject.GetComponent<Renderer>().bounds.size.x.ToString();
-        yInputObject.GetComponent<InputField>().text = childObject.GetComponent<Renderer>().bounds.size.y.ToString();
-        zInputObject.GetComponent<InputField>().text = childObject.GetComponent<Renderer>().bounds.size.z.ToString();
-    }
+		Renderer objectRenderer = childObject.GetComponent<Renderer>();
+
+		// Set dimensions in properties menu
+		xInputObject.GetComponent<InputField>().text = childObject.transform.localScale.x.ToString();
+		yInputObject.GetComponent<InputField>().text = childObject.transform.localScale.y.ToString();
+		zInputObject.GetComponent<InputField>().text = childObject.transform.localScale.z.ToString();
+	}
 }
