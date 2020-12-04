@@ -20,6 +20,11 @@ public class SceneObjects : MonoBehaviour
     /// </summary>
     public GameObject parentObject;
 
+    /// <summary>
+    /// Last selected object
+    /// </summary>
+    public GameObject lastSelected;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +33,7 @@ public class SceneObjects : MonoBehaviour
 
         foreach (Transform go in parentObject.transform)
         {
-            GameObject childObject = new GameObject("Object" + counter, typeof(RectTransform));
+            GameObject childObject = new GameObject(go.name, typeof(RectTransform));
             childObject.transform.SetParent(this.objectListContent.transform);
 
             // Position of object item
@@ -45,6 +50,9 @@ public class SceneObjects : MonoBehaviour
             childText.text = go.name;
             childText.color = Color.black;
             childText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+
+            // Add script
+            childObject.AddComponent(typeof(SelectObject));
             
             counter++;
             position += -20;
@@ -61,5 +69,11 @@ public class SceneObjects : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void DeselectObject()
+    {
+        Text childText = lastSelected.GetComponent<Text>();
+        childText.color = Color.black;
     }
 }

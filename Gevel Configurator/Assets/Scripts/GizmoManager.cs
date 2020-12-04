@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine.UI;
 using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 
@@ -72,6 +73,11 @@ namespace RTG {
 		public float highlight_width = 4f;
 
 		/// <summary>
+        /// Side menu objects
+        /// </summary>
+		private GameObject sideMenu;
+
+		/// <summary>
 		/// Performs all necessary initializations.
 		/// </summary>
 		private void Start() {
@@ -98,6 +104,9 @@ namespace RTG {
 			// We initialize the work gizmo to the move gizmo by default.
 			_workGizmo = _objectMoveGizmo;
 			_workGizmoId = GizmoId.Move;
+
+			// Find side menu
+			sideMenu = GameObject.Find("SideMenu");
 		}
 
 		/// <summary>
@@ -107,35 +116,31 @@ namespace RTG {
 			// Check if the left mouse button was pressed in the current frame.
 			if (Input.GetMouseButtonDown(0) &&
 				RTGizmosEngine.Get.HoveredGizmo == null) {
+
 				// Pick a game object
 				GameObject pickedObject = PickGameObject();
+
 				if (pickedObject != null) {
+					SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
 
-					// Is the CTRL key pressed?
-					if (Input.GetKey(KeyCode.LeftControl)) {
-						// The CTRL key is pressed; it means we find ourselves in 2 possible situations:
-						// a) the picked object is already selected, in which case we deselect it;
-						// b) the picked object is not selected, in which case we append it to the selection.
-						if (_selectedObjects.Contains(pickedObject)) {
-							_selectedObjects.Remove(pickedObject);
-							RemoveHighlight(pickedObject);
+					HighlightGameObject(pickedObject);
 
-						} else {
-							_selectedObjects.Add(pickedObject);
-						}
-						// The selection has changed
-						OnSelectionChanged();
-					} else {
-						// The CTRL key is not pressed; in this case we just clear the selection and
-						// select only the object that we clicked on.
-						RemoveHighlights(_selectedObjects);
-						_selectedObjects.Clear();
-						_selectedObjects.Add(pickedObject);
-
-						// The selection has changed
-						OnSelectionChanged();
+					if (scene.lastSelected)
+					{
+						scene.DeselectObject();
 					}
-				} else {
+
+					string objectName = pickedObject.name;
+					GameObject objectList = scene.objectListContent;
+
+					// Set last selected object in SceneObject script
+					GameObject childObject = objectList.transform.Find(objectName).gameObject;
+
+					scene.lastSelected = childObject;
+					Text childText = childObject.GetComponent<Text>();
+					childText.color = Color.white;
+				}
+				else {
 					// If we reach this point, it means no object was picked. This means that we clicked
 					// in thin air, so we just clear the selected objects list.
 					RemoveHighlights(_selectedObjects);
@@ -260,6 +265,43 @@ namespace RTG {
 				return null;
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// Highlight a given gameobject
+		/// </summary>
+		public void HighlightGameObject(GameObject pickedObject)
+        {
+			// Is the CTRL key pressed?
+			if (Input.GetKey(KeyCode.LeftControl))
+			{
+				// The CTRL key is pressed; it means we find ourselves in 2 possible situations:
+				// a) the picked object is already selected, in which case we deselect it;
+				// b) the picked object is not selected, in which case we append it to the selection.
+				if (_selectedObjects.Contains(pickedObject))
+				{
+					_selectedObjects.Remove(pickedObject);
+					RemoveHighlight(pickedObject);
+
+				}
+				else
+				{
+					_selectedObjects.Add(pickedObject);
+				}
+				// The selection has changed
+				OnSelectionChanged();
+			}
+			else
+			{
+				// The CTRL key is not pressed; in this case we just clear the selection and
+				// select only the object that we clicked on.
+				RemoveHighlights(_selectedObjects);
+				_selectedObjects.Clear();
+				_selectedObjects.Add(pickedObject);
+
+				// The selection has changed
+				OnSelectionChanged();
+			}
 		}
 
 		/// <summary>
