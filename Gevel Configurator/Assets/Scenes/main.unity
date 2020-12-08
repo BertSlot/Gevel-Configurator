@@ -2365,7 +2365,6 @@ Transform:
   - {fileID: 550590311}
   - {fileID: 720860393}
   - {fileID: 65475424}
-  - {fileID: 378333689}
   - {fileID: 2106418029}
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -2776,11 +2775,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 378333688}
   m_LocalRotation: {x: -0, y: -0.13697524, z: -0, w: 0.99057454}
-  m_LocalPosition: {x: 52174, y: 11139, z: -2215}
-  m_LocalScale: {x: 11937.857, y: 27853.092, z: 61050}
+  m_LocalPosition: {x: 1613.243, y: 1771.2164, z: 2155.9443}
+  m_LocalScale: {x: 1193.7858, y: 2785.3093, z: 6105}
   m_Children: []
-  m_Father: {fileID: 294604821}
-  m_RootOrder: 5
+  m_Father: {fileID: 2106418029}
+  m_RootOrder: 40
   m_LocalEulerAnglesHint: {x: 0, y: -15.746, z: 0}
 --- !u!65 &378333690
 BoxCollider:
@@ -4398,7 +4397,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000002928379}
+  m_AnchoredPosition: {x: 0, y: 0.0000039201254}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &620655767
@@ -5281,7 +5280,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 2.1e-44, z: 0, w: 0.0000000017246755}
+  m_BoundingSphereOverride: {x: 0, y: 2.1059e-41, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -5828,7 +5827,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &840338847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19934,8 +19933,9 @@ Transform:
   - {fileID: 1837023556}
   - {fileID: 1265505556}
   - {fileID: 1612391761}
+  - {fileID: 378333689}
   m_Father: {fileID: 294604821}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2110955946
 GameObject:

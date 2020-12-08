@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Objects_overzicht : MonoBehaviour {
@@ -13,8 +14,21 @@ public class Objects_overzicht : MonoBehaviour {
 	[SerializeField]
 	private GameObject parentObject;
 
-	public Dictionary<string, float> surfaceGroupTotals = new Dictionary<string, float>();
 
+	/// <summary>
+	/// Dictionary with group names and group totals
+	/// </summary>
+	private Dictionary<string, float> surfaceGroupTotals = new Dictionary<string, float>();
+
+	/// <summary>
+	/// This function makes sure that whenever you access this variable it is updated
+	/// </summary>
+	public Dictionary<string, float> SurfaceGroupTotals {
+		get {
+			UpdateSurfaceGroupTotal();
+			return surfaceGroupTotals;
+		}
+	}
 
 
 	private void Start() {
@@ -22,8 +36,12 @@ public class Objects_overzicht : MonoBehaviour {
 		foreach (GameObject obj in parentObject.GetAllChildren()) {
 			//Debug.Log(obj.name);
 			SetSurfaceGroupState(obj, true);
+			//AddSurfaceGroup(obj, "Noord");
+			//AddSurfaceGroup(obj, "West");
+			//AddSurfaceGroup(obj, "Oost");
+			//AddSurfaceGroup(obj, "Zuid");
 		}
-
+		//ExportTotalsToExcel();
 	}
 
 
@@ -31,10 +49,50 @@ public class Objects_overzicht : MonoBehaviour {
 	private void Update() {
 
 		//Debug.Log(objects[0]);
-		AddSurfaceGroupToList(parentObject.GetAllChildren(), "North");
-		surfaceGroupTotals = TotalSurfaceAreaPerGroup(parentObject.GetAllChildren());
+		//AddSurfaceGroupToList(parentObject.GetAllChildren(), "North");
+		//surfaceGroupTotals = TotalSurfaceAreaPerGroup(parentObject.GetAllChildren());
+	}
+
+
+
+	/// <summary>
+	/// This function exports the SurfaceGroupTotals data to a Excel xls sheet format
+	/// </summary>
+	public void ExportTotalsToExcel() {
+
+		var path = EditorUtility.SaveFilePanel("Save Surface totals as Excel", "", "", "xlsx");
+		if (path != null) {
+			Excel xls = new Excel();
+			ExcelTable table = new ExcelTable {
+				TableName = "Totals"
+			};
+			xls.Tables.Add(table);
+
+			var surfaceTotals = SurfaceGroupTotals;
+
+			xls.Tables[0].SetValue(1, 1, "Surface totals:");
+			xls.Tables[0].SetValue(1, 2, "cm^2");
+			int iter = 2;
+
+			foreach (var total in surfaceTotals) {
+				xls.Tables[0].SetValue(iter, 1, total.Key);
+				xls.Tables[0].SetValue(iter, 2, total.Value.ToString());
+				iter++;
+			}
+
+			ExcelHelper.SaveExcel(xls, path);
+		}
 
 	}
+
+
+	/// <summary>
+	/// This funtion updates the totals of every surface group. Will need to be called before accessing the value.
+	/// </summary>
+	public void UpdateSurfaceGroupTotal() {
+		surfaceGroupTotals = TotalSurfaceAreaPerGroup(parentObject.GetAllChildren());
+	}
+
 
 	/// <summary>
 	/// This funciton turns on the surface calculations for this Gameobject and if it didnt have the component it adds it a well
@@ -49,6 +107,9 @@ public class Objects_overzicht : MonoBehaviour {
 			groups.surfaceOn = state;
 		}
 	}
+
+
+
 
 	/// <summary>
 	/// This function removes a surface group from the given gameObject
@@ -75,6 +136,8 @@ public class Objects_overzicht : MonoBehaviour {
 			RemoveSurfaceGroup(obj, groupName);
 		}
 	}
+
+
 
 
 	/// <summary>
@@ -106,6 +169,7 @@ public class Objects_overzicht : MonoBehaviour {
 			AddSurfaceGroup(obj, groupName);
 		}
 	}
+
 
 
 	/// <summary>
@@ -148,6 +212,7 @@ public class Objects_overzicht : MonoBehaviour {
 	}
 
 
+
 	/// <summary>
 	/// Calculates the surface area of an object using the object.transform.localScale .x and .y 
 	/// </summary>
@@ -168,9 +233,5 @@ public class Objects_overzicht : MonoBehaviour {
 		}
 		return (float)total;
 	}
-
-
-
-
 
 }
