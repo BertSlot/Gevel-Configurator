@@ -3,77 +3,72 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SceneObjects : MonoBehaviour
-{
-    /// <summary>
-    /// This scroll view object is serialized to set the object height
-    /// </summary>
-    public GameObject objectList;
+public class SceneObjects : MonoBehaviour {
+	/// <summary>
+	/// This scroll view object is serialized to set the object height
+	/// </summary>
+	public GameObject objectList;
 
-    /// <summary>
-    /// This object is a child of GameObject 'objectList' containing the list of child objects
-    /// </summary>
-    public GameObject objectListContent;
+	/// <summary>
+	/// This object is a child of GameObject 'objectList' containing the list of child objects
+	/// </summary>
+	public GameObject objectListContent;
 
-    /// <summary>
-    /// From this object all child objects are retrieved
-    /// </summary>
-    public GameObject parentObject;
+	/// <summary>
+	/// From this object all child objects are retrieved
+	/// </summary>
+	public GameObject parentObject;
 
-    /// <summary>
-    /// Last selected object
-    /// </summary>
-    public GameObject lastSelected;
+	/// <summary>
+	/// Last selected object
+	/// </summary>
+	public GameObject lastSelected;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        int counter = 0;
-        int position = -10;
+	// Start is called before the first frame update
+	void Start() {
+		int counter = 0;
+		int position = -10;
 
-        foreach (Transform go in parentObject.transform)
-        {
-            GameObject childObject = new GameObject(go.name, typeof(RectTransform));
-            childObject.transform.SetParent(this.objectListContent.transform);
+		foreach (Transform go in parentObject.transform) {
+			GameObject childObject = new GameObject(go.name, typeof(RectTransform));
+			childObject.transform.SetParent(this.objectListContent.transform);
 
-            // Position of object item
-            RectTransform rt = childObject.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(240, 20);
-            rt.anchoredPosition = new Vector2(0, position);
+			// Position of object item
+			RectTransform rt = childObject.GetComponent<RectTransform>();
+			rt.sizeDelta = new Vector2(240, 20);
+			rt.anchoredPosition = new Vector2(0, position);
 
-            rt.anchorMin = new Vector2(0.5f, 1);
-            rt.anchorMax = new Vector2(0.5f, 1);
-            rt.pivot = new Vector2(0.5f, 1);
+			rt.anchorMin = new Vector2(0.5f, 1);
+			rt.anchorMax = new Vector2(0.5f, 1);
+			rt.pivot = new Vector2(0.5f, 1);
 
-            // Text styling
-            Text childText = childObject.AddComponent<Text>();
-            childText.text = go.name;
-            childText.color = Color.black;
-            childText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+			// Text styling
+			Text childText = childObject.AddComponent<Text>();
+			childText.text = go.name;
+			childText.color = Color.black;
+			childText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 
-            // Add script
-            childObject.AddComponent(typeof(SelectObject));
-            
-            counter++;
-            position += -20;
-        }
+			// Add script
+			childObject.AddComponent(typeof(SelectObject));
 
-        // Calculate height for objects list
-        int assetsViewHeight = (20 * counter) + 20;
+			counter++;
+			position += -20;
+		}
 
-        RectTransform AssetsViewRt = objectListContent.GetComponent<RectTransform>();
-        AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
-    }
+		// Calculate height for objects list
+		int assetsViewHeight = (20 * counter) + 20;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+		RectTransform AssetsViewRt = objectListContent.GetComponent<RectTransform>();
+		AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
+	}
 
-    public void DeselectObject()
-    {
-        Text childText = lastSelected.GetComponent<Text>();
-        childText.color = Color.black;
-    }
+	// Update is called once per frame
+	void Update() {
+
+	}
+
+	public void DeselectObject() {
+		Text childText = lastSelected.GetComponent<Text>();
+		childText.color = Color.black;
+	}
 }

@@ -207,7 +207,7 @@ namespace RTG {
 			guiStyle.normal.textColor = Color.green;
 
 
-			guiStyle.margin.top = Screen.height - 105;
+			guiStyle.margin.top = Screen.height - 105; // dit blijft net boven de spawn knop
 
 			GUILayout.Label(" ", guiStyle);
 			// Draw the transform space label.
@@ -252,8 +252,7 @@ namespace RTG {
 		/// Objects must have colliders attached.
 		/// </remarks>
 		private GameObject PickGameObject() {
-            if (!EventSystem.current.IsPointerOverGameObject())
-            {
+			if (!EventSystem.current.IsPointerOverGameObject()) {
 				// Build a ray using the current mouse cursor position
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
