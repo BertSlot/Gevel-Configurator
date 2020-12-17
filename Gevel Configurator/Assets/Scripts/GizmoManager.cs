@@ -13,6 +13,8 @@ namespace RTG {
 	/// 
 	/// </remarks>
 	public class GizmoManager : MonoBehaviour {
+
+
 		/// <summary>
 		/// A private enum which is used by the class to differentiate between different 
 		/// gizmo types. Where this enum will come in handy is when we use the 
@@ -233,11 +235,44 @@ namespace RTG {
 				SetWorkGizmoId(GizmoId.Universal);
 		}
 
+
+		/// <summary>
+		/// Spawns object using the middle of the scrren as position of the raycast
+		/// </summary>
+		/// <param name="obj"></param>
+		public void SpawnObjectMiddle(GameObject obj) {
+
+			Vector3 location;
+			Quaternion rotation = new Quaternion(0, 0, 0, 0);
+
+			Vector2 mousePos = new Vector2 {
+				x = Screen.width / 2,
+				y = Screen.height / 2
+			};
+
+			Ray ray = Cam.ScreenPointToRay(mousePos);
+
+			GameObject spawnedObj;
+			if (Physics.Raycast(ray, out RaycastHit hit)) {
+				var Dist = Vector3.Distance(hit.transform.position, Cam.transform.position);
+				Dist /= 2;
+				location = Cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Dist));
+				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
+			} else {
+				location = Cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 500));
+				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
+			}
+
+			_selectedObjects.Clear();
+			_selectedObjects.Add(spawnedObj);
+			OnSelectionChanged();
+		}
+
 		/// <summary>
 		/// Spawns object using mouse position as raycast
 		/// </summary>
 		/// <param name="obj"></param>
-		public void SpawnObject(GameObject obj) {
+		public void SpawnObjectMouse(GameObject obj) {
 
 			Vector3 location;
 			Quaternion rotation = new Quaternion(0, 0, 0, 0);
@@ -248,20 +283,24 @@ namespace RTG {
 			};
 
 			Ray ray = Cam.ScreenPointToRay(mousePos);
-
+			GameObject spawnedObj;
 			if (Physics.Raycast(ray, out RaycastHit hit)) {
 				var Dist = Vector3.Distance(hit.transform.position, Cam.transform.position);
 				Dist /= 2;
 				location = Cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Dist));
-				GameObject.Instantiate(obj, location, rotation, ParentObject.transform);
+				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
 			} else {
 				location = Cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 500));
-				GameObject.Instantiate(obj, location, rotation, ParentObject.transform);
+				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
 			}
 
+			_selectedObjects.Clear();
+			_selectedObjects.Add(spawnedObj);
+			OnSelectionChanged();
 		}
 
 
+		/*
 		/// <summary>
 		/// An implementatio of the OnGUI function which shows the current transform
 		/// space and transform pivot in the top left corner of the screen.
@@ -283,7 +322,7 @@ namespace RTG {
 			// Same for transform pivot
 			//GUILayout.Label("Transform Pivot: " + _objectMoveGizmo.TransformPivot.ToString(), guiStyle);
 		}
-
+		*/
 
 		/// <summary>
 		/// This function instantiates the objects stored in the _clipboard <GameObject,Transform> Dictionary.

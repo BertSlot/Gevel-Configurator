@@ -29,9 +29,7 @@ public class Objects_overzicht : MonoBehaviour {
 			return surfaceGroupTotals;
 		}
 	}
-
-
-	private void Start() {
+	/*private void Start() {
 
 		foreach (GameObject obj in parentObject.GetAllChildren()) {
 			//Debug.Log(obj.name);
@@ -43,7 +41,7 @@ public class Objects_overzicht : MonoBehaviour {
 		}
 		//ExportTotalsToExcel();
 	}
-
+*/
 
 
 	private void Update() {
