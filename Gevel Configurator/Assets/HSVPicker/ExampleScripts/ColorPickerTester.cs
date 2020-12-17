@@ -1,43 +1,60 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace HSVPicker.Examples
 {
     public class ColorPickerTester : MonoBehaviour 
     {
+        /// <summary>
+        /// Change color button object
+        /// </summary>
         public Button changeColor;
+
+        /// <summary>
+        /// Contains the color picker menu
+        /// </summary>
         public GameObject colorPickerMenu;
+
+        /// <summary>
+        /// This object displays the selected color
+        /// </summary>
         public Image colorPreview;
+
+        /// <summary>
+        /// Contains the color picker
+        /// </summary>
         public ColorPicker picker;
 
         public Color Color = Color.red;
-        public bool SetColorOnStart = false;
-
-        private new Renderer renderer;
 
         // Use this for initialization
-        void Start () 
+        void Start()
         {
+            changeColor.onClick.AddListener(ToggleColorPickerMenu);
+        }
+
+        public void ChangeColor(Renderer renderer)
+        {
+            // Set current color in picker
+            renderer.material.color = picker.CurrentColor;
+            picker.CurrentColor = Color;
+
+            // Change color
             picker.onValueChanged.AddListener(color =>
             {
                 colorPreview.color = color;
-                //renderer.material.color = color;
+                renderer.material.color = color;
                 Color = color;
             });
-
-		    //renderer.material.color = picker.CurrentColor;
-            if (SetColorOnStart) 
-            {
-                picker.CurrentColor = Color;
-            }
-
-            changeColor.onClick.AddListener(toggleColorPickerMenu);
         }
 
         /// <summary>
         /// Toggle color picker menu
         /// </summary>
-        void toggleColorPickerMenu()
+        void ToggleColorPickerMenu()
         {
             if (colorPickerMenu.active)
             {

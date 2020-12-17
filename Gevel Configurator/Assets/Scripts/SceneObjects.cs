@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using HSVPicker.Examples;
 
 public class SceneObjects : MonoBehaviour {
 	/// <summary>
@@ -30,6 +31,11 @@ public class SceneObjects : MonoBehaviour {
 	private RTG.GizmoManager manager;
 
 	/// <summary>
+	/// Contains colorPickerMenu
+	/// </summary>
+	private GameObject colorPickerObject;
+
+	/// <summary>
 	/// Last selected object
 	/// </summary>
 	public List<GameObject> _selectedObjects = new List<GameObject>();
@@ -40,6 +46,7 @@ public class SceneObjects : MonoBehaviour {
 		objectList = GameObject.Find("ObjectsList");
 		objectListContent = GameObject.Find("Content");
 		parentObject = GameObject.Find("Objects");
+		colorPickerObject = GameObject.Find("BackgroundColor");
 
 		manager = gizmo.GetComponent<RTG.GizmoManager>();
 
@@ -106,15 +113,18 @@ public class SceneObjects : MonoBehaviour {
 		// Add object to list
 		this._selectedObjects.Add(listGameObject);
 
-		// Higlight editor gameobject
+		// Highlight editor gameobject
 		manager.HighlightGameObject(editorGameObject);
 
-		// Hightlight object in sidemenu
+		// Highlight object in sidemenu
 		Text childText = listGameObject.GetComponent<Text>();
 		childText.color = Color.white;
 
 		// Set property menu fields
 		SetPropertyMenuFields(listGameObject);
+
+		// Set color picker object
+		ChangeColor(editorGameObject);
 	}
 
 	void DeselectGameObject(GameObject listGameObject, GameObject editorGameObject)
@@ -161,4 +171,14 @@ public class SceneObjects : MonoBehaviour {
 		yInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.y.ToString();
 		zInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.z.ToString();
 	}
+
+	void ChangeColor(GameObject editorGameObject)
+    {
+		// Get renderer of selectedObject
+		Renderer objectRenderer = editorGameObject.GetComponent<Renderer>();
+
+		// Get colorPickerTester script
+		ColorPickerTester colorPicker = colorPickerObject.GetComponent<ColorPickerTester>();
+		colorPicker.ChangeColor(objectRenderer);
+    }
 }

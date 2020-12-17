@@ -22,7 +22,7 @@ public class SelectObject : MonoBehaviour, IPointerClickHandler {
 	}
 
 	public void OnPointerClick(PointerEventData pointerEventData) {
-		// Get script
+		// Get sceneObjects script
 		SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
 
 		string objectName = gameObject.GetComponent<Text>().text;

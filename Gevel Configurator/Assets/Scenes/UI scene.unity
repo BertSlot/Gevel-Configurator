@@ -8745,9 +8745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9cbfe3cabe1c8544a5453f7e07cc513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectList: {fileID: 1488002409}
-  objectListContent: {fileID: 919791366}
-  parentObject: {fileID: 793512328}
+  _selectedObjects: []
 --- !u!114 &733180862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16044,6 +16042,7 @@ MonoBehaviour:
   colorPickerMenu: {fileID: 1749043043}
   colorPreview: {fileID: 352439753}
   picker: {fileID: 854088209}
+  sideMenu: {fileID: 733180859}
   Color: {r: 1, g: 0, b: 0, a: 1}
   SetColorOnStart: 0
 --- !u!1 &1023072628
@@ -24567,6 +24566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19446263b6caa4c438f2f1bd3170d6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selectedObjects: []
   highlight_color: {r: 0, g: 1, b: 0, a: 1}
   highlight_width: 4
 --- !u!1 &1750620377
@@ -28225,7 +28225,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 0.0000030492897}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &2028061767
