@@ -8,14 +8,15 @@ namespace HSVPicker.Examples
         public Button changeColor;
         public GameObject colorPickerMenu;
         public Image colorPreview;
-        //public new Renderer renderer;
         public ColorPicker picker;
 
         public Color Color = Color.red;
         public bool SetColorOnStart = false;
 
-	    // Use this for initialization
-	    void Start () 
+        private new Renderer renderer;
+
+        // Use this for initialization
+        void Start () 
         {
             picker.onValueChanged.AddListener(color =>
             {
@@ -30,15 +31,13 @@ namespace HSVPicker.Examples
                 picker.CurrentColor = Color;
             }
 
-            changeColor.onClick.AddListener(openColorPickerMenu);
+            changeColor.onClick.AddListener(toggleColorPickerMenu);
         }
-	
-	    // Update is called once per frame
-	    void Update () {
-	
-	    }
 
-        void openColorPickerMenu()
+        /// <summary>
+        /// Toggle color picker menu
+        /// </summary>
+        void toggleColorPickerMenu()
         {
             if (colorPickerMenu.active)
             {

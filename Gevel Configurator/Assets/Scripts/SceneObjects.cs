@@ -7,25 +7,42 @@ public class SceneObjects : MonoBehaviour {
 	/// <summary>
 	/// This scroll view object is serialized to set the object height
 	/// </summary>
-	public GameObject objectList;
+	private GameObject objectList;
 
 	/// <summary>
 	/// This object is a child of GameObject 'objectList' containing the list of child objects
 	/// </summary>
-	public GameObject objectListContent;
+	private GameObject objectListContent;
 
 	/// <summary>
 	/// From this object all child objects are retrieved
 	/// </summary>
-	public GameObject parentObject;
+	private GameObject parentObject;
+
+	/// <summary>
+	/// Contains RTGizmoManager gameobject for the GizmoManager script
+	/// </summary>
+	private GameObject gizmo;
+
+	/// <summary>
+	/// Contains GizmoManager from gizmo
+	/// </summary>
+	private RTG.GizmoManager manager;
 
 	/// <summary>
 	/// Last selected object
 	/// </summary>
-	public GameObject lastSelected;
+	public List<GameObject> _selectedObjects = new List<GameObject>();
 
 	// Start is called before the first frame update
 	void Start() {
+		gizmo = GameObject.Find("RTGizmoManager");
+		objectList = GameObject.Find("ObjectsList");
+		objectListContent = GameObject.Find("Content");
+		parentObject = GameObject.Find("Objects");
+
+		manager = gizmo.GetComponent<RTG.GizmoManager>();
+
 		int counter = 0;
 		int position = -10;
 
@@ -62,13 +79,86 @@ public class SceneObjects : MonoBehaviour {
 		AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
 	}
 
-	// Update is called once per frame
-	void Update() {
+	public GameObject GetObjectListContent()
+    {
+		return this.objectListContent;
+    }
 
+	public void SelectGameObject(GameObject listGameObject, GameObject editorGameObject)
+	{
+		if (!Input.GetKey(KeyCode.LeftControl) && !Input.GetKey(KeyCode.RightControl))
+		{
+			DeselectAllGameObjects();
+		}
+
+		if (this._selectedObjects.Contains(listGameObject))
+		{
+			DeselectGameObject(listGameObject, editorGameObject);
+		}
+		else
+		{
+			AddGameObject(listGameObject, editorGameObject);
+		}
 	}
 
-	public void DeselectObject() {
-		Text childText = lastSelected.GetComponent<Text>();
+	void AddGameObject(GameObject listGameObject, GameObject editorGameObject)
+    {
+		// Add object to list
+		this._selectedObjects.Add(listGameObject);
+
+		// Higlight editor gameobject
+		manager.HighlightGameObject(editorGameObject);
+
+		// Hightlight object in sidemenu
+		Text childText = listGameObject.GetComponent<Text>();
+		childText.color = Color.white;
+
+		// Set property menu fields
+		SetPropertyMenuFields(listGameObject);
+	}
+
+	void DeselectGameObject(GameObject listGameObject, GameObject editorGameObject)
+	{
+		// Remove object from list
+		this._selectedObjects.Remove(listGameObject);
+
+		// Remove editor gameobject hightlight
+		manager.RemoveHighlight(editorGameObject);
+
+		// Remove sidemenu object highlight
+		Text childText = listGameObject.GetComponent<Text>();
 		childText.color = Color.black;
+	}
+
+	void DeselectAllGameObjects()
+    {
+		// Remove sidemenu objects highlight
+		foreach (GameObject selected in this._selectedObjects)
+		{
+			Text childText = selected.GetComponent<Text>();
+			childText.color = Color.black;
+		}
+
+		// Clear object list
+		this._selectedObjects.Clear();
+
+		// Remove all editor hightlights
+		manager.RemoveHighlights(manager._selectedObjects);
+	}
+
+	void SetPropertyMenuFields(GameObject selectedObject)
+    {
+		// Get renderer of selectedObject
+		Renderer objectRenderer = selectedObject.GetComponent<Renderer>();
+
+		// Find dimensions fields
+		GameObject xInputObject = GameObject.Find("XInput");
+		GameObject yInputObject = GameObject.Find("YInput");
+		GameObject zInputObject = GameObject.Find("ZInput");
+
+		// Set dimensions in properties menu
+		xInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.x.ToString();
+		yInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.y.ToString();
+		zInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.z.ToString();
 	}
 }

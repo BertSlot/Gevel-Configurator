@@ -8245,7 +8245,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1242325065}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999535
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8748,7 +8748,6 @@ MonoBehaviour:
   objectList: {fileID: 1488002409}
   objectListContent: {fileID: 919791366}
   parentObject: {fileID: 793512328}
-  lastSelected: {fileID: 0}
 --- !u!114 &733180862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28226,7 +28225,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0007835626}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &2028061767
@@ -28920,6 +28919,7 @@ GameObject:
   - component: {fileID: 2063561396}
   - component: {fileID: 2063561395}
   - component: {fileID: 2063561394}
+  - component: {fileID: 2063561397}
   m_Layer: 8
   m_Name: window (124)
   m_TagString: Untagged
@@ -28935,7 +28935,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2063561392}
   m_LocalRotation: {x: -0, y: -0.12721467, z: -0, w: 0.9918753}
-  m_LocalPosition: {x: 3023.1426, y: 1348, z: -504.3999}
+  m_LocalPosition: {x: 3115, y: 1348, z: -856}
   m_LocalScale: {x: 23.957817, y: 180.4335, z: 154.5591}
   m_Children: []
   m_Father: {fileID: 793512329}
@@ -28973,7 +28973,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c5879c7305189014b87ee0f16ccd0603, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -29003,6 +29003,14 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2063561392}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!222 &2063561397
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2063561392}
+  m_CullTransparentMesh: 0
 --- !u!1 &2066622600
 GameObject:
   m_ObjectHideFlags: 0
