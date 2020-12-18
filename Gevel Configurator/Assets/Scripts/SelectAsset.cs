@@ -20,7 +20,7 @@ public class SelectAsset : MonoBehaviour, IPointerDownHandler {
 	// Click data for Asset  Menu clicks
 	float clicked = 0;
 	float clicktime = 0;
-	readonly float clickdelay = 0.5f;
+	readonly float clickdelay = 0.25f;
 
 
 

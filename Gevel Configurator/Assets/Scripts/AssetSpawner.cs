@@ -37,9 +37,10 @@ public class AssetSpawner : MonoBehaviour {
 	int mouseClicks = 0;
 	float mouseTimerLimit = .25f;
 */
-	// Start is called before the first frame update
 
-	private void Start() {
+	// Add Object to a dictionary with Pair<Name,AssetPanel> for cquick searching
+	private void Awake() {
+
 		int x = 40;
 		int y = -40;
 		if (ObjectsFolderPath != null) {
@@ -47,28 +48,43 @@ public class AssetSpawner : MonoBehaviour {
 			GameObject AssetPanel;
 
 			foreach (GameObject obj in ObjectsList) {
+				// Create Panel
 				AssetPanel = Instantiate(PanelPrefab, ObjectListContent.transform);
 
+				// Add Asset to panel and name under panel
 				SelectAsset panelData = AssetPanel.GetComponent<SelectAsset>();
 				panelData.Asset = obj;
 				panelData.AssetNameText = obj.name;
 
+				// Set position of Panel
 				RectTransform rt = AssetPanel.GetComponent<RectTransform>();
 				rt.anchoredPosition = new Vector2(x, y);
 
+				// Set Preview Sprite of Panel
+				SetPanelSprite(AssetPanel, obj, Color.black);
 
-				Image img = AssetPanel.GetComponent<Image>();
-				Texture2D texture = RuntimePreviewGenerator.GenerateModelPreview(obj.transform, 100, 100, true);
-				Rect rect = new Rect(0, 0, texture.width, texture.height);
-				Vector2 pivot = new Vector2(1, 1);
-				Sprite preview = Sprite.Create(texture, rect, pivot);
-				img.sprite = preview;
-
+				// Increase Offset
 				x += 120;
 
 			}
 		}
+
+
 	}
+
+	private void SetPanelSprite(GameObject obj, GameObject asset, Color BackgroundColor) {
+		Image img = obj.GetComponent<Image>();
+		if (img != null) {
+			RuntimePreviewGenerator.BackgroundColor = BackgroundColor;
+			Texture2D texture = RuntimePreviewGenerator.GenerateModelPreview(asset.transform, 100, 100, true);
+			Rect rect = new Rect(0, 0, texture.width, texture.height);
+			Vector2 pivot = new Vector2(1, 1);
+			Sprite preview = Sprite.Create(texture, rect, pivot);
+			img.sprite = preview;
+		}
+	}
+
+
 	private void Update() {
 
 	}
