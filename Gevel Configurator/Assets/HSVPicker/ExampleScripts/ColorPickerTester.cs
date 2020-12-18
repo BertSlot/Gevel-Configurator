@@ -38,10 +38,6 @@ namespace HSVPicker.Examples
 
         public void ChangeColor(Renderer renderer)
         {
-            // Set current color in picker
-            renderer.material.color = picker.CurrentColor;
-            picker.CurrentColor = Color;
-
             // Change color
             picker.onValueChanged.AddListener(color =>
             {

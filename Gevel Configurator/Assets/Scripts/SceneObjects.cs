@@ -50,10 +50,16 @@ public class SceneObjects : MonoBehaviour {
 
 		manager = gizmo.GetComponent<RTG.GizmoManager>();
 
+		SetObjectListMenu();
+	}
+
+	void SetObjectListMenu()
+    {
 		int counter = 0;
 		int position = -10;
 
-		foreach (Transform go in parentObject.transform) {
+		foreach (Transform go in parentObject.transform)
+		{
 			GameObject childObject = new GameObject(go.name, typeof(RectTransform));
 			childObject.transform.SetParent(this.objectListContent.transform);
 
