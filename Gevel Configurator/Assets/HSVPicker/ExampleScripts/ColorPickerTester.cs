@@ -38,6 +38,9 @@ namespace HSVPicker.Examples
 
         public void ChangeColor(Renderer renderer)
         {
+            // First remove previous listeners
+            picker.onValueChanged.RemoveAllListeners();
+
             // Change color
             picker.onValueChanged.AddListener(color =>
             {
