@@ -63,11 +63,12 @@ namespace RTG {
 		/// '_objectRotationGizmo' and so on.
 		/// </summary>
 		private ObjectTransformGizmo _workGizmo;
+
 		/// <summary>
 		/// A list of objects which are currently selected. This is also the list that holds
 		/// the gizmo target objects. 
 		/// </summary>
-		private List<GameObject> _selectedObjects = new List<GameObject>();
+		public List<GameObject> _selectedObjects = new List<GameObject>();
 
 		/// <summary>
 		/// A Dictionary of objects and transform values wich are copied from the selected objects. This list also contains 
@@ -91,6 +92,11 @@ namespace RTG {
 		/// Side menu objects
 		/// </summary>
 		private GameObject sideMenu;
+
+		/// <summary>
+        /// SelectObject for the scripts
+        /// </summary>
+        //private GameObject 
 
 		/// <summary>
 		/// Performs all necessary initializations.
@@ -138,22 +144,17 @@ namespace RTG {
 				if (pickedObject != null) {
 					SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
 
-					HighlightGameObject(pickedObject);
-
-					if (scene.lastSelected) {
-						scene.DeselectObject();
-					}
-
+					// Get name of picked object
 					string objectName = pickedObject.name;
-					GameObject objectList = scene.objectListContent;
+					GameObject objectList = scene.GetObjectListContent();
 
-					// Set last selected object in SceneObject script
-					GameObject childObject = objectList.transform.Find(objectName).gameObject;
+					// Find sidemenu object by name in objectList
+					GameObject listGameObject = objectList.transform.Find(objectName).gameObject;
 
-					scene.lastSelected = childObject;
-					Text childText = childObject.GetComponent<Text>();
-					childText.color = Color.white;
-				} else {
+					// Set last selected object in SceneObject script & Higlight gameobject in editor
+					scene.SelectGameObject(listGameObject, pickedObject);
+				}
+				else {
 					// If we reach this point, it means no object was picked. This means that we clicked
 					// in thin air, so we just clear the selected objects list.
 					RemoveHighlights(_selectedObjects);
@@ -498,7 +499,7 @@ namespace RTG {
 		/// This function removes highlights from all objects in a list
 		/// </summary>
 		/// <param name="objects"></param>
-		private void RemoveHighlights(List<GameObject> objects) {
+		public void RemoveHighlights(List<GameObject> objects) {
 			foreach (var obj in objects) {
 				RemoveHighlight(obj);
 			}
@@ -508,7 +509,7 @@ namespace RTG {
 		/// This function removes the highlight of a single object
 		/// </summary>
 		/// <param name="obj"></param>
-		private void RemoveHighlight(GameObject obj) {
+		public void RemoveHighlight(GameObject obj) {
 			if (obj.GetComponent<Outline>() != null) {
 				Outline outline = obj.GetComponent<Outline>();
 				outline.enabled = false;
