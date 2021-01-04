@@ -86,9 +86,19 @@ namespace HSVPicker.Examples
             
         }
 
-        void closeColorPickerMenu()
-        {
+		//}
 
-        }
-    }
+		void openColorPickerMenu() {
+			if (colorPickerMenu.active) {
+				colorPickerMenu.SetActive(false);
+			} else {
+				colorPickerMenu.SetActive(true);
+			}
+
+		}
+
+		void closeColorPickerMenu() {
+
+		}
+	}
 }

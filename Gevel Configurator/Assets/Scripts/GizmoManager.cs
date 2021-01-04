@@ -13,6 +13,8 @@ namespace RTG {
 	/// 
 	/// </remarks>
 	public class GizmoManager : MonoBehaviour {
+
+
 		/// <summary>
 		/// A private enum which is used by the class to differentiate between different 
 		/// gizmo types. Where this enum will come in handy is when we use the 
@@ -35,6 +37,19 @@ namespace RTG {
 		private ObjectTransformGizmo _objectRotationGizmo;
 		private ObjectTransformGizmo _objectScaleGizmo;
 		private ObjectTransformGizmo _objectUniversalGizmo;
+
+
+		/// <summary>
+		/// Camera object
+		/// </summary>
+		[SerializeField]
+		private Camera Cam;
+
+		/// <summary>
+		/// ParentObject for spawning new objects
+		/// </summary>
+		[SerializeField]
+		private GameObject ParentObject;
 
 		/// <summary>
 		/// The current work gizmo id. The work gizmo is the gizmo which is currently used
@@ -74,14 +89,14 @@ namespace RTG {
 		public float highlight_width = 4f;
 
 		/// <summary>
-        /// Side menu objects to get children
-        /// </summary>
+		/// Side menu objects
+		/// </summary>
 		private GameObject sideMenu;
 
 		/// <summary>
-        /// SelectObject for the scripts
-        /// </summary>
-        //private GameObject 
+		/// SelectObject for the scripts
+		/// </summary>
+		//private GameObject 
 
 		/// <summary>
 		/// Performs all necessary initializations.
@@ -135,11 +150,12 @@ namespace RTG {
 
 					// Find sidemenu object by name in objectList
 					GameObject listGameObject = objectList.transform.Find(objectName).gameObject;
+					if (listGameObject != null) {
 
-					// Set last selected object in SceneObject script & Higlight gameobject in editor
-					scene.SelectGameObject(listGameObject, pickedObject);
-				}
-				else {
+						// Set last selected object in SceneObject script & Higlight gameobject in editor
+						scene.SelectGameObject(listGameObject, pickedObject);
+					}
+				} else {
 					// If we reach this point, it means no object was picked. This means that we clicked
 					// in thin air, so we just clear the selected objects list.
 					RemoveHighlights(_selectedObjects);
@@ -153,21 +169,46 @@ namespace RTG {
 
 			// If the Ctrl + C key was pressed we add the currently selected objects to the clipboard list
 			// If the Ctrl + V key was pressed we add the objects currently in the clipboard list to the scene
-			if (Input.GetKeyDown(KeyCode.C)) {
-				if (_selectedObjects.Count != 0) {
-					CopyToClipboard(_selectedObjects);
-				} else {
-					_clipboard.Clear();
+			if (Application.isEditor) { // this works when you are using the editor
+				if (Input.GetKeyDown(KeyCode.C)) {
+					if (_selectedObjects.Count != 0) {
+						CopyToClipboard(_selectedObjects);
+					} else {
+						_clipboard.Clear();
+					}
+				} else if (Input.GetKeyDown(KeyCode.V)) {
+					if (_clipboard.Count != 0) {
+						RemoveHighlights(_selectedObjects);
+						_selectedObjects.Clear();
+						_selectedObjects.AddRange(Paste());
+						OnSelectionChanged();
+					}
 				}
-			} else if (Input.GetKeyDown(KeyCode.V)) {
-				if (_clipboard.Count != 0) {
-					RemoveHighlights(_selectedObjects);
-					_selectedObjects.Clear();
-					_selectedObjects.AddRange(Paste());
-					OnSelectionChanged();
+			} else { // This works when you are not using the editor
+				if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl)) {
+					if (_selectedObjects.Count != 0) {
+						CopyToClipboard(_selectedObjects);
+					} else {
+						_clipboard.Clear();
+					}
+				} else if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl)) {
+					if (_clipboard.Count != 0) {
+						RemoveHighlights(_selectedObjects);
+						_selectedObjects.Clear();
+						_selectedObjects.AddRange(Paste());
+						OnSelectionChanged();
+					}
 				}
 			}
 
+			if (Input.GetKey(KeyCode.Delete)) {
+				if (_selectedObjects.Count != 0) {
+					RemoveHighlights(_selectedObjects);
+					DeleteObjectList(_selectedObjects);
+					_selectedObjects.Clear();
+					OnSelectionChanged();
+				}
+			}
 			// If the G key was pressed, we change the transform space to Global. Otherwise,
 			// if the L key was pressed, we change it to Local.
 			if (Input.GetKeyDown(KeyCode.G))
@@ -196,6 +237,72 @@ namespace RTG {
 				SetWorkGizmoId(GizmoId.Universal);
 		}
 
+
+		/// <summary>
+		/// Spawns object using the middle of the scrren as position of the raycast
+		/// </summary>
+		/// <param name="obj"></param>
+		public void SpawnObjectMiddle(GameObject obj) {
+
+			Vector3 location;
+			Quaternion rotation = new Quaternion(0, 0, 0, 0);
+
+			Vector2 mousePos = new Vector2 {
+				x = Screen.width / 2,
+				y = Screen.height / 2
+			};
+
+			Ray ray = Cam.ScreenPointToRay(mousePos);
+
+			GameObject spawnedObj;
+			if (Physics.Raycast(ray, out RaycastHit hit)) {
+				var Dist = Vector3.Distance(hit.transform.position, Cam.transform.position);
+				Dist /= 2;
+				location = Cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Dist));
+				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
+			} else {
+				location = Cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 500));
+				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
+			}
+
+			_selectedObjects.Clear();
+			_selectedObjects.Add(spawnedObj);
+			OnSelectionChanged();
+		}
+
+		/// <summary>
+		/// Spawns object using mouse position as raycast
+		/// </summary>
+		/// <param name="obj"></param>
+		public void SpawnObjectMouse(GameObject obj) {
+
+			Vector3 location;
+			Quaternion rotation = new Quaternion(0, 0, 0, 0);
+
+			Vector2 mousePos = new Vector2 {
+				x = Input.mousePosition.x,
+				y = Input.mousePosition.y
+			};
+
+			Ray ray = Cam.ScreenPointToRay(mousePos);
+			GameObject spawnedObj;
+			if (Physics.Raycast(ray, out RaycastHit hit)) {
+				var Dist = Vector3.Distance(hit.transform.position, Cam.transform.position);
+				Dist /= 2;
+				location = Cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Dist));
+				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
+			} else {
+				location = Cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 500));
+				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
+			}
+
+			_selectedObjects.Clear();
+			_selectedObjects.Add(spawnedObj);
+			OnSelectionChanged();
+		}
+
+
+		/*
 		/// <summary>
 		/// An implementatio of the OnGUI function which shows the current transform
 		/// space and transform pivot in the top left corner of the screen.
@@ -217,8 +324,7 @@ namespace RTG {
 			// Same for transform pivot
 			//GUILayout.Label("Transform Pivot: " + _objectMoveGizmo.TransformPivot.ToString(), guiStyle);
 		}
-
-
+		*/
 
 		/// <summary>
 		/// This function instantiates the objects stored in the _clipboard <GameObject,Transform> Dictionary.
@@ -239,6 +345,25 @@ namespace RTG {
 			_clipboard.Clear();
 			foreach (var obj in gameObjects) {
 				_clipboard.Add(obj);
+			}
+		}
+
+
+		/// <summary>
+		/// Deletes single GameObject
+		/// </summary>
+		/// <param name="obj"></param>
+		private void DeleteObject(GameObject obj) {
+			Destroy(obj);
+		}
+
+		/// <summary>
+		/// Deletes List of Gameobjects one by one
+		/// </summary>
+		/// <param name="objList"></param>
+		private void DeleteObjectList(List<GameObject> objList) {
+			foreach (GameObject obj in objList) {
+				DeleteObject(obj);
 			}
 		}
 
@@ -269,29 +394,22 @@ namespace RTG {
 		/// <summary>
 		/// Highlight a given gameobject
 		/// </summary>
-		public void HighlightGameObject(GameObject pickedObject)
-        {
+		public void HighlightGameObject(GameObject pickedObject) {
 			// Is the CTRL key pressed?
-			if (Input.GetKey(KeyCode.LeftControl))
-			{
+			if (Input.GetKey(KeyCode.LeftControl)) {
 				// The CTRL key is pressed; it means we find ourselves in 2 possible situations:
 				// a) the picked object is already selected, in which case we deselect it;
 				// b) the picked object is not selected, in which case we append it to the selection.
-				if (_selectedObjects.Contains(pickedObject))
-				{
+				if (_selectedObjects.Contains(pickedObject)) {
 					_selectedObjects.Remove(pickedObject);
 					RemoveHighlight(pickedObject);
 
-				}
-				else
-				{
+				} else {
 					_selectedObjects.Add(pickedObject);
 				}
 				// The selection has changed
 				OnSelectionChanged();
-			}
-			else
-			{
+			} else {
 				// The CTRL key is not pressed; in this case we just clear the selection and
 				// select only the object that we clicked on.
 				RemoveHighlights(_selectedObjects);

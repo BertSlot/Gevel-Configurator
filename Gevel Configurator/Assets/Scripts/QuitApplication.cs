@@ -2,22 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuitApplication : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+public class QuitApplication : MonoBehaviour {
+	// Start is called before the first frame update
+	void Start() {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	}
 
-    public void DoQuit()
-    {
-        Application.Quit();
-    }
+	// Update is called once per frame
+	void Update() {
+
+	}
+
+	public void DoQuit() {
+		Application.Quit();
+	}
 }

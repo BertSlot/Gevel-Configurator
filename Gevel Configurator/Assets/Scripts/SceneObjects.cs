@@ -53,13 +53,11 @@ public class SceneObjects : MonoBehaviour {
 		SetObjectListMenu();
 	}
 
-	void SetObjectListMenu()
-    {
+	void SetObjectListMenu() {
 		int counter = 0;
 		int position = -10;
 
-		foreach (Transform go in parentObject.transform)
-		{
+		foreach (Transform go in parentObject.transform) {
 			GameObject childObject = new GameObject(go.name, typeof(RectTransform));
 			childObject.transform.SetParent(this.objectListContent.transform);
 
@@ -92,30 +90,23 @@ public class SceneObjects : MonoBehaviour {
 		AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
 	}
 
-	public GameObject GetObjectListContent()
-    {
+	public GameObject GetObjectListContent() {
 		return this.objectListContent;
-    }
+	}
 
-	public void SelectGameObject(GameObject listGameObject, GameObject editorGameObject)
-	{
-		if (!Input.GetKey(KeyCode.LeftControl) && !Input.GetKey(KeyCode.RightControl))
-		{
+	public void SelectGameObject(GameObject listGameObject, GameObject editorGameObject) {
+		if (!Input.GetKey(KeyCode.LeftControl) && !Input.GetKey(KeyCode.RightControl)) {
 			DeselectAllGameObjects();
 		}
 
-		if (this._selectedObjects.Contains(listGameObject))
-		{
+		if (this._selectedObjects.Contains(listGameObject)) {
 			DeselectGameObject(listGameObject, editorGameObject);
-		}
-		else
-		{
+		} else {
 			AddGameObject(listGameObject, editorGameObject);
 		}
 	}
 
-	void AddGameObject(GameObject listGameObject, GameObject editorGameObject)
-    {
+	void AddGameObject(GameObject listGameObject, GameObject editorGameObject) {
 		// Add object to list
 		this._selectedObjects.Add(listGameObject);
 
@@ -133,8 +124,7 @@ public class SceneObjects : MonoBehaviour {
 		ChangeColor(editorGameObject);
 	}
 
-	void DeselectGameObject(GameObject listGameObject, GameObject editorGameObject)
-	{
+	void DeselectGameObject(GameObject listGameObject, GameObject editorGameObject) {
 		// Remove object from list
 		this._selectedObjects.Remove(listGameObject);
 
@@ -146,11 +136,9 @@ public class SceneObjects : MonoBehaviour {
 		childText.color = Color.black;
 	}
 
-	void DeselectAllGameObjects()
-    {
+	void DeselectAllGameObjects() {
 		// Remove sidemenu objects highlight
-		foreach (GameObject selected in this._selectedObjects)
-		{
+		foreach (GameObject selected in this._selectedObjects) {
 			Text childText = selected.GetComponent<Text>();
 			childText.color = Color.black;
 		}
@@ -162,8 +150,7 @@ public class SceneObjects : MonoBehaviour {
 		manager.RemoveHighlights(manager._selectedObjects);
 	}
 
-	void SetPropertyMenuFields(GameObject selectedObject)
-    {
+	void SetPropertyMenuFields(GameObject selectedObject) {
 		// Get renderer of selectedObject
 		Renderer objectRenderer = selectedObject.GetComponent<Renderer>();
 
@@ -171,25 +158,23 @@ public class SceneObjects : MonoBehaviour {
 		GameObject xInputObject = GameObject.Find("XInput");
 		GameObject yInputObject = GameObject.Find("YInput");
 		GameObject zInputObject = GameObject.Find("ZInput");
-		
+
 		// Set dimensions in properties menu
 		xInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.x.ToString();
 		yInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.y.ToString();
 		zInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.z.ToString();
 	}
 
-	void ChangeColor(GameObject editorGameObject)
-    {
+	void ChangeColor(GameObject editorGameObject) {
 		// Get renderer of selectedObject
 		Renderer objectRenderer = editorGameObject.GetComponent<Renderer>();
 
 		// Get colorPickerTester script
 		ColorPickerTester colorPicker = colorPickerObject.GetComponent<ColorPickerTester>();
 		colorPicker.ChangeColor(objectRenderer);
-    }
+	}
 
-	void ChangeBackgroundImage(GameObject editorGameObject)
-    {
+	void ChangeBackgroundImage(GameObject editorGameObject) {
 		editorGameObject.AddComponent<Image>();
 	}
 }
