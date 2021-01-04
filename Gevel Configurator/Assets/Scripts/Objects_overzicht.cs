@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using SFB;
 
 public class Objects_overzicht : MonoBehaviour {
 	// Start is called before the first frame update
@@ -43,14 +44,14 @@ public class Objects_overzicht : MonoBehaviour {
 	}
 */
 
+	/*
+		private void Update() {
 
-	private void Update() {
-
-		//Debug.Log(objects[0]);
-		//AddSurfaceGroupToList(parentObject.GetAllChildren(), "North");
-		//surfaceGroupTotals = TotalSurfaceAreaPerGroup(parentObject.GetAllChildren());
-	}
-
+			//Debug.Log(objects[0]);
+			//AddSurfaceGroupToList(parentObject.GetAllChildren(), "North");
+			//surfaceGroupTotals = TotalSurfaceAreaPerGroup(parentObject.GetAllChildren());
+		}
+	*/
 
 
 	/// <summary>
@@ -58,7 +59,8 @@ public class Objects_overzicht : MonoBehaviour {
 	/// </summary>
 	public void ExportTotalsToExcel() {
 
-		var path = EditorUtility.SaveFilePanel("Save Surface totals as Excel", "", "", "xlsx");
+		var path = StandaloneFileBrowser.SaveFilePanel("Save Surface totals as Excel", "", "", "xlsx");
+		// Debug.Log(path);
 		if (path != null) {
 			Excel xls = new Excel();
 			ExcelTable table = new ExcelTable {
@@ -79,6 +81,7 @@ public class Objects_overzicht : MonoBehaviour {
 			}
 
 			ExcelHelper.SaveExcel(xls, path);
+			return;
 		}
 
 	}

@@ -67,13 +67,13 @@ namespace RTG {
 		/// A list of objects which are currently selected. This is also the list that holds
 		/// the gizmo target objects. 
 		/// </summary>
-		private readonly List<GameObject> _selectedObjects = new List<GameObject>();
+		private List<GameObject> _selectedObjects = new List<GameObject>();
 
 		/// <summary>
 		/// A Dictionary of objects and transform values wich are copied from the selected objects. This list also contains 
 		/// the objects that will be instantiated on the paste command
 		/// </summary>
-		private readonly List<GameObject> _clipboard = new List<GameObject>();
+		private List<GameObject> _clipboard = new List<GameObject>();
 
 		/// <summary>
 		/// Color of the outline for the selected objects
