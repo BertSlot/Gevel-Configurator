@@ -171,7 +171,7 @@ public class SceneObjects : MonoBehaviour {
 		GameObject xInputObject = GameObject.Find("XInput");
 		GameObject yInputObject = GameObject.Find("YInput");
 		GameObject zInputObject = GameObject.Find("ZInput");
-
+		
 		// Set dimensions in properties menu
 		xInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.x.ToString();
 		yInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.y.ToString();
@@ -187,4 +187,9 @@ public class SceneObjects : MonoBehaviour {
 		ColorPickerTester colorPicker = colorPickerObject.GetComponent<ColorPickerTester>();
 		colorPicker.ChangeColor(objectRenderer);
     }
+
+	void ChangeBackgroundImage(GameObject editorGameObject)
+    {
+		editorGameObject.AddComponent<Image>();
+	}
 }
