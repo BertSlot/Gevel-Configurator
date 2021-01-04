@@ -44,7 +44,7 @@ namespace HSVPicker.Examples
             // Change color
             picker.onValueChanged.AddListener(color =>
             {
-                // Set rendering mode to transparent if color alpha is 0
+                // Set rendering mode to transparent if color alpha is < 1
                 if (color.a < 1)
                 {
                     renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
