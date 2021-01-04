@@ -94,9 +94,9 @@ namespace RTG {
 		private GameObject sideMenu;
 
 		/// <summary>
-        /// SelectObject for the scripts
-        /// </summary>
-        //private GameObject 
+		/// SelectObject for the scripts
+		/// </summary>
+		//private GameObject 
 
 		/// <summary>
 		/// Performs all necessary initializations.
@@ -150,11 +150,12 @@ namespace RTG {
 
 					// Find sidemenu object by name in objectList
 					GameObject listGameObject = objectList.transform.Find(objectName).gameObject;
+					if (listGameObject != null) {
 
-					// Set last selected object in SceneObject script & Higlight gameobject in editor
-					scene.SelectGameObject(listGameObject, pickedObject);
-				}
-				else {
+						// Set last selected object in SceneObject script & Higlight gameobject in editor
+						scene.SelectGameObject(listGameObject, pickedObject);
+					}
+				} else {
 					// If we reach this point, it means no object was picked. This means that we clicked
 					// in thin air, so we just clear the selected objects list.
 					RemoveHighlights(_selectedObjects);
