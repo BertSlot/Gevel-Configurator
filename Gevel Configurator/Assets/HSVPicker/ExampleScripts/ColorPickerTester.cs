@@ -85,9 +85,5 @@ namespace HSVPicker.Examples
             }
             
         }
-
-		void closeColorPickerMenu() {
-
-		}
 	}
 }
