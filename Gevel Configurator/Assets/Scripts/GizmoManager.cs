@@ -94,6 +94,11 @@ namespace RTG {
 		private GameObject sideMenu;
 
 		/// <summary>
+		/// Contains SceneObjects script
+		/// </summary>
+		private SceneObjects scene;
+
+		/// <summary>
 		/// SelectObject for the scripts
 		/// </summary>
 		//private GameObject 
@@ -128,6 +133,7 @@ namespace RTG {
 
 			// Find side menu
 			sideMenu = GameObject.Find("SideMenu");
+			scene = sideMenu.GetComponent<SceneObjects>();
 		}
 
 		/// <summary>
@@ -142,8 +148,6 @@ namespace RTG {
 				GameObject pickedObject = PickGameObject();
 
 				if (pickedObject != null) {
-					SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
-
 					// Get name of picked object
 					string objectName = pickedObject.name;
 					GameObject objectList = scene.GetObjectListContent();
@@ -235,6 +239,8 @@ namespace RTG {
 				SetWorkGizmoId(GizmoId.Scale);
 			else if (Input.GetKeyDown(KeyCode.T))
 				SetWorkGizmoId(GizmoId.Universal);
+
+			OnSelectionChanged();
 		}
 
 
@@ -333,8 +339,12 @@ namespace RTG {
 			List<GameObject> instantiatedObjects = new List<GameObject>();
 
 			foreach (var obj in _clipboard) {
-				instantiatedObjects.Add(Instantiate(obj, obj.transform.parent) as GameObject);
+				GameObject duplicateObject = Instantiate(obj, obj.transform.parent);
+				instantiatedObjects.Add(duplicateObject);
+
+				scene.AddObjectToObjectListMenu(duplicateObject);
 			}
+
 			return instantiatedObjects;
 		}
 
@@ -355,6 +365,7 @@ namespace RTG {
 		/// <param name="obj"></param>
 		private void DeleteObject(GameObject obj) {
 			Destroy(obj);
+			scene.RemoveObjectFromObjectListMenu(obj);
 		}
 
 		/// <summary>
