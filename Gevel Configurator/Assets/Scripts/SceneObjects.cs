@@ -40,6 +40,11 @@ public class SceneObjects : MonoBehaviour {
 	/// </summary>
 	public List<GameObject> _selectedObjects = new List<GameObject>();
 
+	/// <summary>
+	/// List with list objects
+	/// </summary>
+	private List<GameObject> listObjectsList = new List<GameObject>();
+
 	// Start is called before the first frame update
 	void Start() {
 		gizmo = GameObject.Find("RTGizmoManager");
@@ -54,40 +59,93 @@ public class SceneObjects : MonoBehaviour {
 	}
 
 	void SetObjectListMenu() {
+		foreach (Transform go in parentObject.transform) {
+			GameObject childObject = CreateListObject(go);
+			listObjectsList.Add(childObject);
+		}
+
+		RenderListObjects();
+	}
+
+	public void AddObjectToObjectListMenu(GameObject go)
+    {
+        GameObject childObject = CreateListObject(go.transform);
+        listObjectsList.Add(childObject);
+
+        RenderListObjects();
+    }
+
+	public void RemoveObjectFromObjectListMenu(GameObject go)
+    {
+		for (int i = 0; i < listObjectsList.Count; i++)
+		{
+			if (listObjectsList[i].name == go.name)
+			{
+				listObjectsList.Remove(listObjectsList[i]);
+				break;
+			}
+		}
+
+		RenderListObjects();
+	}
+
+	void ClearObjectListMenu()
+	{
+		foreach (Transform child in objectListContent.transform)
+		{
+			child.parent = null;
+		}
+
+		// Set list height to zero
+		RectTransform AssetsViewRt = objectListContent.GetComponent<RectTransform>();
+		AssetsViewRt.sizeDelta = new Vector2(0, 0);
+	}
+
+	void RenderListObjects()
+    {
 		int counter = 0;
 		int position = -10;
 
-		foreach (Transform go in parentObject.transform) {
-			GameObject childObject = new GameObject(go.name, typeof(RectTransform));
-			childObject.transform.SetParent(this.objectListContent.transform);
+		// First clear object list menu
+		ClearObjectListMenu();
 
-			// Position of object item
-			RectTransform rt = childObject.GetComponent<RectTransform>();
-			rt.sizeDelta = new Vector2(240, 20);
-			rt.anchoredPosition = new Vector2(0, position);
+		foreach (GameObject go in listObjectsList)
+        {
+            go.transform.SetParent(this.objectListContent.transform);
 
-			rt.anchorMin = new Vector2(0.5f, 1);
-			rt.anchorMax = new Vector2(0.5f, 1);
-			rt.pivot = new Vector2(0.5f, 1);
+            RectTransform rt = go.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(240, 20);
+            rt.anchoredPosition = new Vector2(0, position);
 
-			// Text styling
-			Text childText = childObject.AddComponent<Text>();
-			childText.text = go.name;
-			childText.color = Color.black;
-			childText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+            rt.anchorMin = new Vector2(0.5f, 1);
+            rt.anchorMax = new Vector2(0.5f, 1);
+            rt.pivot = new Vector2(0.5f, 1);
 
-			// Add script
-			childObject.AddComponent(typeof(SelectObject));
-
-			counter++;
+            counter++;
 			position += -20;
 		}
 
 		// Calculate height for objects list
 		int assetsViewHeight = (20 * counter) + 20;
 
-		RectTransform AssetsViewRt = objectListContent.GetComponent<RectTransform>();
+		RectTransform AssetsViewRt = this.objectListContent.GetComponent<RectTransform>();
 		AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
+	}
+
+	GameObject CreateListObject(Transform go)
+    {
+		GameObject childObject = new GameObject(go.name, typeof(RectTransform));
+
+		// Text styling
+		Text childText = childObject.AddComponent<Text>();
+		childText.text = go.name;
+		childText.color = Color.black;
+		childText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+
+		// Add script
+		childObject.AddComponent(typeof(SelectObject));
+
+		return childObject;
 	}
 
 	public GameObject GetObjectListContent() {
