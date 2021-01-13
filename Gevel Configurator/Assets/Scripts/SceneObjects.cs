@@ -45,6 +45,11 @@ public class SceneObjects : MonoBehaviour {
 	/// </summary>
 	private List<GameObject> listObjectsList = new List<GameObject>();
 
+	/// <summary>
+	/// Calculation overzicht object
+	/// </summary>
+	private GameObject calculationOverview;
+
 	// Start is called before the first frame update
 	void Start() {
 		gizmo = GameObject.Find("RTGizmoManager");
@@ -52,6 +57,7 @@ public class SceneObjects : MonoBehaviour {
 		objectListContent = GameObject.Find("Content");
 		parentObject = GameObject.Find("Objects");
 		colorPickerObject = GameObject.Find("BackgroundColor");
+		calculationOverview = GameObject.Find("Calculation_Overzicht");
 
 		manager = gizmo.GetComponent<RTG.GizmoManager>();
 
@@ -169,7 +175,7 @@ public class SceneObjects : MonoBehaviour {
 		childText.color = Color.white;
 
 		// Set property menu fields
-		SetPropertyMenuFields(editorGameObject);
+		SetPropertyMenuFields(listGameObject, editorGameObject);
 
 		// Set color picker object
 		ChangeColor(editorGameObject);
@@ -201,19 +207,50 @@ public class SceneObjects : MonoBehaviour {
 		manager.RemoveHighlights(manager._selectedObjects);
 	}
 
-	void SetPropertyMenuFields(GameObject selectedObject) {
+	void SetPropertyMenuFields(GameObject listGameObject, GameObject editorGameObject) {
 		// Find dimensions fields
 		GameObject xInputObject = GameObject.Find("XInput");
 		GameObject yInputObject = GameObject.Find("YInput");
 		GameObject zInputObject = GameObject.Find("ZInput");
 
 		// Set dimensions in properties menu
-		//xInputObject.GetComponent<InputField>().text = "wow";
-		Debug.Log(selectedObject.transform.localPosition.ToString());
-		xInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.x.ToString();
-		yInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.y.ToString();
-		zInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.z.ToString();
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.z.ToString();
+
+		// Set groups in dropdown
+		GameObject dropdownObject = GameObject.Find("GroupDropdown");
+		Dropdown dropdown = dropdownObject.GetComponent<Dropdown>();
+
+		AddDropdownItems(dropdown);
+
+		// Set object name field
+		GameObject objectNameObject = GameObject.Find("ObjectNameField");
+		InputField objectNameField = objectNameObject.GetComponent<InputField>();
+		objectNameField.text = listGameObject.name;
+
+		// Set object name field listener
+		objectNameField.onValueChanged.AddListener(name =>
+		{
+			listGameObject.name = objectNameField.text;
+			Text childText = listGameObject.GetComponent<Text>();
+			childText.text = objectNameField.text;
+		});
 	}
+
+	void AddDropdownItems(Dropdown dropdown)
+    {
+		List<string> options = new List<string>();
+		Objects_overzicht overview = calculationOverview.GetComponent<Objects_overzicht>();
+		foreach (KeyValuePair<string, float> group in overview.SurfaceGroupTotals)
+        {
+			options.Add(group.Key);
+        }
+
+		dropdown.ClearOptions();
+		dropdown.AddOptions(options);
+	}
+
 	void ChangeColor(GameObject editorGameObject) {
 		// Get renderer of selectedObject
 		Renderer objectRenderer = editorGameObject.GetComponent<Renderer>();
