@@ -152,22 +152,30 @@ namespace RTG {
 					string objectName = pickedObject.name;
 					GameObject objectList = scene.GetObjectListContent();
 
-					// Find sidemenu object by name in objectList
-					GameObject listGameObject = objectList.transform.Find(objectName).gameObject;
-					if (listGameObject != null) {
-
-						// Set last selected object in SceneObject script & Higlight gameobject in editor
-						scene.SelectGameObject(listGameObject, pickedObject);
+                    // Find sidemenu object by name in objectList
+                    GameObject listGameObject = null;
+					if (objectList.transform.Find(objectName) != null)
+                    {
+						listGameObject = objectList.transform.Find(objectName).gameObject;
 					}
-				} else {
-					// If we reach this point, it means no object was picked. This means that we clicked
-					// in thin air, so we just clear the selected objects list.
-					RemoveHighlights(_selectedObjects);
-					_selectedObjects.Clear();
-					OnSelectionChanged();
 
-					// The selection has changed
-					OnSelectionChanged();
+                    if (listGameObject != null)
+                    {
+                        // Set last selected object in SceneObject script & Higlight gameobject in editor
+                        scene.SelectGameObject(listGameObject, pickedObject);
+                    }
+                } else {
+					if (!EventSystem.current.IsPointerOverGameObject())
+					{
+						// If we reach this point, it means no object was picked. This means that we clicked
+						// in thin air, so we just clear the selected objects list.
+						RemoveHighlights(_selectedObjects);
+						_selectedObjects.Clear();
+						OnSelectionChanged();
+
+						// The selection has changed
+						OnSelectionChanged();
+					}
 				}
 			}
 
