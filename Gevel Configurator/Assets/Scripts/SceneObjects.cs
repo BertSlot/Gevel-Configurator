@@ -87,8 +87,9 @@ public class SceneObjects : MonoBehaviour {
 
 	void ClearObjectListMenu() {
 		foreach (Transform child in objectListContent.transform) {
-			//child.parent = null;
+			// child.parent = null;
 			child.SetParent(null, false);
+			// Destroy(child.gameObject);
 		}
 
 		// Set list height to zero

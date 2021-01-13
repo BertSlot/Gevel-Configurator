@@ -16,7 +16,7 @@ public class AssetSpawner : MonoBehaviour {
 	/// This object is a child of GameObject 'objectList' containing the list of child objects
 	/// </summary>
 	[SerializeField]
-	private GameObject ObjectListContent;
+	private GameObject ObjectListContentPanel;
 
 	/// <summary>
 	/// Path to Import_Objects Folder
@@ -49,7 +49,7 @@ public class AssetSpawner : MonoBehaviour {
 
 			foreach (GameObject obj in ObjectsList) {
 				// Create Panel
-				AssetPanel = Instantiate(PanelPrefab, ObjectListContent.transform);
+				AssetPanel = Instantiate(PanelPrefab, ObjectListContentPanel.transform);
 
 				// Add Asset to panel and name under panel
 				SelectAsset panelData = AssetPanel.GetComponent<SelectAsset>();
