@@ -98,7 +98,7 @@ public class SceneObjects : MonoBehaviour {
 
 	void RenderListObjects() {
 		int counter = 0;
-		int position = -10;
+		//int position = -10;*/
 
 		// First clear object list menu
 		ClearObjectListMenu();
@@ -108,14 +108,14 @@ public class SceneObjects : MonoBehaviour {
 
 			RectTransform rt = go.GetComponent<RectTransform>();
 			rt.sizeDelta = new Vector2(240, 20);
+			/*
 			rt.anchoredPosition = new Vector2(0, position);
-
 			rt.anchorMin = new Vector2(0.5f, 1);
 			rt.anchorMax = new Vector2(0.5f, 1);
 			rt.pivot = new Vector2(0.5f, 1);
-
+			*/
 			counter++;
-			position += -20;
+			//position += -20;*/
 		}
 
 		// Calculate height for objects list
@@ -123,6 +123,7 @@ public class SceneObjects : MonoBehaviour {
 
 		RectTransform AssetsViewRt = this.objectListContent.GetComponent<RectTransform>();
 		AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
+
 	}
 
 	GameObject CreateListObject(Transform go) {
