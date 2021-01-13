@@ -67,20 +67,16 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
-	public void AddObjectToObjectListMenu(GameObject go)
-    {
-        GameObject childObject = CreateListObject(go.transform);
-        listObjectsList.Add(childObject);
+	public void AddObjectToObjectListMenu(GameObject go) {
+		GameObject childObject = CreateListObject(go.transform);
+		listObjectsList.Add(childObject);
 
-        RenderListObjects();
-    }
+		RenderListObjects();
+	}
 
-	public void RemoveObjectFromObjectListMenu(GameObject go)
-    {
-		for (int i = 0; i < listObjectsList.Count; i++)
-		{
-			if (listObjectsList[i].name == go.name)
-			{
+	public void RemoveObjectFromObjectListMenu(GameObject go) {
+		for (int i = 0; i < listObjectsList.Count; i++) {
+			if (listObjectsList[i].name == go.name) {
 				listObjectsList.Remove(listObjectsList[i]);
 				break;
 			}
@@ -89,11 +85,10 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
-	void ClearObjectListMenu()
-	{
-		foreach (Transform child in objectListContent.transform)
-		{
-			child.parent = null;
+	void ClearObjectListMenu() {
+		foreach (Transform child in objectListContent.transform) {
+			//child.parent = null;
+			child.SetParent(null, false);
 		}
 
 		// Set list height to zero
@@ -101,27 +96,25 @@ public class SceneObjects : MonoBehaviour {
 		AssetsViewRt.sizeDelta = new Vector2(0, 0);
 	}
 
-	void RenderListObjects()
-    {
+	void RenderListObjects() {
 		int counter = 0;
 		int position = -10;
 
 		// First clear object list menu
 		ClearObjectListMenu();
 
-		foreach (GameObject go in listObjectsList)
-        {
-            go.transform.SetParent(this.objectListContent.transform);
+		foreach (GameObject go in listObjectsList) {
+			go.transform.SetParent(this.objectListContent.transform);
 
-            RectTransform rt = go.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(240, 20);
-            rt.anchoredPosition = new Vector2(0, position);
+			RectTransform rt = go.GetComponent<RectTransform>();
+			rt.sizeDelta = new Vector2(240, 20);
+			rt.anchoredPosition = new Vector2(0, position);
 
-            rt.anchorMin = new Vector2(0.5f, 1);
-            rt.anchorMax = new Vector2(0.5f, 1);
-            rt.pivot = new Vector2(0.5f, 1);
+			rt.anchorMin = new Vector2(0.5f, 1);
+			rt.anchorMax = new Vector2(0.5f, 1);
+			rt.pivot = new Vector2(0.5f, 1);
 
-            counter++;
+			counter++;
 			position += -20;
 		}
 
@@ -132,8 +125,7 @@ public class SceneObjects : MonoBehaviour {
 		AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
 	}
 
-	GameObject CreateListObject(Transform go)
-    {
+	GameObject CreateListObject(Transform go) {
 		GameObject childObject = new GameObject(go.name, typeof(RectTransform));
 
 		// Text styling

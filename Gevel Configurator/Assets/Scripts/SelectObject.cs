@@ -6,13 +6,13 @@ using UnityEngine.EventSystems;
 
 public class SelectObject : MonoBehaviour, IPointerClickHandler {
 	/// <summary>
-    /// Contains sideMenu gameobject for the SceneObjects script
-    /// </summary>
+	/// Contains sideMenu gameobject for the SceneObjects script
+	/// </summary>
 	private GameObject sideMenu;
 
 	/// <summary>
-    /// Contains the 3d-editor objects
-    /// </summary>
+	/// Contains the 3d-editor objects
+	/// </summary>
 	private GameObject objectsList;
 
 	// Start is called before the first frame update
