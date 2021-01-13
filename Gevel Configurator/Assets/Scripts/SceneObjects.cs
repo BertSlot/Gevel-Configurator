@@ -169,7 +169,7 @@ public class SceneObjects : MonoBehaviour {
 		childText.color = Color.white;
 
 		// Set property menu fields
-		SetPropertyMenuFields(listGameObject);
+		SetPropertyMenuFields(editorGameObject);
 
 		// Set color picker object
 		ChangeColor(editorGameObject);
@@ -202,20 +202,18 @@ public class SceneObjects : MonoBehaviour {
 	}
 
 	void SetPropertyMenuFields(GameObject selectedObject) {
-		// Get renderer of selectedObject
-		Renderer objectRenderer = selectedObject.GetComponent<Renderer>();
-
 		// Find dimensions fields
 		GameObject xInputObject = GameObject.Find("XInput");
 		GameObject yInputObject = GameObject.Find("YInput");
 		GameObject zInputObject = GameObject.Find("ZInput");
 
 		// Set dimensions in properties menu
+		//xInputObject.GetComponent<InputField>().text = "wow";
+		Debug.Log(selectedObject.transform.localPosition.ToString());
 		xInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.x.ToString();
 		yInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.y.ToString();
 		zInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.z.ToString();
 	}
-
 	void ChangeColor(GameObject editorGameObject) {
 		// Get renderer of selectedObject
 		Renderer objectRenderer = editorGameObject.GetComponent<Renderer>();
