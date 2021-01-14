@@ -16,6 +16,7 @@ public class SurfaceOverzicht : MonoBehaviour {
 
 	private Objects_overzicht overzicht;
 
+	private string scale = " cm²";
 
 	private void Awake() {
 
@@ -30,14 +31,12 @@ public class SurfaceOverzicht : MonoBehaviour {
 	private void OnEnable() {
 		//ClearContents();
 		RenderOverzichtTotals();
-
 	}
 
 
 
 	private void OnDisable() {
 		ClearContents();
-
 	}
 
 	public void RenderOverzichtTotals() {
@@ -47,11 +46,12 @@ public class SurfaceOverzicht : MonoBehaviour {
 			groupTextbox.transform.SetParent(SurfaceNameList, false);
 		}
 
-		foreach (var total in overzicht.SurfaceGroupTotals.Values) {
-			// values to string with cm^2 or M^2
-			// stuff ?????????????????? stuff
-
-			var groupTextbox = CreateListObject(total.ToString() + "cm^2");
+		foreach (float total in overzicht.SurfaceGroupTotals.Values) {
+			float tempTotal = total;
+			if (scale == " m²") {
+				tempTotal *= (float)0.0001f;
+			}
+			var groupTextbox = CreateListObject(tempTotal.ToString() + scale);
 			groupTextbox.transform.SetParent(SurfaceTotalsList, false);
 		}
 
@@ -87,6 +87,16 @@ public class SurfaceOverzicht : MonoBehaviour {
 		childText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 
 		return childObject;
+	}
+
+	public void setScaleCm() {
+		scale = " cm²";
+		RenderOverzichtTotals();
+	}
+
+	public void setScaleM() {
+		scale = " m²";
+		RenderOverzichtTotals();
 	}
 
 
