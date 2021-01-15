@@ -30,19 +30,19 @@ public class Objects_overzicht : MonoBehaviour {
 			return surfaceGroupTotals;
 		}
 	}
-	/*private void Start() {
+	private void Start() {
 
 		foreach (GameObject obj in parentObject.GetAllChildren()) {
 			//Debug.Log(obj.name);
-			SetSurfaceGroupState(obj, true);
-			//AddSurfaceGroup(obj, "Noord");
-			//AddSurfaceGroup(obj, "West");
-			//AddSurfaceGroup(obj, "Oost");
-			//AddSurfaceGroup(obj, "Zuid");
+			//SetSurfaceGroupState(obj, true);
+			AddSurfaceGroup(obj, "Noord");
+			AddSurfaceGroup(obj, "West");
+			AddSurfaceGroup(obj, "Oost");
+			AddSurfaceGroup(obj, "Zuid");
 		}
 		//ExportTotalsToExcel();
 	}
-*/
+
 
 	/*
 		private void Update() {
@@ -139,6 +139,15 @@ public class Objects_overzicht : MonoBehaviour {
 	}
 
 
+	public List<string> GetSurfaceGroups(GameObject obj) {
+
+		if (obj.GetComponent<SurfaceAreaGroup>() != null) {
+			SurfaceAreaGroup groups = obj.GetComponent<SurfaceAreaGroup>();
+			return groups.surfaceGroups;
+		}
+
+		return null;
+	}
 
 
 	/// <summary>

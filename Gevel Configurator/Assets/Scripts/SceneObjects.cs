@@ -45,6 +45,11 @@ public class SceneObjects : MonoBehaviour {
 	/// </summary>
 	private List<GameObject> listObjectsList = new List<GameObject>();
 
+	/// <summary>
+	/// Calculation overzicht object
+	/// </summary>
+	private GameObject calculationOverview;
+
 	// Start is called before the first frame update
 	void Start() {
 		gizmo = GameObject.Find("RTGizmoManager");
@@ -52,6 +57,7 @@ public class SceneObjects : MonoBehaviour {
 		objectListContent = GameObject.Find("Content");
 		parentObject = GameObject.Find("Objects");
 		colorPickerObject = GameObject.Find("BackgroundColor");
+		calculationOverview = GameObject.Find("Calculation_Overzicht");
 
 		manager = gizmo.GetComponent<RTG.GizmoManager>();
 
@@ -67,20 +73,16 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
-	public void AddObjectToObjectListMenu(GameObject go)
-    {
-        GameObject childObject = CreateListObject(go.transform);
-        listObjectsList.Add(childObject);
+	public void AddObjectToObjectListMenu(GameObject go) {
+		GameObject childObject = CreateListObject(go.transform);
+		listObjectsList.Add(childObject);
 
-        RenderListObjects();
-    }
+		RenderListObjects();
+	}
 
-	public void RemoveObjectFromObjectListMenu(GameObject go)
-    {
-		for (int i = 0; i < listObjectsList.Count; i++)
-		{
-			if (listObjectsList[i].name == go.name)
-			{
+	public void RemoveObjectFromObjectListMenu(GameObject go) {
+		for (int i = 0; i < listObjectsList.Count; i++) {
+			if (listObjectsList[i].name == go.name) {
 				listObjectsList.Remove(listObjectsList[i]);
 				break;
 			}
@@ -89,11 +91,11 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
-	void ClearObjectListMenu()
-	{
-		foreach (Transform child in objectListContent.transform)
-		{
-			child.parent = null;
+	void ClearObjectListMenu() {
+		foreach (Transform child in objectListContent.transform) {
+			// child.parent = null;
+			child.SetParent(null, false);
+			// Destroy(child.gameObject);
 		}
 
 		// Set list height to zero
@@ -101,28 +103,26 @@ public class SceneObjects : MonoBehaviour {
 		AssetsViewRt.sizeDelta = new Vector2(0, 0);
 	}
 
-	void RenderListObjects()
-    {
+	void RenderListObjects() {
 		int counter = 0;
-		int position = -10;
+		//int position = -10;*/
 
 		// First clear object list menu
 		ClearObjectListMenu();
 
-		foreach (GameObject go in listObjectsList)
-        {
-            go.transform.SetParent(this.objectListContent.transform);
+		foreach (GameObject go in listObjectsList) {
+			go.transform.SetParent(this.objectListContent.transform);
 
-            RectTransform rt = go.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(240, 20);
-            rt.anchoredPosition = new Vector2(0, position);
-
-            rt.anchorMin = new Vector2(0.5f, 1);
-            rt.anchorMax = new Vector2(0.5f, 1);
-            rt.pivot = new Vector2(0.5f, 1);
-
-            counter++;
-			position += -20;
+			RectTransform rt = go.GetComponent<RectTransform>();
+			rt.sizeDelta = new Vector2(240, 20);
+			/*
+			rt.anchoredPosition = new Vector2(0, position);
+			rt.anchorMin = new Vector2(0.5f, 1);
+			rt.anchorMax = new Vector2(0.5f, 1);
+			rt.pivot = new Vector2(0.5f, 1);
+			*/
+			counter++;
+			//position += -20;*/
 		}
 
 		// Calculate height for objects list
@@ -130,10 +130,10 @@ public class SceneObjects : MonoBehaviour {
 
 		RectTransform AssetsViewRt = this.objectListContent.GetComponent<RectTransform>();
 		AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
+
 	}
 
-	GameObject CreateListObject(Transform go)
-    {
+	GameObject CreateListObject(Transform go) {
 		GameObject childObject = new GameObject(go.name, typeof(RectTransform));
 
 		// Text styling
@@ -176,7 +176,7 @@ public class SceneObjects : MonoBehaviour {
 		childText.color = Color.white;
 
 		// Set property menu fields
-		SetPropertyMenuFields(listGameObject);
+		SetPropertyMenuFields(listGameObject, editorGameObject);
 
 		// Set color picker object
 		ChangeColor(editorGameObject);
@@ -208,19 +208,45 @@ public class SceneObjects : MonoBehaviour {
 		manager.RemoveHighlights(manager._selectedObjects);
 	}
 
-	void SetPropertyMenuFields(GameObject selectedObject) {
-		// Get renderer of selectedObject
-		Renderer objectRenderer = selectedObject.GetComponent<Renderer>();
-
+	void SetPropertyMenuFields(GameObject listGameObject, GameObject editorGameObject) {
 		// Find dimensions fields
 		GameObject xInputObject = GameObject.Find("XInput");
 		GameObject yInputObject = GameObject.Find("YInput");
 		GameObject zInputObject = GameObject.Find("ZInput");
 
 		// Set dimensions in properties menu
-		xInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.x.ToString();
-		yInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.y.ToString();
-		zInputObject.GetComponent<InputField>().text = selectedObject.transform.localScale.z.ToString();
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.z.ToString();
+
+		// Set groups in dropdown
+		GameObject dropdownObject = GameObject.Find("GroupDropdown");
+		Dropdown dropdown = dropdownObject.GetComponent<Dropdown>();
+
+		AddDropdownItems(dropdown);
+
+		// Set object name field
+		GameObject objectNameObject = GameObject.Find("ObjectNameField");
+		InputField objectNameField = objectNameObject.GetComponent<InputField>();
+		objectNameField.text = listGameObject.name;
+
+		// Set object name field listener
+		objectNameField.onValueChanged.AddListener(name => {
+			listGameObject.name = objectNameField.text;
+			Text childText = listGameObject.GetComponent<Text>();
+			childText.text = objectNameField.text;
+		});
+	}
+
+	void AddDropdownItems(Dropdown dropdown) {
+		List<string> options = new List<string>();
+		Objects_overzicht overview = calculationOverview.GetComponent<Objects_overzicht>();
+		foreach (KeyValuePair<string, float> group in overview.SurfaceGroupTotals) {
+			options.Add(group.Key);
+		}
+
+		dropdown.ClearOptions();
+		dropdown.AddOptions(options);
 	}
 
 	void ChangeColor(GameObject editorGameObject) {
