@@ -231,22 +231,19 @@ public class SceneObjects : MonoBehaviour {
 		objectNameField.text = listGameObject.name;
 
 		// Set object name field listener
-		objectNameField.onValueChanged.AddListener(name =>
-		{
+		objectNameField.onValueChanged.AddListener(name => {
 			listGameObject.name = objectNameField.text;
 			Text childText = listGameObject.GetComponent<Text>();
 			childText.text = objectNameField.text;
 		});
 	}
 
-	void AddDropdownItems(Dropdown dropdown)
-    {
+	void AddDropdownItems(Dropdown dropdown) {
 		List<string> options = new List<string>();
 		Objects_overzicht overview = calculationOverview.GetComponent<Objects_overzicht>();
-		foreach (KeyValuePair<string, float> group in overview.SurfaceGroupTotals)
-        {
+		foreach (KeyValuePair<string, float> group in overview.SurfaceGroupTotals) {
 			options.Add(group.Key);
-        }
+		}
 
 		dropdown.ClearOptions();
 		dropdown.AddOptions(options);

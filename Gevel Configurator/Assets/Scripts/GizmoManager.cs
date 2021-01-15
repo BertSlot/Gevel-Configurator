@@ -277,6 +277,7 @@ namespace RTG {
 
 			_selectedObjects.Clear();
 			_selectedObjects.Add(spawnedObj);
+			scene.AddObjectToObjectListMenu(spawnedObj);
 			OnSelectionChanged();
 		}
 
@@ -308,6 +309,7 @@ namespace RTG {
 
 			_selectedObjects.Clear();
 			_selectedObjects.Add(spawnedObj);
+			scene.AddObjectToObjectListMenu(spawnedObj);
 			OnSelectionChanged();
 		}
 
