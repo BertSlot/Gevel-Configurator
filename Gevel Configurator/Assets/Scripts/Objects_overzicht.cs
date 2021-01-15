@@ -139,6 +139,15 @@ public class Objects_overzicht : MonoBehaviour {
 	}
 
 
+	public List<string> GetSurfaceGroups(GameObject obj) {
+
+		if (obj.GetComponent<SurfaceAreaGroup>() != null) {
+			SurfaceAreaGroup groups = obj.GetComponent<SurfaceAreaGroup>();
+			return groups.surfaceGroups;
+		}
+
+		return null;
+	}
 
 
 	/// <summary>
