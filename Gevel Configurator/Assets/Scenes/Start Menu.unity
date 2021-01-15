@@ -195,7 +195,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5860037564679401367}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &628417831
+--- !u!114 &628417830
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -204,7 +204,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 628417829}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7862b3f1ebf5d054a94f5eacb02fcc15, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e5ab5e26aa8e1f43bdf9497abe844a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &735819602
@@ -992,16 +992,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 628417831}
+      objectReference: {fileID: 628417830}
     - target: {fileID: 4134715279495161346, guid: 8bd2dbf5e0c3e85469b0f18b04ff13b5,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Exit, Assembly-CSharp
+      value: CloseApplication, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4134715279495161346, guid: 8bd2dbf5e0c3e85469b0f18b04ff13b5,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: exitgame
+      value: QuitApplication
       objectReference: {fileID: 0}
     - target: {fileID: 4134715279495161346, guid: 8bd2dbf5e0c3e85469b0f18b04ff13b5,
         type: 3}
@@ -1246,7 +1246,7 @@ PrefabInstance:
     - target: {fileID: 7984221307682253862, guid: 8bd2dbf5e0c3e85469b0f18b04ff13b5,
         type: 3}
       propertyPath: m_Text
-      value: ' Ariaweg, Amersfoort'
+      value: test
       objectReference: {fileID: 0}
     - target: {fileID: 7984854732118228374, guid: 8bd2dbf5e0c3e85469b0f18b04ff13b5,
         type: 3}
