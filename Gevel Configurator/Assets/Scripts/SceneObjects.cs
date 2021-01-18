@@ -75,9 +75,18 @@ public class SceneObjects : MonoBehaviour {
 
 	public void AddObjectToObjectListMenu(GameObject go) {
 		GameObject childObject = CreateListObject(go.transform);
+
+		foreach (GameObject menuObject in listObjectsList)
+        {
+			if (childObject.name == menuObject.name)
+            {
+				
+			}
+        } 
 		listObjectsList.Add(childObject);
 
 		RenderListObjects();
+		SelectGameObject(childObject, go);
 	}
 
 	public void RemoveObjectFromObjectListMenu(GameObject go) {
@@ -209,15 +218,14 @@ public class SceneObjects : MonoBehaviour {
 	}
 
 	void SetPropertyMenuFields(GameObject listGameObject, GameObject editorGameObject) {
-		// Find dimensions fields
-		GameObject xInputObject = GameObject.Find("XInput");
-		GameObject yInputObject = GameObject.Find("YInput");
-		GameObject zInputObject = GameObject.Find("ZInput");
+		// Set scale fields
+		SetScaleFields(editorGameObject);
 
-		// Set dimensions in properties menu
-		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.x.ToString();
-		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.y.ToString();
-		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.z.ToString();
+		// Set rotation fields
+		SetRotationFields(editorGameObject);
+
+		// Set position fields
+		SetPositionFields(editorGameObject);
 
 		// Set groups in dropdown
 		GameObject dropdownObject = GameObject.Find("GroupDropdown");
@@ -225,17 +233,75 @@ public class SceneObjects : MonoBehaviour {
 
 		AddDropdownItems(dropdown);
 
+		Objects_overzicht overview = calculationOverview.GetComponent<Objects_overzicht>();
+
+		// First remove previous listeners
+		dropdown.onValueChanged.RemoveAllListeners();
+
+		dropdown.onValueChanged.AddListener(value =>
+		{
+			//Debug.Log(dropdown.options[dropdown.value].text);
+			overview.AddSurfaceGroup(editorGameObject, dropdown.options[dropdown.value].text);
+		});
+
+		foreach (string obj in overview.GetSurfaceGroups(editorGameObject))
+		{
+			//Debug.Log(obj);
+		}
+
 		// Set object name field
 		GameObject objectNameObject = GameObject.Find("ObjectNameField");
 		InputField objectNameField = objectNameObject.GetComponent<InputField>();
 		objectNameField.text = listGameObject.name;
 
+		objectNameField.onValueChanged.RemoveAllListeners();
+
 		// Set object name field listener
-		objectNameField.onValueChanged.AddListener(name => {
+		objectNameField.onValueChanged.AddListener(name =>
+		{
 			listGameObject.name = objectNameField.text;
 			Text childText = listGameObject.GetComponent<Text>();
 			childText.text = objectNameField.text;
 		});
+	}
+
+	void SetScaleFields(GameObject editorGameObject)
+    {
+		// Find scale fields
+		GameObject xInputObject = GameObject.Find("ScaleXInput");
+		GameObject yInputObject = GameObject.Find("ScaleYInput");
+		GameObject zInputObject = GameObject.Find("ScaleZInput");
+
+		// Set scale in properties menu
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.z.ToString();
+	}
+
+	void SetRotationFields(GameObject editorGameObject)
+    {
+		// Find rotation fields
+		GameObject xInputObject = GameObject.Find("RotationXInput");
+		GameObject yInputObject = GameObject.Find("RotationYInput");
+		GameObject zInputObject = GameObject.Find("RotationZInput");
+
+		// Set scale in properties menu
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.z.ToString();
+	}
+
+	void SetPositionFields(GameObject editorGameObject)
+    {
+		// Find rotation fields
+		GameObject xInputObject = GameObject.Find("PositionXInput");
+		GameObject yInputObject = GameObject.Find("PositionYInput");
+		GameObject zInputObject = GameObject.Find("PositionZInput");
+
+		// Set scale in properties menu
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.z.ToString();
 	}
 
 	void AddDropdownItems(Dropdown dropdown) {
