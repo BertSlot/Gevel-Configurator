@@ -1,7 +1,7 @@
 # Gevel-Configurator
 Gevel Configurator project voor Stichting Happy Balance
 
-## Instalation
+## Installation
 First off you'll need to download [Unity Hub & Unity3D](https://unity3d.com/get-unity/download).  
 
 Once those are installed its time to clone this repository into your desired folder. 
