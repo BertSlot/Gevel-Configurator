@@ -57,7 +57,7 @@ This will open the following menu.
 Press the [ Build ] button and a 'Build Windows' panel will open. Select the highlighted folder inside the repository folder. If this folder does not exist create a folder with the name B/build. Folders with this name will be ignored and not uploaded to Github.
 
 <details open>
-<summary>Edit</summary>
+<summary>Build Windows Panel</summary>
 <br> 
  
 ![BuildFolder.png](RepoInfo/BuildFolder.png)
