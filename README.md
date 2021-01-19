@@ -8,9 +8,12 @@ Once those are installed its time to clone this repository into your desired fol
 Next you start up Unity Hub and follow any necessary instructions until you arrive at an empty Projects screen.
 
 Click on [ ADD ] to open a project existing on your computer.
-<b>click here
+
+<details open>
+<summary>Unity Hub projects</summary>
+<br>
 ![UnityHub2.png](RepoInfo/UnityHub2.png)  
-</b>
+</details>
  
 This will open the next 'open file panel' in which you will select the highlighted folder to open the Unity3D project. 
 
