@@ -19,10 +19,13 @@ Click on [ ADD ] to open a project existing on your computer.
  
 This will open the next 'open file panel' in which you will select the highlighted folder to open the Unity3D project. 
 
-
+<details open>
+<summary>Project Selection panel</summary>
+<br> 
+ 
 ![ProjectSelect.png](RepoInfo/ProjectSelect.png)
 
-
+</details>
 
 ## Usage
 
