@@ -11,8 +11,10 @@ Click on [ ADD ] to open a project existing on your computer.
 
 <details open>
 <summary>Unity Hub projects</summary>
-<br>
-![UnityHub2.png](RepoInfo/UnityHub2.png)  
+<br> 
+ 
+![UnityHub2.png](RepoInfo/UnityHub2.png)   
+ 
 </details>
  
 This will open the next 'open file panel' in which you will select the highlighted folder to open the Unity3D project. 
