@@ -304,10 +304,44 @@ public class SceneObjects : MonoBehaviour {
 		GameObject yInputObject = GameObject.Find("ScaleYInput");
 		GameObject zInputObject = GameObject.Find("ScaleZInput");
 
+		xInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		yInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		zInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+
 		// Set scale in properties menu
 		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.x.ToString();
 		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.y.ToString();
 		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.z.ToString();
+
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.localScale = new Vector3(input, editorGameObject.transform.localScale.y, editorGameObject.transform.localScale.z);
+			}
+		});
+
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.localScale = new Vector3(editorGameObject.transform.localScale.x, input, editorGameObject.transform.localScale.z);
+			}
+		});
+
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.localScale = new Vector3(editorGameObject.transform.localScale.x, editorGameObject.transform.localScale.y, input);
+			}
+		});
 	}
 
 	public void SetRotationFields(GameObject editorGameObject)
