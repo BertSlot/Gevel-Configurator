@@ -1,6 +1,32 @@
 # Gevel-Configurator
 Gevel Configurator project voor Stichting Happy Balance
 
+## Contents
+- [Files](#files)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [Usage](#usage)
+- [Common Errors](#common-errors)
+- [Tips](#tips)
+
+
+## Files 
+
+|File | Content |
+|:----|:--------|
+| [AssetSpawner.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/AssetSpawner.cs) | Used to load objects from an Import_Folder and display them as panels in the Asset Menu that can be clicked to spawn the object|
+| [GizmoManager.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/GizmoManager.cs) | Used to attach Moving/Rotating/Scaling Gizmos to selected objects and for Copy/Pasting objects |
+|[Object_overzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/Objects_overzicht.cs)| This script calculates the total surface area per surface group and stores this data in a dictionary that is used to export to an excel file or show in the "overzicht panel" |
+| [SurfaceOverzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SurfaceOverzicht.cs) | This script  manages the Surface overzicht panel in the view dropdown. It makes sure the text is properly aligned and that the toggle button above switches between cm²/m² |
+| [SurfaceAreaGroup.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SurfaceAreaGroup.cs) | This script gets attached to each object and stores the names of the surface groups it is a part of, and whether or not it needs to be counted |
+| [SceneObjects.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SceneObjects.cs) | This script manages the list of objects on the side of the screen, and also the properties menu below that |
+| [SelectAsset.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SelectAsset.cs) | This script handles the clicking on the asset panels so that when you double click it spawns the object using a function inside the [GizmoManager.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/GizmoManager.cs) |
+| [SelectObject.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SelectObject.cs) | This script handles the selecting of objects. It makes sure that the object you select also exists in the scene objects list and then selects it in both the scene and the side menu |
+| [ViewMode.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/ViewMode.cs) | This script contains functions that cause a switch between working mode and view mode. In view mode all UI is hidden except for the close button |
+
+
+
+
 ## Installation
 First off you'll need to download [Unity Hub & Unity3D](https://unity3d.com/get-unity/download).  
 
@@ -71,20 +97,6 @@ After Selecting the build folder the application will begin building and saving 
 ## Usage
 
 
-
-## Files 
-
-|File | Content |
-|:----|:--------|
-| [AssetSpawner.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/AssetSpawner.cs) | Used to load objects from an Import_Folder and display them as panels in the Asset Menu that can be clicked to spawn the object|
-| [GizmoManager.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/GizmoManager.cs) | Used to attach Moving/Rotating/Scaling Gizmos to selected objects and for Copy/Pasting objects |
-|[Object_overzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/Objects_overzicht.cs)| This script calculates the total surface area per surface group and stores this data in a dictionary that is used to export to an excel file or show in the "overzicht panel" |
-| [SurfaceOverzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SurfaceOverzicht.cs) | This script  manages the Surface overzicht panel in the view dropdown. It makes sure the text is properly aligned and that the toggle button above switches between cm²/m² |
-| [SurfaceAreaGroup.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SurfaceAreaGroup.cs) | This script gets attached to each object and stores the names of the surface groups it is a part of, and whether or not it needs to be counted |
-| [SceneObjects.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SceneObjects.cs) | This script manages the list of objects on the side of the screen, and also the properties menu below that |
-| [SelectAsset.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SelectAsset.cs) | This script handles the clicking on the asset panels so that when you double click it spawns the object using a function inside the [GizmoManager.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/GizmoManager.cs) |
-| [SelectObject.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SelectObject.cs) | This script handles the selecting of objects. It makes sure that the object you select also exists in the scene objects list and then selects it in both the scene and the side menu |
-| [ViewMode.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/ViewMode.cs) | This script contains functions that cause a switch between working mode and view mode. In view mode all UI is hidden except for the close button |
 
 
 
