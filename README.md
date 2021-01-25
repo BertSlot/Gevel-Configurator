@@ -76,7 +76,9 @@ After Selecting the build folder the application will begin building and saving 
 
 |File | Content |
 |:----|:--------|
-| [AssetSpawner.cs](AssetSpawner.cs) | Used for creating asset panels in the Asset Menu |
+| [AssetSpawner.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/AssetSpawner.cs) | Used for creating asset panels in the Asset Menu |
+| [GizmoManager.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/GizmoManager.cs) | Used to attach Moving/Rotating/Scaling Gizmos to selected objects and for Copy/Pasting objects |
+|[Object_overzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/Objects_overzicht.cs)| This script calculates the total surface area per surface group and stores this data in a dictionary that is used to export or show in the "overzicht panel" |
 
 
 
