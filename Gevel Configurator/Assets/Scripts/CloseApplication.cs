@@ -6,7 +6,11 @@ public class CloseApplication : MonoBehaviour
 {
     public void QuitApplication()
     {
-        Debug.Log("Application will not close atm");
-        //Application.Quit();
+        if (Application.isEditor){
+            Debug.Log("Application will not close atm");
+        }else {
+            Application.Quit();
+        }
+        
     }
 }
