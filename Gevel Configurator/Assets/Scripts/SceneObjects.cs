@@ -351,10 +351,44 @@ public class SceneObjects : MonoBehaviour {
 		GameObject yInputObject = GameObject.Find("RotationYInput");
 		GameObject zInputObject = GameObject.Find("RotationZInput");
 
+		xInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		yInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		zInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+
 		// Set scale in properties menu
-		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.x.ToString();
-		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.y.ToString();
-		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.z.ToString();
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.eulerAngles.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.eulerAngles.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.eulerAngles.z.ToString();
+
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.eulerAngles = new Vector3(input, editorGameObject.transform.rotation.eulerAngles.y, editorGameObject.transform.rotation.eulerAngles.z);
+			}
+		});
+
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.eulerAngles = new Vector3(editorGameObject.transform.rotation.eulerAngles.x, input, editorGameObject.transform.rotation.eulerAngles.z);
+			}
+		});
+
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.eulerAngles = new Vector3(editorGameObject.transform.rotation.eulerAngles.x, editorGameObject.transform.rotation.eulerAngles.y, input);
+			}
+		});
 	}
 
 	public void SetPositionFields(GameObject editorGameObject)
@@ -364,10 +398,44 @@ public class SceneObjects : MonoBehaviour {
 		GameObject yInputObject = GameObject.Find("PositionYInput");
 		GameObject zInputObject = GameObject.Find("PositionZInput");
 
+		xInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		yInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		zInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+
 		// Set scale in properties menu
 		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.x.ToString();
 		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.y.ToString();
 		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.z.ToString();
+
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.position = new Vector3(input, editorGameObject.transform.position.y, editorGameObject.transform.position.z);
+			}
+		});
+
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.position = new Vector3(editorGameObject.transform.position.x, input, editorGameObject.transform.position.z);
+			}
+		});
+
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.position = new Vector3(editorGameObject.transform.position.x, editorGameObject.transform.position.y, input);
+			}
+		});
 	}
 
 	void AddDropdownItems(Dropdown dropdown) {
