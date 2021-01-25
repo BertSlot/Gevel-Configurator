@@ -76,7 +76,7 @@ After Selecting the build folder the application will begin building and saving 
 
 |File | Content |
 |:----|:--------|
-| [AssetSpawner.cs](Gevel Configurator/Assets/Scripts/AssetSpawner.cs) | Used for creating asset panels in the Asset Menu|
+| [AssetSpawner.cs](AssetSpawner.cs) | Used for creating asset panels in the Asset Menu |
 
 
 
