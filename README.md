@@ -96,15 +96,121 @@ After Selecting the build folder the application will begin building and saving 
 
 ## Usage
 
+### Table of contents
+- [Keybindings](#keybindings)
+- [Navigation Bar Buttons](#navigation-bar-buttons)
+  * [File Dropdown](#file-dropdown)
+  * [Edit Dropdown](#edit-dropdown)
+  * [View Dropdown](#view-dropdown)
+- [Menus](#menus)
+  * [Objects List](#objects-list)
+  * [Properties](#properties)
+  * [Asset Menu](#asset-menu)
+
+### Keybindings
+
+Gizmo tools types and shortcuts
+
+<details>
+<summary>Keybindings</summary>
+<br> 
+ 
+|Tool|Keybind|
+|:---|:------|
+| Move Tool              | W |
+| Rotating Tool          | E |
+| Scaling Tool           | R |
+| Universal tool         | T |
+| Transform Space Global | G |
+| Transform Space Local  | L |
+| Copy                   | Crtl + C |
+| Paste                  | Crtl + V |
+| Delete                 | Del |
+| Alternate Tool Mode    | Hold LShift while using a tool |
+
+</details>
+
+### Navigation Bar Buttons
+
+#### File Dropdown
+<details>
+<summary>File Drowpdown menu</summary>
+<br> 
+ 
+|Button|Use|
+|:-----|:--|
+| New     | W.I.P |
+| Load    | W.I.P |
+| Save    | W.I.P |
+| Save As | W.I.P |
+| Import  | W.I.P |
+| Settings| W.I.P |
+| Quit    | Exit Application |
+
+</details>
+
+#### Edit Dropdown
+<details>
+<summary>Edit Drowpdown menu</summary>
+<br> 
+ 
+|Button|Use|
+|:-----|:--|
+| Redo       | redo's last move/rotate/scale action |
+| Undo       | undo's last move/rotate/scale action |
+| Copy       | W.I.P |
+| Cut        | W.I.P |
+| Paste      | W.I.P |
+| Asset Menu | Opens Asset menu |
+
+</details>
+
+
+#### View Dropdown
+<details>
+<summary>View Drowpdown menu</summary>
+<br> 
+ 
+|Button|Use|
+|:-----|:--|
+| Overzicht | Opens panel that shows surface Totals and a button for exporting to Excel |
+| Demo (F5) | Hides all UI for presentation, does not restrict tool use |
+
+</details>
+
+### Menus
+
+#### Objects List
+Shows all objects in the scene in a scrollable viewport on the right side of the screen
+
+#### Properties
+Is supposed to show basic information about the object such as:
+- W.I.P Size
+- W.I.P Surface Group
+- Background color of the object
+- W.I.P background Image
+- W.I.P Object Name
+
+#### Asset Menu
+
+Double Clicking on a object preview spawns the object i the scene between the camera and the object you are looking at.
+
+- W.I.P Search bar
+- W.I.P Import Button to import new assets into your project
+
+
 
 
 
 
 ### Common Errors
-
+- NullReferenceException : This means you have a null as value instead of the type you acctualy need. To not have this error make sure you check if the variable you want to access is not (!=) null, and also try to assign a newly created variable with a "new" of that type. For instance: 
+```c#
+public Dictionary<String,Float> randomDictionary = new Dictionary<String,Float>(); 
+```
 
 ### Tips
-
+- When starting off take your time to allign a single row of a building so that you can copy an entire floor and paste the rest.
 
 
 
