@@ -6,6 +6,7 @@ Gevel Configurator project voor Stichting Happy Balance
 - [Installation](#installation)
 - [Running the Application](#running-the-application)
 - [Usage](#usage)
+- [TODO](#todo)
 - [Common Errors](#common-errors)
 - [Tips](#tips)
 
@@ -199,7 +200,9 @@ Double Clicking on a object preview spawns the object i the scene between the ca
 - W.I.P Import Button to import new assets into your project
 
 
-
+## TODO
+✅ stuff we've done  
+⬜ stuff we need to do
 
 
 
