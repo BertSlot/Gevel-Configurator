@@ -99,6 +99,7 @@ After Selecting the build folder the application will begin building and saving 
 
 ### Table of contents
 - [Keybindings](#keybindings)
+- [Camera](#camera)
 - [Navigation Bar Buttons](#navigation-bar-buttons)
   * [File Dropdown](#file-dropdown)
   * [Edit Dropdown](#edit-dropdown)
@@ -128,6 +129,20 @@ Gizmo tools types and shortcuts
 | Paste                  | Crtl + V |
 | Delete                 | Del |
 | Alternate Tool Mode    | Hold LShift while using a tool |
+
+</details>
+
+### Camera
+<details>
+<summary>Camera Movement</summary>
+<br> 
+
+|Button|Use|
+|:-----|:--|
+| WASD               | Move forward/back/sideways                       |
+| Hold RMButton      | Rotate camera                                    |
+| Hold MiddleMButton | Pan camera verticaly and horizontaly on its axis |
+| Scroll Wheel       | Move forwards and backwards , Zoom               |
 
 </details>
 
