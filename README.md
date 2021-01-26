@@ -204,10 +204,11 @@ Double Clicking on a object preview spawns the object i the scene between the ca
 
 
 ### Common Errors
-- NullReferenceException : This means you have a null as value instead of the type you acctualy need. To not have this error make sure you check if the variable you want to access is not (!=) null, and also try to assign a newly created variable with a "new" of that type. For instance: 
-```c#
-public Dictionary<String,Float> randomDictionary = new Dictionary<String,Float>(); 
-```
+- NullReferenceException : This means you have a null as value instead of the type you acctualy need. To not have this error make sure you check if the variable you want to       access is not (!=) null, and also try to assign a newly created variable with a "new" of that type. For instance: 
+  ```c#
+  public Dictionary<String,Float> randomDictionary = new Dictionary<String,Float>();
+  // This creates an empty dictionary with strings and floats as keys and values.
+  ``` 
 
 ### Tips
 - When starting off take your time to allign a single row of a building so that you can copy an entire floor and paste the rest.
