@@ -256,11 +256,11 @@ Todo:
 - Make sure there are no errors when trying to build, otherwise the application can not be build. Errors sometimes only arise when trying to build so do this regularly.
 
 ### Used Assets
-- [Gizmo Manager](https://www.youtube.com/playlist?list=PLPwpt1oIEdwAY_Qo6fczi6qTiUjCMZBW1)
-- [Point Cloud Viewer & tools](https://assetstore.unity.com/packages/tools/utilities/point-cloud-viewer-and-tools-16019?aid=1101lGti&utm_source=aff)
-- [Excel4Unity](https://github.com/joexi/Excel4Unity)
-- [HSV-Color_Picker-Unity](https://github.com/judah4/HSV-Color-Picker-Unity)
-- [Runtime Preview Generator](https://github.com/yasirkula/UnityRuntimePreviewGenerator)
-- [UnityStandaloneFileBrowser](https://github.com/gkngkc/UnityStandaloneFileBrowser )
-- [Quick Outline](https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488 )
+- [Gizmo Manager](https://www.youtube.com/playlist?list=PLPwpt1oIEdwAY_Qo6fczi6qTiUjCMZBW1)  - Youtube playlist
+- [Point Cloud Viewer & tools](https://assetstore.unity.com/packages/tools/utilities/point-cloud-viewer-and-tools-16019?aid=1101lGti&utm_source=aff) - Unity Assetstore
+- [Excel4Unity](https://github.com/joexi/Excel4Unity) - Github asset
+- [HSV-Color_Picker-Unity](https://github.com/judah4/HSV-Color-Picker-Unity) - Github asset
+- [Runtime Preview Generator](https://github.com/yasirkula/UnityRuntimePreviewGenerator) - Github asset
+- [UnityStandaloneFileBrowser](https://github.com/gkngkc/UnityStandaloneFileBrowser ) - Github asset
+- [Quick Outline](https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488 ) - Unity Assetstore
 
