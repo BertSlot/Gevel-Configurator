@@ -11,6 +11,7 @@ Made in collaboration with "Stichting Happy Balance".
 - [Common Errors](#common-errors)
 - [Tips](#tips)
 - [Used Assets](#used-assets)
+- [Collaborators](#Collaborators)
 
 
 ## Files 
@@ -264,3 +265,7 @@ Todo:
 - [UnityStandaloneFileBrowser](https://github.com/gkngkc/UnityStandaloneFileBrowser ) - Github asset
 - [Quick Outline](https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488 ) - Unity Assetstore
 
+### Collaborators
+- Scott Timmemans
+- Nick Klomp
+- Cor de Kruijf
