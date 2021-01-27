@@ -1,6 +1,6 @@
 # Gevel-Configurator
 Facade Configurator for buildings. Using pointcloud data from Cyclomedia.   
-Made in collaboration with happy balance foundation
+Made in collaboration with "Stichting Happy Balance".
 
 ## Contents
 - [Files](#files)
