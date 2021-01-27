@@ -212,7 +212,7 @@ Is supposed to show basic information about the object such as:
 
 Double Clicking on a object preview spawns the object i the scene between the camera and the object you are looking at.
 
-- W.I.P Search bar
+- Search bar
 - W.I.P Import Button to import new assets into your project
 
 
