@@ -253,6 +253,7 @@ Todo:
 
 ### Tips
 - When starting off take your time to allign a single row of a building so that you can copy an entire floor and paste the rest.
+- Make sure there are no errors when trying to build, otherwise the application can not be build. Errors sometimes only arise when trying to build so do this regularly.
 
 ### Used Assets
 - [Gizmo Manager](https://www.youtube.com/playlist?list=PLPwpt1oIEdwAY_Qo6fczi6qTiUjCMZBW1)
