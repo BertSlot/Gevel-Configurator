@@ -370,8 +370,8 @@ namespace RTG {
 		/// </summary>
 		/// <param name="obj"></param>
 		private void DeleteObject(GameObject obj) {
-			Destroy(obj);
 			scene.RemoveObjectFromObjectListMenu(obj);
+			Destroy(obj);
 		}
 
 		/// <summary>

@@ -5,14 +5,11 @@ using UnityEngine.UI;
 using HSVPicker.Examples;
 
 public class SceneObjects : MonoBehaviour {
-	/// <summary>
-	/// This scroll view object is serialized to set the object height
-	/// </summary>
-	private GameObject objectList;
 
 	/// <summary>
 	/// This object is a child of GameObject 'objectList' containing the list of child objects
 	/// </summary>
+	[SerializeField]
 	private GameObject objectListContent;
 
 	/// <summary>
@@ -48,6 +45,7 @@ public class SceneObjects : MonoBehaviour {
 	/// <summary>
 	/// Calculation overzicht object
 	/// </summary>
+	[SerializeField]
 	private GameObject calculationOverview;
 
 	/// <summary>
@@ -58,12 +56,10 @@ public class SceneObjects : MonoBehaviour {
 	// Start is called before the first frame update
 	void Start() {
 		gizmo = GameObject.Find("RTGizmoManager");
-		objectList = GameObject.Find("ObjectsList");
-		objectListContent = GameObject.Find("Content");
 		parentObject = GameObject.Find("Objects");
 		colorPickerObject = GameObject.Find("BackgroundColor");
-		calculationOverview = GameObject.Find("Calculation_Overzicht");
-
+		//calculationOverview = GameObject.Find("Calculation_Overzicht");
+		//objectListContent = GameObject.Find("Content");
 		manager = gizmo.GetComponent<RTG.GizmoManager>();
 
 		propertyMenu.gameObject.SetActive(false);
@@ -90,13 +86,11 @@ public class SceneObjects : MonoBehaviour {
 			code = code + characters[a];
 		}
 
-		foreach (GameObject menuObject in listObjectsList)
-        {
-			if (go.name == menuObject.name)
-            {
+		foreach (GameObject menuObject in listObjectsList) {
+			if (go.name == menuObject.name) {
 				go.name = go.name + code;
 			}
-        }
+		}
 
 		Debug.Log(go.name);
 
@@ -110,7 +104,9 @@ public class SceneObjects : MonoBehaviour {
 	public void RemoveObjectFromObjectListMenu(GameObject go) {
 		for (int i = 0; i < listObjectsList.Count; i++) {
 			if (listObjectsList[i].name == go.name) {
+				Destroy(listObjectsList[i].gameObject);
 				listObjectsList.Remove(listObjectsList[i]);
+
 				break;
 			}
 		}
@@ -119,10 +115,10 @@ public class SceneObjects : MonoBehaviour {
 	}
 
 	void ClearObjectListMenu() {
+
 		foreach (Transform child in objectListContent.transform) {
 			child.SetParent(null, false);
 		}
-
 		// Set list height to zero
 		RectTransform AssetsViewRt = objectListContent.GetComponent<RectTransform>();
 		AssetsViewRt.sizeDelta = new Vector2(0, 0);
@@ -193,13 +189,11 @@ public class SceneObjects : MonoBehaviour {
 		childText.color = Color.white;
 
 		// Set property menu fields
-		if (this._selectedObjects.Count == 1)
-        {
+		if (this._selectedObjects.Count == 1) {
 			SetPropertyMenuFields(listGameObject, editorGameObject);
-		} else
-        {
+		} else {
 			propertyMenu.gameObject.SetActive(false);
-        }
+		}
 
 		// Set color picker object
 		ChangeColor(editorGameObject);
@@ -217,11 +211,17 @@ public class SceneObjects : MonoBehaviour {
 		childText.color = Color.black;
 	}
 
+	/// <summary>
+	/// Deselects all text selected list objects, and skips ones that might be deleted
+	/// </summary>
 	void DeselectAllGameObjects() {
 		// Remove sidemenu objects highlight
 		foreach (GameObject selected in this._selectedObjects) {
-			Text childText = selected.GetComponent<Text>();
-			childText.color = Color.black;
+			// checks if its deleted
+			if (selected != null) {
+				Text childText = selected.GetComponent<Text>();
+				childText.color = Color.black;
+			}
 		}
 
 		// Clear object list
@@ -255,14 +255,12 @@ public class SceneObjects : MonoBehaviour {
 		// First remove previous listeners
 		dropdown.onValueChanged.RemoveAllListeners();
 
-		dropdown.onValueChanged.AddListener(value =>
-		{
+		dropdown.onValueChanged.AddListener(value => {
 			//Debug.Log(dropdown.options[dropdown.value].text);
 			overview.AddSurfaceGroup(editorGameObject, dropdown.options[dropdown.value].text);
 		});
 
-		foreach (string obj in overview.GetSurfaceGroups(editorGameObject))
-		{
+		foreach (string obj in overview.GetSurfaceGroups(editorGameObject)) {
 			//Debug.Log(obj);
 		}
 
@@ -274,21 +272,17 @@ public class SceneObjects : MonoBehaviour {
 		objectNameField.text = listGameObject.name;
 
 		// Set object name field listener
-		objectNameField.onValueChanged.AddListener(name =>
-		{
+		objectNameField.onValueChanged.AddListener(name => {
 			bool equal = false;
 
 			// Check if name already exists
-			foreach (GameObject menuObject in listObjectsList)
-            {
-				if (objectNameField.text == menuObject.name)
-                {
+			foreach (GameObject menuObject in listObjectsList) {
+				if (objectNameField.text == menuObject.name) {
 					equal = true;
 				}
 			}
 
-			if (!equal)
-            {
+			if (!equal) {
 				listGameObject.name = objectNameField.text;
 				Text childText = listGameObject.GetComponent<Text>();
 				childText.text = objectNameField.text;
@@ -297,8 +291,7 @@ public class SceneObjects : MonoBehaviour {
 		});
 	}
 
-	public void SetScaleFields(GameObject editorGameObject)
-    {
+	public void SetScaleFields(GameObject editorGameObject) {
 		// Find scale fields
 		GameObject xInputObject = GameObject.Find("ScaleXInput");
 		GameObject yInputObject = GameObject.Find("ScaleYInput");
@@ -313,39 +306,32 @@ public class SceneObjects : MonoBehaviour {
 		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.y.ToString();
 		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.z.ToString();
 
-		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.localScale = new Vector3(input, editorGameObject.transform.localScale.y, editorGameObject.transform.localScale.z);
 			}
 		});
 
-		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.localScale = new Vector3(editorGameObject.transform.localScale.x, input, editorGameObject.transform.localScale.z);
 			}
 		});
 
-		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.localScale = new Vector3(editorGameObject.transform.localScale.x, editorGameObject.transform.localScale.y, input);
 			}
 		});
 	}
 
-	public void SetRotationFields(GameObject editorGameObject)
-    {
+	public void SetRotationFields(GameObject editorGameObject) {
 		// Find rotation fields
 		GameObject xInputObject = GameObject.Find("RotationXInput");
 		GameObject yInputObject = GameObject.Find("RotationYInput");
@@ -360,39 +346,32 @@ public class SceneObjects : MonoBehaviour {
 		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.eulerAngles.y.ToString();
 		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.eulerAngles.z.ToString();
 
-		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.eulerAngles = new Vector3(input, editorGameObject.transform.rotation.eulerAngles.y, editorGameObject.transform.rotation.eulerAngles.z);
 			}
 		});
 
-		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.eulerAngles = new Vector3(editorGameObject.transform.rotation.eulerAngles.x, input, editorGameObject.transform.rotation.eulerAngles.z);
 			}
 		});
 
-		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.eulerAngles = new Vector3(editorGameObject.transform.rotation.eulerAngles.x, editorGameObject.transform.rotation.eulerAngles.y, input);
 			}
 		});
 	}
 
-	public void SetPositionFields(GameObject editorGameObject)
-    {
+	public void SetPositionFields(GameObject editorGameObject) {
 		// Find rotation fields
 		GameObject xInputObject = GameObject.Find("PositionXInput");
 		GameObject yInputObject = GameObject.Find("PositionYInput");
@@ -407,32 +386,26 @@ public class SceneObjects : MonoBehaviour {
 		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.y.ToString();
 		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.z.ToString();
 
-		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.position = new Vector3(input, editorGameObject.transform.position.y, editorGameObject.transform.position.z);
 			}
 		});
 
-		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.position = new Vector3(editorGameObject.transform.position.x, input, editorGameObject.transform.position.z);
 			}
 		});
 
-		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
-		{
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value => {
 			float input;
 
-			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
-			{
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input)) {
 				editorGameObject.transform.position = new Vector3(editorGameObject.transform.position.x, editorGameObject.transform.position.y, input);
 			}
 		});
