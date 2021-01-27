@@ -275,6 +275,7 @@ namespace RTG {
 				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
 			}
 
+			RemoveHighlights(_selectedObjects);
 			_selectedObjects.Clear();
 			_selectedObjects.Add(spawnedObj);
 			scene.AddObjectToObjectListMenu(spawnedObj);

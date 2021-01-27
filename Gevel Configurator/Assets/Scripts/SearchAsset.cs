@@ -1,12 +1,9 @@
-﻿using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class AssetSpawner : MonoBehaviour {
-
-
+public class SearchAsset : MonoBehaviour {
 	/// <summary>
 	/// Array for GameObjects loaded from Import_Objects
 	/// </summary>
@@ -19,37 +16,51 @@ public class AssetSpawner : MonoBehaviour {
 	private GameObject ObjectListContentPanel;
 
 	/// <summary>
-	/// Path to Import_Objects Folder
-	/// </summary>
-	[SerializeField]
-	private string ObjectsFolderPath = "Import_Objects";
-
-	/// <summary>
 	/// AssetPanel prefab
 	/// </summary>
 	[SerializeField]
 	private GameObject PanelPrefab;
 
-	private void OnDisable() {
+	/// <summary>
+	/// Text field for the input
+	/// </summary>
+	public Text SeachInput;
 
-		for (int i = 0; i < ObjectListContentPanel.transform.childCount; i++) {
-			ObjectListContentPanel.transform.GetChild(i).gameObject.SetActive(false);
-			Destroy(ObjectListContentPanel.transform.GetChild(i).gameObject);
+	/// <summary>
+	/// Parent object for removed children objects
+	/// </summary>
+	public GameObject parent;
+
+	/// <summary>
+	/// String for input of objects
+	/// </summary>
+	private string ObjectsFolderPath;
+
+
+	// checks input field in AssetsMenu
+	public void SearchAssets() {
+		SpawnAsset("Import_Objects/");
+		string assetName = SeachInput.text.ToString();
+
+		if (assetName == "") {
+			return;
 		}
 
-
+		foreach (Transform child in parent.transform) {
+			if (!child.GetChild(0).GetComponent<Text>().text.ToLower().Contains(assetName.ToLower())) {
+				Destroy(child.gameObject);
+			}
+		}
 	}
 
-	private void OnEnable() {
-		SpawnAssetPanels();
-	}
-
-	private void SpawnAssetPanels() {
+	// Spawns assets with name from function above
+	private void SpawnAsset(string AssetName) {
 		int x = 40;
 		int y = -40;
-		if (ObjectsFolderPath != null) {
+		ClearAssetPanels();
+		if (AssetName != null) {
 			// Load all objects from folder
-			ObjectsList = Resources.LoadAll(ObjectsFolderPath, typeof(GameObject));
+			ObjectsList = Resources.LoadAll(AssetName, typeof(GameObject));
 			GameObject AssetPanel;
 
 			// Make a panel sprite for every object in the folder
@@ -68,16 +79,17 @@ public class AssetSpawner : MonoBehaviour {
 
 				// Set Preview Sprite of Panel
 				SetPanelSprite(AssetPanel, obj, Color.black);
-
-				//foreach (GameObject obj in ObjectsList) {
-				//	// Create Panel
-				//	AssetPanel = Instantiate(PanelPrefab, ObjectListContentPanel.transform);
-
-				//}
 			}
 		}
 	}
 
+	private void ClearAssetPanels() {
+		for (int i = 0; i < ObjectListContentPanel.transform.childCount; i++) {
+			ObjectListContentPanel.transform.GetChild(i).gameObject.SetActive(false);
+			Destroy(ObjectListContentPanel.transform.GetChild(i).gameObject);
+		}
+
+	}
 
 
 	// Create sprites for the assests menu
@@ -92,32 +104,4 @@ public class AssetSpawner : MonoBehaviour {
 			img.sprite = preview;
 		}
 	}
-
-
 }
-
-
-/*
-	public void OnClick() {
-		mouseClicks++;
-		if (mouseClicksStarted) {
-			return;
-		}
-		mouseClicksStarted = true;
-		Invoke("checkMouseDoubleClick", mouseTimerLimit);
-	}
-
-
-	private void checkMouseDoubleClick() {
-		if (mouseClicks > 1) {
-			Debug.Log("Double Clickedd");
-			GameObject.Find("AssetsMenu").SetActive(false);
-
-		} else {
-			Debug.Log("Error: Double click to spawn object!");
-		}
-		mouseClicksStarted = false;
-		mouseClicks = 0;
-	}
-}
-*/
