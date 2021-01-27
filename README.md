@@ -201,7 +201,7 @@ Shows all objects in the scene in a scrollable viewport on the right side of the
 
 #### Properties
 Is supposed to show basic information about the object such as:
-- W.I.P Size
+- Size
 - W.I.P Surface Group
 - Background color of the object
 - W.I.P background Image
