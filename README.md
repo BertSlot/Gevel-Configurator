@@ -205,7 +205,7 @@ Is supposed to show basic information about the object such as:
 - W.I.P Surface Group
 - Background color of the object
 - W.I.P background Image
-- W.I.P Object Name
+- Object Name
 
 #### Asset Menu
 
