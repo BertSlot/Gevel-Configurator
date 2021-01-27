@@ -9,6 +9,7 @@ Gevel Configurator project voor Stichting Happy Balance
 - [TODO](#todo)
 - [Common Errors](#common-errors)
 - [Tips](#tips)
+- [Used Assets](#used-assets)
 
 
 ## Files 
@@ -201,7 +202,7 @@ Shows all objects in the scene in a scrollable viewport on the right side of the
 
 #### Properties
 Is supposed to show basic information about the object such as:
-- Size
+- Size, Rotation, Position
 - W.I.P Surface Group
 - Background color of the object
 - W.I.P background Image
@@ -216,9 +217,21 @@ Double Clicking on a object preview spawns the object i the scene between the ca
 
 
 ## TODO
-✅ stuff we've done  
-⬜ stuff we need to do
 
+Done:  
+✅ Background Color changing   
+✅ Changing Scale, Rotation, Position  
+✅ Attaching Gizmos to objects for transform movements  
+✅ Spawning assets from the asset menu  
+✅ Object list that shows all objects in the scene   
+✅ Object Selection Outline using outline asset from unity asset store   
+
+
+Todo:  
+⬜ Error Handling    
+⬜ Multiple Selection Outline fix ( Outlines that overlap block eachother from rendering )    
+⬜ Multiple Selection Properties ( Transform capabilities for all selected objects at once )    
+⬜ Surface Group Selection ( Selecting multiple groups for an object using [Toggle groups](https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/script-ToggleGroup.html))    
 
 
 ### Common Errors
@@ -231,5 +244,12 @@ Double Clicking on a object preview spawns the object i the scene between the ca
 ### Tips
 - When starting off take your time to allign a single row of a building so that you can copy an entire floor and paste the rest.
 
-
+### Used Assets
+- [Gizmo Manager](https://www.youtube.com/playlist?list=PLPwpt1oIEdwAY_Qo6fczi6qTiUjCMZBW1)
+- [Point Cloud Viewer & tools](https://assetstore.unity.com/packages/tools/utilities/point-cloud-viewer-and-tools-16019?aid=1101lGti&utm_source=aff)
+- [Excel4Unity](https://github.com/joexi/Excel4Unity)
+- [HSV-Color_Picker-Unity](https://github.com/judah4/HSV-Color-Picker-Unity)
+- [Runtime Preview Generator](https://github.com/yasirkula/UnityRuntimePreviewGenerator)
+- [UnityStandaloneFileBrowser](https://github.com/gkngkc/UnityStandaloneFileBrowser )
+- [Quick Outline](https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488 )
 
