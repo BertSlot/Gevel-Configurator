@@ -266,6 +266,6 @@ Todo:
 - [Quick Outline](https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488 ) - Unity Assetstore
 
 ## Collaborators
-- Scott Timmemans
-- Nick Klomp
-- Cor de Kruijf
+- [Scott Timmemans](https://github.com/KingPungy)
+- [Nick Klomp](https://github.com/kllomp)
+- [Cor de Kruijf](https://github.com/cordekruijf)
