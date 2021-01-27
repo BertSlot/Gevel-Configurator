@@ -4,7 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+<<<<<<< Updated upstream
 public class AssetSpawner : MonoBehaviour {
+=======
+public class AssetSpawner : MonoBehaviour
+{
+>>>>>>> Stashed changes
 
 
     /// <summary>
@@ -16,7 +21,11 @@ public class AssetSpawner : MonoBehaviour {
     /// This object is a child of GameObject 'objectList' containing the list of child objects
     /// </summary>
     [SerializeField]
+<<<<<<< Updated upstream
     private GameObject ObjectListContent;
+=======
+    private GameObject ObjectListContentPanel;
+>>>>>>> Stashed changes
 
     /// <summary>
     /// Path to Import_Objects Folder
@@ -46,7 +55,11 @@ public class AssetSpawner : MonoBehaviour {
             foreach (GameObject obj in ObjectsList)
             {
                 // Create Panel
+<<<<<<< Updated upstream
                 AssetPanel = Instantiate(PanelPrefab, ObjectListContent.transform);
+=======
+                AssetPanel = Instantiate(PanelPrefab, ObjectListContentPanel.transform);
+>>>>>>> Stashed changes
 
                 // Add Asset to panel and name under panel
                 SelectAsset panelData = AssetPanel.GetComponent<SelectAsset>();
@@ -60,6 +73,7 @@ public class AssetSpawner : MonoBehaviour {
                 // Set Preview Sprite of Panel
                 SetPanelSprite(AssetPanel, obj, Color.black);
 
+<<<<<<< Updated upstream
                 // Increase Offset
                 x += 120;
 
@@ -85,6 +99,31 @@ public class AssetSpawner : MonoBehaviour {
 
     private void Update()
     {
+=======
+                //foreach (GameObject obj in ObjectsList) {
+                //	// Create Panel
+                //	AssetPanel = Instantiate(PanelPrefab, ObjectListContentPanel.transform);
+
+                //}
+            }
+        }
+
+        // Create sprites for the assests menu
+        void SetPanelSprite(GameObject obj, GameObject asset, Color BackgroundColor)
+        {
+            Image img = obj.GetComponent<Image>();
+            if (img != null)
+            {
+                RuntimePreviewGenerator.BackgroundColor = BackgroundColor;
+                Texture2D texture = RuntimePreviewGenerator.GenerateModelPreview(asset.transform, 100, 100, true);
+                Rect rect = new Rect(0, 0, texture.width, texture.height);
+                Vector2 pivot = new Vector2(1, 1);
+                Sprite preview = Sprite.Create(texture, rect, pivot);
+                img.sprite = preview;
+            }
+        }
+
+>>>>>>> Stashed changes
 
     }
 }
