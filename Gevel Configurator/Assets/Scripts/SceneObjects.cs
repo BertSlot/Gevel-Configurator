@@ -90,6 +90,7 @@ public class SceneObjects : MonoBehaviour {
 			code = code + characters[a];
 		}
 
+		// Check if name already exists in list
 		foreach (GameObject menuObject in listObjectsList)
         {
 			if (go.name == menuObject.name)
@@ -97,8 +98,6 @@ public class SceneObjects : MonoBehaviour {
 				go.name = go.name + code;
 			}
         }
-
-		Debug.Log(go.name);
 
 		GameObject childObject = CreateListObject(go.transform);
 		listObjectsList.Add(childObject);
