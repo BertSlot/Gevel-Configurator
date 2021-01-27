@@ -1,5 +1,6 @@
 # Gevel-Configurator
-Gevel Configurator project voor Stichting Happy Balance
+Facade Configurator for buildings. Using pointcloud data from Cyclomedia.   
+Made in collaboration with happy balance foundation
 
 ## Contents
 - [Files](#files)
