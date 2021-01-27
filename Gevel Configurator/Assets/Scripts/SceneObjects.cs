@@ -50,6 +50,11 @@ public class SceneObjects : MonoBehaviour {
 	/// </summary>
 	private GameObject calculationOverview;
 
+	/// <summary>
+	/// Property menu object
+	/// </summary>
+	public GameObject propertyMenu;
+
 	// Start is called before the first frame update
 	void Start() {
 		gizmo = GameObject.Find("RTGizmoManager");
@@ -60,6 +65,8 @@ public class SceneObjects : MonoBehaviour {
 		calculationOverview = GameObject.Find("Calculation_Overzicht");
 
 		manager = gizmo.GetComponent<RTG.GizmoManager>();
+
+		propertyMenu.gameObject.SetActive(false);
 
 		SetObjectListMenu();
 	}
@@ -74,10 +81,30 @@ public class SceneObjects : MonoBehaviour {
 	}
 
 	public void AddObjectToObjectListMenu(GameObject go) {
+		string characters = "0123456789abcdefghijklmnopqrstuvwxABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+		string code = "";
+
+		for (int i = 0; i < 5; i++) {
+			int a = Random.Range(0, characters.Length);
+			code = code + characters[a];
+		}
+
+		foreach (GameObject menuObject in listObjectsList)
+        {
+			if (go.name == menuObject.name)
+            {
+				go.name = go.name + code;
+			}
+        }
+
+		Debug.Log(go.name);
+
 		GameObject childObject = CreateListObject(go.transform);
 		listObjectsList.Add(childObject);
 
 		RenderListObjects();
+		SelectGameObject(childObject, go);
 	}
 
 	public void RemoveObjectFromObjectListMenu(GameObject go) {
@@ -93,9 +120,7 @@ public class SceneObjects : MonoBehaviour {
 
 	void ClearObjectListMenu() {
 		foreach (Transform child in objectListContent.transform) {
-			// child.parent = null;
 			child.SetParent(null, false);
-			// Destroy(child.gameObject);
 		}
 
 		// Set list height to zero
@@ -105,7 +130,6 @@ public class SceneObjects : MonoBehaviour {
 
 	void RenderListObjects() {
 		int counter = 0;
-		//int position = -10;*/
 
 		// First clear object list menu
 		ClearObjectListMenu();
@@ -115,14 +139,8 @@ public class SceneObjects : MonoBehaviour {
 
 			RectTransform rt = go.GetComponent<RectTransform>();
 			rt.sizeDelta = new Vector2(240, 20);
-			/*
-			rt.anchoredPosition = new Vector2(0, position);
-			rt.anchorMin = new Vector2(0.5f, 1);
-			rt.anchorMax = new Vector2(0.5f, 1);
-			rt.pivot = new Vector2(0.5f, 1);
-			*/
+
 			counter++;
-			//position += -20;*/
 		}
 
 		// Calculate height for objects list
@@ -130,7 +148,6 @@ public class SceneObjects : MonoBehaviour {
 
 		RectTransform AssetsViewRt = this.objectListContent.GetComponent<RectTransform>();
 		AssetsViewRt.sizeDelta = new Vector2(0, assetsViewHeight);
-
 	}
 
 	GameObject CreateListObject(Transform go) {
@@ -176,7 +193,13 @@ public class SceneObjects : MonoBehaviour {
 		childText.color = Color.white;
 
 		// Set property menu fields
-		SetPropertyMenuFields(listGameObject, editorGameObject);
+		if (this._selectedObjects.Count == 1)
+        {
+			SetPropertyMenuFields(listGameObject, editorGameObject);
+		} else
+        {
+			propertyMenu.gameObject.SetActive(false);
+        }
 
 		// Set color picker object
 		ChangeColor(editorGameObject);
@@ -209,15 +232,17 @@ public class SceneObjects : MonoBehaviour {
 	}
 
 	void SetPropertyMenuFields(GameObject listGameObject, GameObject editorGameObject) {
-		// Find dimensions fields
-		GameObject xInputObject = GameObject.Find("XInput");
-		GameObject yInputObject = GameObject.Find("YInput");
-		GameObject zInputObject = GameObject.Find("ZInput");
+		// Show property menu
+		propertyMenu.gameObject.SetActive(true);
 
-		// Set dimensions in properties menu
-		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.x.ToString();
-		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.y.ToString();
-		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.z.ToString();
+		// Set scale fields
+		SetScaleFields(editorGameObject);
+
+		// Set rotation fields
+		SetRotationFields(editorGameObject);
+
+		// Set position fields
+		SetPositionFields(editorGameObject);
 
 		// Set groups in dropdown
 		GameObject dropdownObject = GameObject.Find("GroupDropdown");
@@ -225,16 +250,191 @@ public class SceneObjects : MonoBehaviour {
 
 		AddDropdownItems(dropdown);
 
+		Objects_overzicht overview = calculationOverview.GetComponent<Objects_overzicht>();
+
+		// First remove previous listeners
+		dropdown.onValueChanged.RemoveAllListeners();
+
+		dropdown.onValueChanged.AddListener(value =>
+		{
+			//Debug.Log(dropdown.options[dropdown.value].text);
+			overview.AddSurfaceGroup(editorGameObject, dropdown.options[dropdown.value].text);
+		});
+
+		foreach (string obj in overview.GetSurfaceGroups(editorGameObject))
+		{
+			//Debug.Log(obj);
+		}
+
 		// Set object name field
 		GameObject objectNameObject = GameObject.Find("ObjectNameField");
 		InputField objectNameField = objectNameObject.GetComponent<InputField>();
+
+		objectNameField.onValueChanged.RemoveAllListeners();
 		objectNameField.text = listGameObject.name;
 
 		// Set object name field listener
-		objectNameField.onValueChanged.AddListener(name => {
-			listGameObject.name = objectNameField.text;
-			Text childText = listGameObject.GetComponent<Text>();
-			childText.text = objectNameField.text;
+		objectNameField.onValueChanged.AddListener(name =>
+		{
+			bool equal = false;
+
+			// Check if name already exists
+			foreach (GameObject menuObject in listObjectsList)
+            {
+				if (objectNameField.text == menuObject.name)
+                {
+					equal = true;
+				}
+			}
+
+			if (!equal)
+            {
+				listGameObject.name = objectNameField.text;
+				Text childText = listGameObject.GetComponent<Text>();
+				childText.text = objectNameField.text;
+				editorGameObject.name = objectNameField.text;
+			}
+		});
+	}
+
+	public void SetScaleFields(GameObject editorGameObject)
+    {
+		// Find scale fields
+		GameObject xInputObject = GameObject.Find("ScaleXInput");
+		GameObject yInputObject = GameObject.Find("ScaleYInput");
+		GameObject zInputObject = GameObject.Find("ScaleZInput");
+
+		xInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		yInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		zInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+
+		// Set scale in properties menu
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.localScale.z.ToString();
+
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.localScale = new Vector3(input, editorGameObject.transform.localScale.y, editorGameObject.transform.localScale.z);
+			}
+		});
+
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.localScale = new Vector3(editorGameObject.transform.localScale.x, input, editorGameObject.transform.localScale.z);
+			}
+		});
+
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.localScale = new Vector3(editorGameObject.transform.localScale.x, editorGameObject.transform.localScale.y, input);
+			}
+		});
+	}
+
+	public void SetRotationFields(GameObject editorGameObject)
+    {
+		// Find rotation fields
+		GameObject xInputObject = GameObject.Find("RotationXInput");
+		GameObject yInputObject = GameObject.Find("RotationYInput");
+		GameObject zInputObject = GameObject.Find("RotationZInput");
+
+		xInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		yInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		zInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+
+		// Set scale in properties menu
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.eulerAngles.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.eulerAngles.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.rotation.eulerAngles.z.ToString();
+
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.eulerAngles = new Vector3(input, editorGameObject.transform.rotation.eulerAngles.y, editorGameObject.transform.rotation.eulerAngles.z);
+			}
+		});
+
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.eulerAngles = new Vector3(editorGameObject.transform.rotation.eulerAngles.x, input, editorGameObject.transform.rotation.eulerAngles.z);
+			}
+		});
+
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.eulerAngles = new Vector3(editorGameObject.transform.rotation.eulerAngles.x, editorGameObject.transform.rotation.eulerAngles.y, input);
+			}
+		});
+	}
+
+	public void SetPositionFields(GameObject editorGameObject)
+    {
+		// Find rotation fields
+		GameObject xInputObject = GameObject.Find("PositionXInput");
+		GameObject yInputObject = GameObject.Find("PositionYInput");
+		GameObject zInputObject = GameObject.Find("PositionZInput");
+
+		xInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		yInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+		zInputObject.GetComponent<InputField>().onValueChanged.RemoveAllListeners();
+
+		// Set scale in properties menu
+		xInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.x.ToString();
+		yInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.y.ToString();
+		zInputObject.GetComponent<InputField>().text = editorGameObject.transform.position.z.ToString();
+
+		xInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(xInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.position = new Vector3(input, editorGameObject.transform.position.y, editorGameObject.transform.position.z);
+			}
+		});
+
+		yInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(yInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.position = new Vector3(editorGameObject.transform.position.x, input, editorGameObject.transform.position.z);
+			}
+		});
+
+		zInputObject.GetComponent<InputField>().onValueChanged.AddListener(value =>
+		{
+			float input;
+
+			if (float.TryParse(zInputObject.GetComponent<InputField>().text, out input))
+			{
+				editorGameObject.transform.position = new Vector3(editorGameObject.transform.position.x, editorGameObject.transform.position.y, input);
+			}
 		});
 	}
 

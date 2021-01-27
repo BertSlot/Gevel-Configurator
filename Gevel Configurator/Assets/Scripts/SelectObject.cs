@@ -21,6 +21,11 @@ public class SelectObject : MonoBehaviour, IPointerClickHandler {
 		objectsList = GameObject.Find("Objects");
 	}
 
+	void Update()
+    {
+		
+    }
+
 	public void OnPointerClick(PointerEventData pointerEventData) {
 		// Get sceneObjects script
 		SceneObjects scene = sideMenu.GetComponent<SceneObjects>();
