@@ -229,9 +229,18 @@ Done:
 
 Todo:  
 ⬜ Error Handling    
-⬜ Multiple Selection Outline fix ( Outlines that overlap block eachother from rendering )    
-⬜ Multiple Selection Properties ( Transform capabilities for all selected objects at once )    
+⬜ Export to Excel in build application ( Works in unity Editor but not when build )   
+⬜ Multiple Selection Outline fix ( Outlines that overlap block eachother from rendering )      
+⬜ Multiple Selection Properties ( Transform capabilities for all selected objects at once )      
 ⬜ Surface Group Selection ( Selecting multiple groups for an object using [Toggle groups](https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/script-ToggleGroup.html))    
+⬜ Loading in PointClouds via import   
+⬜ Building to WebGL for browser    
+⬜ Save/Loading projects    
+⬜ Start menu for loading projects   
+⬜ Adding more properties to objects for ease of use in calculations  
+⬜ image recognition for windows and edges   
+
+
 
 
 ### Common Errors
