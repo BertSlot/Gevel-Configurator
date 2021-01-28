@@ -7,7 +7,7 @@ public class MiniAndMaxiWindow : MonoBehaviour {
 
 	private void Start() {
 
-		Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
+		Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, true);
 	}
 
 	public void MiniMizeScreen() {
@@ -20,8 +20,8 @@ public class MiniAndMaxiWindow : MonoBehaviour {
 
 	public void MaxiMizeScreen() {
 		// resizes to fullscreen and uses the fullscreen resolution, so native resolution
-		Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, true);
-		Debug.Log("Maximize screen");
+		Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, true);
+		Debug.Log("Maximize screen:  " + Display.main.systemWidth.ToString() + " , " + Display.main.systemHeight.ToString());
 		GameObject.Find("Navbar/UIButtons/MaximizeButton").SetActive(false);
 		GameObject.Find("Navbar/UIButtons/MinimizeButton").SetActive(true);
 	}

@@ -1235,7 +1235,6 @@ GameObject:
   - component: {fileID: 49869927}
   - component: {fileID: 49869926}
   - component: {fileID: 49869925}
-  - component: {fileID: 49869924}
   m_Layer: 5
   m_Name: MaximizeButton
   m_TagString: Untagged
@@ -1262,18 +1261,6 @@ RectTransform:
   m_AnchoredPosition: {x: 34.5, y: 0}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &49869924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49869922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1c7862cd3494d94a84ce12a2e48c52a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &49869925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1317,8 +1304,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 49869924}
-        m_TargetAssemblyTypeName: MiniAndMaxiWindow, Assembly-CSharp
+      - m_Target: {fileID: 1780621892}
+        m_TargetAssemblyTypeName: WindowChanger, Assembly-CSharp
         m_MethodName: MaxiMizeScreen
         m_Mode: 1
         m_Arguments:
@@ -5484,7 +5471,6 @@ GameObject:
   - component: {fileID: 210079940}
   - component: {fileID: 210079939}
   - component: {fileID: 210079938}
-  - component: {fileID: 210079937}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -5511,18 +5497,6 @@ RectTransform:
   m_AnchoredPosition: {x: 70, y: 0}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &210079937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 210079935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e5ab5e26aa8e1f43bdf9497abe844a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &210079938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5566,7 +5540,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 210079937}
+      - m_Target: {fileID: 1780621891}
         m_TargetAssemblyTypeName: CloseApplication, Assembly-CSharp
         m_MethodName: QuitApplication
         m_Mode: 1
@@ -20555,7 +20529,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: 243.787}
+  m_AnchoredPosition: {x: -0.000030517578, y: 6.886905}
   m_SizeDelta: {x: 258, y: 420.9217}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &752314705
@@ -25680,7 +25654,6 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -25753,26 +25726,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -348.2, y: 281.11, z: 0}
---- !u!114 &963194229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: facb67ec8efe28446ab3fe8c9545e4b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 963194228}
-  maxOffsetDistance: 2000
-  orbitSpeed: 2
-  panSpeed: 5.05
-  zoomSpeed: 100
-  mainSpeed: 1000
-  shiftAdd: 2500
-  maxShift: 10000
 --- !u!1 &971293821
 GameObject:
   m_ObjectHideFlags: 0
@@ -47466,7 +47419,6 @@ GameObject:
   - component: {fileID: 1749187912}
   - component: {fileID: 1749187911}
   - component: {fileID: 1749187910}
-  - component: {fileID: 1749187909}
   m_Layer: 5
   m_Name: MinimalizeButton
   m_TagString: Untagged
@@ -47493,18 +47445,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1749187909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1749187907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1c7862cd3494d94a84ce12a2e48c52a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1749187910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47548,8 +47488,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1749187909}
-        m_TargetAssemblyTypeName: MinimalimalizeWindow, Assembly-CSharp
+      - m_Target: {fileID: 1780621892}
+        m_TargetAssemblyTypeName: WindowChanger, Assembly-CSharp
         m_MethodName: OnMinimizeButtonClick
         m_Mode: 1
         m_Arguments:
@@ -48355,6 +48295,8 @@ GameObject:
   - component: {fileID: 1780621890}
   - component: {fileID: 1780621889}
   - component: {fileID: 1780621888}
+  - component: {fileID: 1780621892}
+  - component: {fileID: 1780621891}
   m_Layer: 5
   m_Name: UIButtons
   m_TagString: Untagged
@@ -48445,6 +48387,30 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1780621891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780621886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e5ab5e26aa8e1f43bdf9497abe844a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1780621892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780621886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1c7862cd3494d94a84ce12a2e48c52a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1781304660
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50141,7 +50107,6 @@ GameObject:
   - component: {fileID: 1871103357}
   - component: {fileID: 1871103356}
   - component: {fileID: 1871103355}
-  - component: {fileID: 1871103354}
   m_Layer: 5
   m_Name: MinimizeButton
   m_TagString: Untagged
@@ -50168,18 +50133,6 @@ RectTransform:
   m_AnchoredPosition: {x: 34.5, y: 0}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1871103354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1871103352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1c7862cd3494d94a84ce12a2e48c52a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1871103355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50223,8 +50176,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1871103354}
-        m_TargetAssemblyTypeName: MiniAndMaxiWindow, Assembly-CSharp
+      - m_Target: {fileID: 1780621892}
+        m_TargetAssemblyTypeName: WindowChanger, Assembly-CSharp
         m_MethodName: MiniMizeScreen
         m_Mode: 1
         m_Arguments:
@@ -51265,8 +51218,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1811232562}
   m_HandleRect: {fileID: 1811232561}
   m_Direction: 2
-  m_Value: -0.0000012518149
-  m_Size: 0.42082652
+  m_Value: -0.000031019707
+  m_Size: 0.983639
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -54544,7 +54497,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2004539849}
   m_HandleRect: {fileID: 2004539848}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
