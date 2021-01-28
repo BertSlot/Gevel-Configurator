@@ -232,6 +232,7 @@ Done:
 Todo:  
 ⬜ Error Handling    
 ⬜ Export to Excel in build application ( Works in unity Editor but not when build )   
+⬜ Save the latest resize resolution so that when you go to fullscreen and come back from fullsceen it uses the latest resolution     
 ⬜ Multiple Selection Outline fix ( Outlines that overlap block eachother from rendering )      
 ⬜ Multiple Selection Properties ( Transform capabilities for all selected objects at once )      
 ⬜ Surface Group Selection ( Selecting multiple groups for an object using [Toggle groups](https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/script-ToggleGroup.html))    
