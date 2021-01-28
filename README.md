@@ -1,6 +1,6 @@
 # Gevel-Configurator
 Facade Configurator for buildings. Using pointcloud data from Cyclomedia.   
-Made in collaboration with happy balance foundation
+Made in collaboration with "Stichting Happy Balance".
 
 ## Contents
 - [Files](#files)
@@ -11,6 +11,7 @@ Made in collaboration with happy balance foundation
 - [Common Errors](#common-errors)
 - [Tips](#tips)
 - [Used Assets](#used-assets)
+- [Collaborators](#Collaborators)
 
 
 ## Files 
@@ -231,6 +232,7 @@ Done:
 Todo:  
 ⬜ Error Handling    
 ⬜ Export to Excel in build application ( Works in unity Editor but not when build )   
+⬜ Save the latest resize resolution so that when you go to fullscreen and come back from fullsceen it uses the latest resolution     
 ⬜ Multiple Selection Outline fix ( Outlines that overlap block eachother from rendering )      
 ⬜ Multiple Selection Properties ( Transform capabilities for all selected objects at once )      
 ⬜ Surface Group Selection ( Selecting multiple groups for an object using [Toggle groups](https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/script-ToggleGroup.html))    
@@ -264,3 +266,7 @@ Todo:
 - [UnityStandaloneFileBrowser](https://github.com/gkngkc/UnityStandaloneFileBrowser ) - Github asset
 - [Quick Outline](https://assetstore.unity.com/packages/tools/particles-effects/quick-outline-115488 ) - Unity Assetstore
 
+## Collaborators
+- [Scott Timmemans](https://github.com/KingPungy)
+- [Nick Klomp](https://github.com/kllomp)
+- [Cor de Kruijf](https://github.com/cordekruijf)
