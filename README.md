@@ -242,6 +242,8 @@ Todo:
 ⬜ Start menu for loading projects   
 ⬜ Adding more properties to objects for ease of use in calculations  
 ⬜ image recognition for windows and edges   
+⬜ Allow Grouping of objects so that they move as if they were one single object. Also make it posible to tag some of these objects as unscalable to keep proportions    
+
 
 
 
