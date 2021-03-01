@@ -221,7 +221,7 @@ Double Clicking on a object preview spawns the object i the scene between the ca
 ## TODO
 
 Done:  
-✅ Background Color changing   
+✅ Object Background Color changing   
 ✅ Changing Scale, Rotation, Position  
 ✅ Attaching Gizmos to objects for transform movements  
 ✅ Spawning assets from the asset menu  
@@ -232,17 +232,19 @@ Done:
 Todo:  
 ⬜ Error Handling    
 ⬜ Export to Excel in build application ( Works in unity Editor but not when build )   
-⬜ Save the latest resize resolution so that when you go to fullscreen and come back from fullsceen it uses the latest resolution     
+⬜ Save the latest resize resolution so that when you go to fullscreen and come back from fullscreen it uses the latest resolution again     
 ⬜ Multiple Selection Outline fix ( Outlines that overlap block eachother from rendering )      
 ⬜ Multiple Selection Properties ( Transform capabilities for all selected objects at once )      
-⬜ Surface Group Selection ( Selecting multiple groups for an object using [Toggle groups](https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/script-ToggleGroup.html))    
+⬜ Surface Group Selection ( Selecting multiple groups for an object using [Toggle groups](https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/script-ToggleGroup.html)) 
+     
+⬜ Allow Grouping of objects so that they move as if they were one single object. Also make it posible to tag some of these objects as unscalable to keep proportions      
 ⬜ Loading in PointClouds via import   
+⬜ Save/Loading projects 
+⬜ Start menu for loading projects  
 ⬜ Building to WebGL for browser    
-⬜ Save/Loading projects    
-⬜ Start menu for loading projects   
 ⬜ Adding more properties to objects for ease of use in calculations  
 ⬜ image recognition for windows and edges   
-⬜ Allow Grouping of objects so that they move as if they were one single object. Also make it posible to tag some of these objects as unscalable to keep proportions    
+ 
 
 
 
