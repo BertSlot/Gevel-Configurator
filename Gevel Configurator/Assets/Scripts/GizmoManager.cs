@@ -22,11 +22,11 @@ namespace RTG {
 		/// pressed for example, we will call the 'SetWorkGizmoId' function passing 
 		/// GizmoId.Move as the parameter.
 		/// </summary>
-		private enum GizmoId {
+		public enum GizmoId {
 			Move = 1,
-			Rotate,
-			Scale,
-			Universal
+			Rotate = 2,
+			Scale = 3,
+			Universal = 4
 		}
 
 		/// <summary>
@@ -275,11 +275,32 @@ namespace RTG {
 				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
 			}
 
+
 			RemoveHighlights(_selectedObjects);
 			_selectedObjects.Clear();
-			_selectedObjects.Add(spawnedObj);
-			scene.AddObjectToObjectListMenu(spawnedObj);
+
+
+			// for .obj files that have child objects with meshes
+			List<GameObject> children = spawnedObj.GetAllChildren();
+			foreach (GameObject child in children) {
+				// This is making sure the all the objects spawned have the same name as the parent so that the can be selected
+				// The names dont have to be different because the addObjectToObjectListMenu() function takes care of duplicate names.
+				child.name = spawnedObj.name;
+				// UnParent the childobjects and set them under the Objects Parent object
+				child.transform.SetParent(ParentObject.transform);
+				// Add children to the sceneObjectsList
+				_selectedObjects.Add(child);
+				scene.AddObjectToObjectListMenu(child);
+			}
+
+			if (spawnedObj.GetComponent<Collider>() == null) {
+				DeleteObject(spawnedObj);
+			} else {
+				_selectedObjects.Add(spawnedObj);
+				scene.AddObjectToObjectListMenu(spawnedObj);
+			}
 			OnSelectionChanged();
+
 		}
 
 		/// <summary>
@@ -443,8 +464,53 @@ namespace RTG {
 		/// This function is called to change the type of work gizmo. This is
 		/// used in the 'Update' function in response to the user pressing the
 		/// W,E,R,T keys to switch between different gizmo types.
+		/// This specific function allows for it to be called using an interger as ID
 		/// </summary>
-		private void SetWorkGizmoId(GizmoId gizmoId) {
+		public void SetWorkGizmoIdInt(int gizmoId) {
+			// If the specified gizmo id is the same as the current id, there is nothing left to do
+			if ((GizmoId)gizmoId == _workGizmoId)
+				return;
+
+			// Start with a clean slate and disable all gizmos
+			_objectMoveGizmo.Gizmo.SetEnabled(false);
+			_objectRotationGizmo.Gizmo.SetEnabled(false);
+			_objectScaleGizmo.Gizmo.SetEnabled(false);
+			_objectUniversalGizmo.Gizmo.SetEnabled(false);
+
+			// At this point all gizmos are disabled. Now we need to check the gizmo id
+			// and adjust the '_workGizmo' variable.
+			_workGizmoId = (GizmoId)gizmoId;
+			if ((GizmoId)gizmoId == GizmoId.Move)
+				_workGizmo = _objectMoveGizmo;
+			else if ((GizmoId)gizmoId == GizmoId.Rotate)
+				_workGizmo = _objectRotationGizmo;
+			else if ((GizmoId)gizmoId == GizmoId.Scale)
+				_workGizmo = _objectScaleGizmo;
+			else if ((GizmoId)gizmoId == GizmoId.Universal)
+				_workGizmo = _objectUniversalGizmo;
+
+			// If we have any selected objects, we need to make sure the work gizmo is enabled
+			if (_selectedObjects.Count != 0) {
+				// Make sure the work gizmo is enabled.
+				_workGizmo.Gizmo.SetEnabled(true);
+
+				// When working with transform spaces and pivots, the gizmos need to know about the pivot object. 
+				// This piece of information is necessary when the transform space is set to local because in that 
+				// case the gizmo will have its rotation synchronized with the target objects rotation. But because 
+				// there is more than one target object, we need to tell the gizmo which object to use. This is the 
+				// role if the pivot object in this case. This pivot object is also useful when the transform pivot 
+				// is set to 'ObjectMeshPivot' because it will be used to adjust the position of the gizmo. 
+				_workGizmo.SetTargetPivotObject(_selectedObjects[_selectedObjects.Count - 1]);
+			}
+		}
+
+
+		/// <summary>
+		/// This function is called to change the type of work gizmo. This is
+		/// used in the 'Update' function in response to the user pressing the
+		/// W,E,R,T keys to switch between different gizmo types.
+		/// </summary>
+		public void SetWorkGizmoId(GizmoId gizmoId) {
 			// If the specified gizmo id is the same as the current id, there is nothing left to do
 			if (gizmoId == _workGizmoId)
 				return;
@@ -481,7 +547,6 @@ namespace RTG {
 				_workGizmo.SetTargetPivotObject(_selectedObjects[_selectedObjects.Count - 1]);
 			}
 		}
-
 
 
 		/// <summary>
