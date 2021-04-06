@@ -285,7 +285,11 @@ namespace PointCloudRuntimeViewer {
 					case PointCloudFormat.ASC: // ASC (space at front)
 						{
 						headerCheck = PeekHeader.PeekHeaderASC(streamReader, readRGB);
-						if (!headerCheck.readSuccess) { streamReader.Close(); return; }
+						if (!headerCheck.readSuccess) {
+							streamReader.Close();
+							LogMessage("Incorrect header for " + pointCloudFormat + " format in file: " + fullPath);
+							return;
+						}
 						lines = headerCheck.linesRead;
 					}
 					break;
@@ -687,7 +691,7 @@ namespace PointCloudRuntimeViewer {
 				int indexCount = 0;
 
 #if UNITY_2017_3_OR_NEWER
-				int MaxVertexCountPerMesh = 1000000;
+				int MaxVertexCountPerMesh = 10000000;
 #else
 				int MaxVertexCountPerMesh = 65000;
 #endif
