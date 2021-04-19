@@ -12,6 +12,7 @@ using TMPro;
 //internal 
 class LoadingScreen : MonoBehaviour {
 
+<<<<<<< HEAD
 	/// <summary>
 	/// progress bar
 	/// </summary>
@@ -40,16 +41,29 @@ class LoadingScreen : MonoBehaviour {
 	/// <summary>
 	/// Default green color for the progress bar
 	/// </summary>
+=======
+	public Slider slider;
+	public TMP_Text statusText;
+	public Image barColorImage;
+
+	private float targetProgress;
+	public float fillSpeed = 0.5f;
+
+>>>>>>> PointCloudLoading
 	private Color defaultColor = new Color(0, 255, 0);
 
 	private void OnDisable() {
 		targetProgress = 0;
 		slider.value = 0;
+<<<<<<< HEAD
 		statusText.text = "None";
+=======
+>>>>>>> PointCloudLoading
 		barColorImage.color = defaultColor;
 	}
 
 	private void Start() {
+<<<<<<< HEAD
 		// resets all aspects of the loading screen
 		targetProgress = 0;
 		slider.value = 0;
@@ -63,6 +77,18 @@ class LoadingScreen : MonoBehaviour {
 			slider.value += fillSpeed * Time.deltaTime;
 		} else if (slider.value == 1) {
 			// doesn't need to do anything at 100% this jsut dispalys finished
+=======
+		targetProgress = 0;
+		slider.value = 0;
+		barColorImage.color = defaultColor;
+		SettargetProgressBarValue(1f);
+	}
+
+	void Update() {
+		if (slider.value < targetProgress) {
+			slider.value += fillSpeed * Time.deltaTime;
+		} else if (slider.value == 1) {
+>>>>>>> PointCloudLoading
 			SetStatusText("Finished");
 		}
 	}
@@ -91,6 +117,7 @@ class LoadingScreen : MonoBehaviour {
 		barColorImage.color = newColor;
 	}
 
+<<<<<<< HEAD
 
 	/// <summary>
 	/// Use this function to start a coroutine that disables the Loading Screen after 'x' amount of seconds
@@ -106,6 +133,12 @@ class LoadingScreen : MonoBehaviour {
 	/// <param name="seconds"></param>
 	/// <returns></returns>
 	private IEnumerator WaitSeconds(float seconds) {
+=======
+	public void DisableAfterSeconds(float seconds) {
+		StartCoroutine(WaitSeconds(seconds));
+	}
+	IEnumerator WaitSeconds(float seconds) {
+>>>>>>> PointCloudLoading
 		yield return new WaitForSeconds(seconds);
 		gameObject.SetActive(false);
 	}
