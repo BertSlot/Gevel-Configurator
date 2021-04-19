@@ -115,6 +115,9 @@ namespace PointCloudRuntimeViewer {
 		Vector3 tempColor;
 		private Camera cam;
 
+		// Added by Scott Timmermans to accomodate a custom loading screen
+		private LoadingScreen loadingScreen;
+
 		[Header("Caching")]
 		[Tooltip("Output .bin file, so can load it with PointCloudViewerDX11, instead of parsing raw pointcloud again")]
 		public bool cacheBinFile = false;
@@ -128,6 +131,8 @@ namespace PointCloudRuntimeViewer {
 		// init
 		private IEnumerator Start() {
 			cam = Camera.main;
+			loadingScreen = GameObject.Find("LoadingScreen").GetComponent<LoadingScreen>();
+			loadingScreen.DisableAfterSeconds(5f);
 
 			if (instantiateMaterial == true) {
 				cloudMaterial = new Material(cloudMaterial);
