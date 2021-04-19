@@ -92,6 +92,9 @@ namespace unitycodercom_PointCloudBinaryViewer {
 
 		private Camera cam;
 
+		// Added by Scott Timmermans to accomodate a custom loading screen
+		private LoadingScreen loadingScreen;
+
 		[Header("Rendering")]
 		[Tooltip("Draw using CommandBuffer instead of OnRenderObject")]
 		public bool useCommandBuffer = false;
@@ -131,6 +134,7 @@ namespace unitycodercom_PointCloudBinaryViewer {
 			transformPos = transform.position;
 
 			cam = Camera.main;
+			loadingScreen = GameObject.Find("LoadingScreen").GetComponent<LoadingScreen>();
 
 			if (useCommandBuffer == true) {
 				commandBuffer = new CommandBuffer();
@@ -348,9 +352,10 @@ namespace unitycodercom_PointCloudBinaryViewer {
 				return;
 			}
 
-			if (!isLoadingNewData)
+			if (!isLoadingNewData) {
 				Debug.Log("(Viewer) Reading threaded pointcloud file: " + fullPath, gameObject);
 
+			}
 			// pass in filename
 			//ThreadReaderInfo threadReaderData = new ThreadReaderInfo();
 			//threadReaderData.fileName = fullPath;
