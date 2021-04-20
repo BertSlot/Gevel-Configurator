@@ -22,6 +22,12 @@ class LoadingScreen : MonoBehaviour {
 	/// </summary>
 	public TMP_Text statusText;
 
+	private bool disablePending = false;
+	private float pendingSeconds;
+
+	private bool newStatusPending = false;
+	private string newStatusText;
+
 	/// <summary>
 	/// progress bar fill. Can be found under FillArea
 	/// </summary>
@@ -63,15 +69,21 @@ class LoadingScreen : MonoBehaviour {
 			slider.value += fillSpeed * Time.deltaTime;
 		} else if (slider.value == 1) {
 			// doesn't need to do anything at 100% this jsut dispalys finished
-			SetStatusText("Finished");
+			//SetStatusText("Finished");
 		}
+
+		if (newStatusPending)
+			SetStatusText(newStatusText);
+		if (disablePending)
+			DisableAfterSeconds(pendingSeconds);
+
 	}
 
 	/// <summary>
 	/// This function sets the targetprogress to the given value which can range from 0 to 1
 	/// </summary>
 	/// <param name="Value"></param>
-	public void SettargetProgressBarValue(float Value) {
+	public void SetTargetProgressBarValue(float Value) {
 		targetProgress = Value;
 	}
 
@@ -81,6 +93,16 @@ class LoadingScreen : MonoBehaviour {
 	/// <param name="status"></param>
 	public void SetStatusText(string status) {
 		statusText.text = status;
+	}
+
+	/// <summary>
+	/// TextMeshPro UI objects cant be modified from a thread, so to circumvent that this function 
+	/// sets a bool to signal the loading Screen to update the status text in the next Update() call
+	/// </summary>
+	/// <param name="statusString"></param>
+	public void SetStatusTextThread(string statusString) {
+		newStatusText = statusString;
+		newStatusPending = true;
 	}
 
 	/// <summary>
@@ -99,6 +121,17 @@ class LoadingScreen : MonoBehaviour {
 	public void DisableAfterSeconds(float seconds) {
 		StartCoroutine(WaitSeconds(seconds));
 	}
+
+	/// <summary>
+	/// UI objects cant be modified from a thread, so to circumvent that this function 
+	/// sets a bool to signal the loading Screen to disable itself
+	/// </summary>
+	/// <param name="seconds"></param>
+	public void DisableAfterSecondsThread(float seconds) {
+		disablePending = true;
+		pendingSeconds = seconds;
+	}
+
 
 	/// <summary>
 	/// IEnumerator for coroutine that disables the Loading Screen after X amount of seconds

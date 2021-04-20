@@ -354,6 +354,9 @@ namespace unitycodercom_PointCloudBinaryViewer {
 
 			if (!isLoadingNewData) {
 				Debug.Log("(Viewer) Reading threaded pointcloud file: " + fullPath, gameObject);
+				loadingScreen.SetStatusTextThread("Reading pointcloud file: " + fullPath);
+				loadingScreen.SetTargetProgressBarValue(.25f);
+
 
 			}
 			// pass in filename
@@ -417,6 +420,7 @@ namespace unitycodercom_PointCloudBinaryViewer {
 					long totalMaxPointsTemp = totalPoints;
 
 					Debug.Log("(header) totalPoints:" + totalPoints);
+
 					byteIndexTemp += sizeof(System.Int32);
 
 					if (readWholeCloud == true) {
@@ -706,6 +710,8 @@ namespace unitycodercom_PointCloudBinaryViewer {
 			points = new Vector3[totalPoints];
 
 			Debug.Log("Loading old format: " + totalPoints + " points..");
+			loadingScreen.SetStatusTextThread("Loading Points: " + totalPoints.ToString() + " points...");
+			loadingScreen.SetTargetProgressBarValue(.5f);
 
 			float x, y, z;
 			float minX = Mathf.Infinity;
@@ -841,6 +847,9 @@ namespace unitycodercom_PointCloudBinaryViewer {
 			data = null;
 
 			Debug.Log("Finished Loading.");
+			loadingScreen.SetStatusTextThread("Finished Loading");
+			loadingScreen.SetTargetProgressBarValue(1f);
+			loadingScreen.DisableAfterSecondsThread(.5f);
 
 			if (showDebug) {
 				stopwatch.Stop();

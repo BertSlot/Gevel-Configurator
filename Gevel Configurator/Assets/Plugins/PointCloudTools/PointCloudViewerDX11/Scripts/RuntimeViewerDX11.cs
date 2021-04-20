@@ -132,7 +132,7 @@ namespace PointCloudRuntimeViewer {
 		private IEnumerator Start() {
 			cam = Camera.main;
 			loadingScreen = GameObject.Find("LoadingScreen").GetComponent<LoadingScreen>();
-			loadingScreen.DisableAfterSeconds(5f);
+
 
 			if (instantiateMaterial == true) {
 				cloudMaterial = new Material(cloudMaterial);
@@ -195,6 +195,9 @@ namespace PointCloudRuntimeViewer {
 				return;
 			}
 
+			// added for loadingScreen implementation ###################################################################
+			loadingScreen.SetStatusText("Reading threaded pointcloud file: " + fullPath);
+			loadingScreen.SetTargetProgressBarValue(0.15f);
 			Debug.Log("Reading threaded pointcloud file: " + fullPath, gameObject);
 
 			ParameterizedThreadStart start = new ParameterizedThreadStart(LoadRawPointCloud);
@@ -270,7 +273,9 @@ namespace PointCloudRuntimeViewer {
 			hasLoadedPointCloud = false;
 
 			LogMessage("Loading " + pointCloudFormat + " file: " + fullPath);
-
+			// added for loadingScreen implementation ###################################################################
+			loadingScreen.SetStatusTextThread("Loading " + pointCloudFormat + " file: " + fullPath);
+			loadingScreen.SetTargetProgressBarValue(.25f);
 			long lines = 0;
 
 			// get initial data (so can check if data is ok)
@@ -393,6 +398,9 @@ namespace PointCloudRuntimeViewer {
 					// calculate actual point data lines
 					int splitCount = 0;
 					LogMessage("calculating actual point data lines");
+					// added for loadingScreen implementation ###################################################################
+					loadingScreen.SetStatusTextThread("calculating actual point data lines");
+					loadingScreen.SetTargetProgressBarValue(.5f);
 					while (streamReader.EndOfStream == false && abortReaderThread == false) {
 						line = streamReader.ReadLine();
 
@@ -442,10 +450,15 @@ namespace PointCloudRuntimeViewer {
 
 				// process all points
 				LogMessage("processing all points");
+				// added for loadingScreen implementation ###################################################################
+				loadingScreen.SetStatusTextThread("processing all points");
+				loadingScreen.SetTargetProgressBarValue(.75f);
+
 				while (haveMoreToRead == true && abortReaderThread == false) {
 					if (progressCounter > 256000) {
 						// TODO: add runtime progressbar
 						//EditorUtility.DisplayProgressBar(appName, "Converting point cloud to binary file", rowCount / (float)lines);
+
 						progressCounter = 0;
 					}
 
@@ -689,6 +702,11 @@ namespace PointCloudRuntimeViewer {
 			} // using reader
 
 			Debug.Log("Finished loading.");
+			// added for loadingScreen implementation ###################################################################
+			loadingScreen.SetStatusTextThread("Finished loading");
+			loadingScreen.SetTargetProgressBarValue(1f);
+			loadingScreen.DisableAfterSecondsThread(1f);
+
 
 			// if mesh version, build meshes
 			if (useDX11 == false) {
