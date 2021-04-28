@@ -33,6 +33,8 @@ class LoadingScreen : MonoBehaviour {
 	/// </summary>
 	public Image barColorImage;
 
+	public GameObject loadingPanel;
+
 	/// <summary>
 	/// Target progress bar value
 	/// </summary>
@@ -132,6 +134,9 @@ class LoadingScreen : MonoBehaviour {
 		pendingSeconds = seconds;
 	}
 
+	public void EnableLoadingScreen() {
+		loadingPanel.gameObject.SetActive(true);
+	}
 
 	/// <summary>
 	/// IEnumerator for coroutine that disables the Loading Screen after X amount of seconds
@@ -140,7 +145,7 @@ class LoadingScreen : MonoBehaviour {
 	/// <returns></returns>
 	private IEnumerator WaitSeconds(float seconds) {
 		yield return new WaitForSeconds(seconds);
-		gameObject.SetActive(false);
+		loadingPanel.SetActive(false);
 	}
 
 }

@@ -76,6 +76,16 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// TODO change this to numeric naming like> cube(1), cube(2), cube(3)....cube(99) 
+	// instead of cube(Clone)djfoh, cube(Clone)(Clone)fdfhd.... cube(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)hfjdf
+	// This creates a mess of the scene object list. It cuts of all words past the first so image an object called Energy Facade(Clone)(Clone)(Clone)(Clone)(Clone)gfjsd(Clone)(Clone)gwinf(Clone)(Clone)
+	// shows as Energy   .... not clear which one it is.
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	/// <summary>
+	/// Adds an object to the scene list with a random set of character behind it to identify it in the list to overcome dublicate naming errors.
+	/// </summary>
+	/// <param name="go"></param>
 	public void AddObjectToObjectListMenu(GameObject go) {
 		string characters = "0123456789abcdefghijklmnopqrstuvwxABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -101,6 +111,10 @@ public class SceneObjects : MonoBehaviour {
 		SelectGameObject(childObject, go);
 	}
 
+	/// <summary>
+	/// Removes the given object from the scene object list
+	/// </summary>
+	/// <param name="go"></param>
 	public void RemoveObjectFromObjectListMenu(GameObject go) {
 		for (int i = 0; i < listObjectsList.Count; i++) {
 			if (listObjectsList[i].name == go.name) {
@@ -114,9 +128,13 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
+	/// <summary>
+	/// Cleares the entire scene object list
+	/// </summary>
 	void ClearObjectListMenu() {
 
 		foreach (Transform child in objectListContent.transform) {
+			// dont know if this removes the object or just "de-parents" it (Creating an Orphan object)
 			child.SetParent(null, false);
 		}
 		// Set list height to zero

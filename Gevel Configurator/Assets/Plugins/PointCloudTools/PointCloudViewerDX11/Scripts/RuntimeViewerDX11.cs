@@ -134,6 +134,7 @@ namespace PointCloudRuntimeViewer {
 			loadingScreen = GameObject.Find("LoadingScreen").GetComponent<LoadingScreen>();
 
 
+
 			if (instantiateMaterial == true) {
 				cloudMaterial = new Material(cloudMaterial);
 			}
@@ -196,6 +197,7 @@ namespace PointCloudRuntimeViewer {
 			}
 
 			// added for loadingScreen implementation ###################################################################
+			loadingScreen.EnableLoadingScreen();
 			loadingScreen.SetStatusText("Reading threaded pointcloud file: " + fullPath);
 			loadingScreen.SetTargetProgressBarValue(0.15f);
 			Debug.Log("Reading threaded pointcloud file: " + fullPath, gameObject);

@@ -354,6 +354,7 @@ namespace unitycodercom_PointCloudBinaryViewer {
 
 			if (!isLoadingNewData) {
 				Debug.Log("(Viewer) Reading threaded pointcloud file: " + fullPath, gameObject);
+				loadingScreen.EnableLoadingScreen();
 				loadingScreen.SetStatusTextThread("Reading pointcloud file: " + fullPath);
 				loadingScreen.SetTargetProgressBarValue(.25f);
 

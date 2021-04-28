@@ -175,6 +175,8 @@ namespace RTG {
 				}
 			}
 
+			// TODO add giant if to check if you are in an input field as to not make mistakes by deleting or copying objects
+
 			// If the Ctrl + C key was pressed we add the currently selected objects to the clipboard list
 			// If the Ctrl + V key was pressed we add the objects currently in the clipboard list to the scene
 			if (Application.isEditor) { // this works when you are using the editor
@@ -338,7 +340,7 @@ namespace RTG {
 
 		/*
 		/// <summary>
-		/// An implementatio of the OnGUI function which shows the current transform
+		/// An implementation of the OnGUI function which shows the current transform
 		/// space and transform pivot in the top left corner of the screen.
 		/// </summary>
 		private void OnGUI() {
@@ -371,8 +373,10 @@ namespace RTG {
 				instantiatedObjects.Add(duplicateObject);
 
 				scene.AddObjectToObjectListMenu(duplicateObject);
-			}
 
+			}
+			// for some reason the last object is a duplicate of the first one and causes that object to experience twice the transformation effects
+			instantiatedObjects.RemoveAt(instantiatedObjects.Count - 1);
 			return instantiatedObjects;
 		}
 
