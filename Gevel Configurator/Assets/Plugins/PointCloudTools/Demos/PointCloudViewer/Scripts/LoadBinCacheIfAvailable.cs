@@ -5,7 +5,7 @@ using unitycodercom_PointCloudBinaryViewer;
 using PointCloudRuntimeViewer;
 using UnityEngine;
 using UnityEngine.UI;
-
+using SFB;
 #if !UNITY_SAMSUNGTV && !UNITY_WEBGL
 using System.IO;
 #endif
@@ -16,7 +16,6 @@ namespace unitycoder_examples {
 
 		[Tooltip("If this file has .bin cached file, we use PointCloudViewerDX11 instead of parsing with RuntimeViewerDX11")]
 		public string fileName = "StreamingAssets/PointCloudViewerSampleData/sample.xyz";
-
 		[SerializeField]
 		public InputField filePathField;
 
@@ -29,9 +28,17 @@ namespace unitycoder_examples {
 				StartLoadingPointCloud();
 			}
 		}
+
+		public void GetPointcloudPath() {
+			// make this a coroutine
+			fileName = StandaloneFileBrowser.OpenFilePanel("Select Pointcloud", "", "xyz", false)[0];
+			StartLoadingPointCloud();
+		}
+
 		public void StartLoadingPointCloud() {
 
-			fileName = filePathField.text;
+			// ## pre-openFilePanel ##
+			//fileName = filePathField.text;
 
 			if (Path.IsPathRooted(fileName) == false) {
 				fileName = Path.Combine(Application.streamingAssetsPath, fileName);

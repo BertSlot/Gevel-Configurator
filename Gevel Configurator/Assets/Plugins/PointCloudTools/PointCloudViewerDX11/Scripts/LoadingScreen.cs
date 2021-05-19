@@ -134,6 +134,9 @@ class LoadingScreen : MonoBehaviour {
 		pendingSeconds = seconds;
 	}
 
+	/// <summary>
+	/// Enables the loading screen.
+	/// </summary>
 	public void EnableLoadingScreen() {
 		loadingPanel.gameObject.SetActive(true);
 	}

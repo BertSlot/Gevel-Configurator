@@ -251,7 +251,7 @@ namespace RTG {
 
 
 		/// <summary>
-		/// Spawns object using the middle of the scrren as position of the raycast
+		/// Spawns object using the middle of the screen as position of the raycast
 		/// </summary>
 		/// <param name="obj"></param>
 		public void SpawnObjectMiddle(GameObject obj) {
@@ -267,6 +267,7 @@ namespace RTG {
 			Ray ray = Cam.ScreenPointToRay(mousePos);
 
 			GameObject spawnedObj;
+			//Debug.Log(obj.name);
 			if (Physics.Raycast(ray, out RaycastHit hit)) {
 				var Dist = Vector3.Distance(hit.transform.position, Cam.transform.position);
 				Dist /= 2;
@@ -277,27 +278,39 @@ namespace RTG {
 				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
 			}
 
-
 			RemoveHighlights(_selectedObjects);
 			_selectedObjects.Clear();
 
-
 			// for .obj files that have child objects with meshes
 			List<GameObject> children = spawnedObj.GetAllChildren();
-			foreach (GameObject child in children) {
-				// This is making sure the all the objects spawned have the same name as the parent so that the can be selected
-				// The names dont have to be different because the addObjectToObjectListMenu() function takes care of duplicate names.
-				child.name = spawnedObj.name;
-				// UnParent the childobjects and set them under the Objects Parent object
-				child.transform.SetParent(ParentObject.transform);
-				// Add children to the sceneObjectsList
-				_selectedObjects.Add(child);
-				scene.AddObjectToObjectListMenu(child);
+			if (children.Count > 0) { // if the gameobject has no children it doesn't need to loop over anything
+				foreach (GameObject child in children) {
+
+					// For some reason only Destroy makes it work. when using DeleteObject() it deletes the wrong child object with the same name.
+					if (child.GetComponent<MeshRenderer>() == null) {
+						//Debug.Log("annihilate : " + child.name);
+						Destroy(child);
+					} else {
+						// This is making sure the all the objects spawned have the same name as the parent so that the can be selected
+						// The names dont have to be different because the addObjectToObjectListMenu() function takes care of duplicate names.
+						child.name = spawnedObj.name;
+						// UnParent the childobjects and set them under the Objects Parent object
+						child.transform.SetParent(ParentObject.transform);
+
+						// Add children to the sceneObjectsList
+						_selectedObjects.Add(child);
+						scene.AddObjectToObjectListMenu(child);
+
+						AddOrigin(child, obj.name, true);
+					}
+				}
 			}
 
-			if (spawnedObj.GetComponent<Collider>() == null) {
-				DeleteObject(spawnedObj);
+			if (spawnedObj.GetComponent<Collider>() == null && spawnedObj.GetComponent<MeshCollider>() == null) {
+				//Debug.Log("Annihilate : " + spawnedObj.name);
+				Destroy(spawnedObj);
 			} else {
+				AddOrigin(spawnedObj, obj.name, false);
 				_selectedObjects.Add(spawnedObj);
 				scene.AddObjectToObjectListMenu(spawnedObj);
 			}
@@ -331,12 +344,61 @@ namespace RTG {
 				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
 			}
 
+			RemoveHighlights(_selectedObjects);
 			_selectedObjects.Clear();
-			_selectedObjects.Add(spawnedObj);
-			scene.AddObjectToObjectListMenu(spawnedObj);
+
+
+			// for .obj files that have child objects with meshes
+			List<GameObject> children = spawnedObj.GetAllChildren();
+			if (children.Count > 0) {
+				foreach (GameObject child in children) {
+					// For some reason only Destroy makes it work. when using DeleteObject() it deletes the wrong child object.
+					if (child.GetComponent<MeshRenderer>() == null) {
+						//Debug.Log("annihilate : " + child.name);
+						Destroy(child);
+					} else {
+						// This is making sure the all the objects spawned have the same name as the parent so that the can be selected
+						// The names dont have to be different because the addObjectToObjectListMenu() function takes care of duplicate names.
+						child.name = spawnedObj.name;
+						// UnParent the childobjects and set them under the Objects Parent object
+						child.transform.SetParent(ParentObject.transform);
+
+						// Add children to the sceneObjectsList
+						_selectedObjects.Add(child);
+						scene.AddObjectToObjectListMenu(child);
+
+						AddOrigin(child, obj.name, true);
+					}
+				}
+			}
+
+			if (spawnedObj.GetComponent<Collider>() == null && spawnedObj.GetComponent<MeshCollider>() == null) {
+				//Debug.Log("Annihilate : " + spawnedObj.name);
+				Destroy(spawnedObj);
+
+			} else {
+				AddOrigin(spawnedObj, obj.name, false);
+				_selectedObjects.Add(spawnedObj);
+				scene.AddObjectToObjectListMenu(spawnedObj);
+			}
 			OnSelectionChanged();
+
 		}
 
+		/// <summary>
+		/// This function adds a component of type OriginObject to obj containing information about the object from which it is derived. 
+		/// This info is used for replicating this object while loading from a save file.
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="originName"></param>
+		/// <param name="childOfMultiMesh"></param>
+		private void AddOrigin(GameObject obj, string originName, bool childOfMultiMesh) {
+			OriginObject OriObj = obj.AddComponent<OriginObject>();
+			OriObj.originObjectName = originName;
+			OriObj.originObjectHasMultipleMeshes = childOfMultiMesh;
+			OriObj.meshName = obj.GetMesh().name;
+
+		}
 
 		/*
 		/// <summary>
