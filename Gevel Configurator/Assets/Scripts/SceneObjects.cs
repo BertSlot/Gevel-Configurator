@@ -278,9 +278,10 @@ public class SceneObjects : MonoBehaviour {
 			overview.AddSurfaceGroup(editorGameObject, dropdown.options[dropdown.value].text);
 		});
 
-		foreach (string obj in overview.GetSurfaceGroups(editorGameObject)) {
+		// Does nothing
+		/*foreach (string obj in overview.GetSurfaceGroups(editorGameObject)) {
 			//Debug.Log(obj);
-		}
+		}*/
 
 		// Set object name field
 		GameObject objectNameObject = GameObject.Find("ObjectNameField");

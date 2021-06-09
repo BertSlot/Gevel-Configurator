@@ -15,7 +15,7 @@ namespace unitycoder_examples {
 		public bool loadAtStart = true;
 
 		[Tooltip("If this file has .bin cached file, we use PointCloudViewerDX11 instead of parsing with RuntimeViewerDX11")]
-		public string fileName = "StreamingAssets/PointCloudViewerSampleData/sample.xyz";
+		public string fileName = "";
 		[SerializeField]
 		public InputField filePathField;
 
@@ -31,8 +31,11 @@ namespace unitycoder_examples {
 
 		public void GetPointcloudPath() {
 			// make this a coroutine
-			fileName = StandaloneFileBrowser.OpenFilePanel("Select Pointcloud", "", "xyz", false)[0];
-			StartLoadingPointCloud();
+			string[] temp = StandaloneFileBrowser.OpenFilePanel("Select Pointcloud", "", "xyz", false);
+			if (temp.Length != 0) { // When canceled the length is 0
+				fileName = temp[0];
+				StartLoadingPointCloud();
+			}
 		}
 
 		public void StartLoadingPointCloud() {
