@@ -89,12 +89,12 @@ public class SurfaceOverzicht : MonoBehaviour {
 		return childObject;
 	}
 
-	public void setScaleCm() {
+	public void SetScaleCm() {
 		scale = " cm²";
 		RenderOverzichtTotals();
 	}
 
-	public void setScaleM() {
+	public void SetScaleM() {
 		scale = " m²";
 		RenderOverzichtTotals();
 	}
