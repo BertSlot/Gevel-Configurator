@@ -103,6 +103,8 @@ namespace RTG {
 		/// </summary>
 		//private GameObject 
 
+		public bool AllowKeyboardInputs = true;
+
 		/// <summary>
 		/// Performs all necessary initializations.
 		/// </summary>
@@ -176,77 +178,78 @@ namespace RTG {
 			}
 
 			// TODO add giant if to check if you are in an input field as to not make mistakes by deleting or copying objects
+			if (AllowKeyboardInputs) {
 
-			// If the Ctrl + C key was pressed we add the currently selected objects to the clipboard list
-			// If the Ctrl + V key was pressed we add the objects currently in the clipboard list to the scene
-			if (Application.isEditor) { // this works when you are using the editor
-				if (Input.GetKeyDown(KeyCode.C)) {
-					if (_selectedObjects.Count != 0) {
-						CopyToClipboard(_selectedObjects);
-					} else {
-						_clipboard.Clear();
+				// If the Ctrl + C key was pressed we add the currently selected objects to the clipboard list
+				// If the Ctrl + V key was pressed we add the objects currently in the clipboard list to the scene
+				if (Application.isEditor) { // this works when you are using the editor
+					if (Input.GetKeyDown(KeyCode.C)) {
+						if (_selectedObjects.Count != 0) {
+							CopyToClipboard(_selectedObjects);
+						} else {
+							_clipboard.Clear();
+						}
+					} else if (Input.GetKeyDown(KeyCode.V)) {
+						if (_clipboard.Count != 0) {
+							RemoveHighlights(_selectedObjects);
+							_selectedObjects.Clear();
+							_selectedObjects.AddRange(Paste());
+							OnSelectionChanged();
+						}
 					}
-				} else if (Input.GetKeyDown(KeyCode.V)) {
-					if (_clipboard.Count != 0) {
+				} else { // This works when you are not using the editor
+					if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl)) {
+						if (_selectedObjects.Count != 0) {
+							CopyToClipboard(_selectedObjects);
+						} else {
+							_clipboard.Clear();
+						}
+					} else if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl)) {
+						if (_clipboard.Count != 0) {
+							RemoveHighlights(_selectedObjects);
+							_selectedObjects.Clear();
+							_selectedObjects.AddRange(Paste());
+							OnSelectionChanged();
+						}
+					}
+				}
+
+				if (Input.GetKey(KeyCode.Delete)) {
+					if (_selectedObjects.Count != 0) {
 						RemoveHighlights(_selectedObjects);
+						DeleteObjectList(_selectedObjects);
 						_selectedObjects.Clear();
-						_selectedObjects.AddRange(Paste());
 						OnSelectionChanged();
 					}
 				}
-			} else { // This works when you are not using the editor
-				if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl)) {
-					if (_selectedObjects.Count != 0) {
-						CopyToClipboard(_selectedObjects);
-					} else {
-						_clipboard.Clear();
-					}
-				} else if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl)) {
-					if (_clipboard.Count != 0) {
-						RemoveHighlights(_selectedObjects);
-						_selectedObjects.Clear();
-						_selectedObjects.AddRange(Paste());
-						OnSelectionChanged();
-					}
+				// If the G key was pressed, we change the transform space to Global. Otherwise,
+				// if the L key was pressed, we change it to Local.
+				if (Input.GetKeyDown(KeyCode.G))
+					SetTransformSpace(GizmoSpace.Global);
+				else if (Input.GetKeyDown(KeyCode.L))
+					SetTransformSpace(GizmoSpace.Local);
+
+				// We will change the pivot type when the P key is pressed
+				if (Input.GetKeyDown(KeyCode.P)) {
+					// Retrieve the current transform pivot and activate the other one instead.
+					GizmoObjectTransformPivot currentPivot = _objectMoveGizmo.TransformPivot;
+					if (currentPivot == GizmoObjectTransformPivot.ObjectGroupCenter)
+						SetTransformPivot(GizmoObjectTransformPivot.ObjectMeshPivot);
+					else
+						SetTransformPivot(GizmoObjectTransformPivot.ObjectGroupCenter);
 				}
+
+				// Switch between different gizmo types using the W,E,R,T keys.
+				if (Input.GetKeyDown(KeyCode.W))
+					SetWorkGizmoId(GizmoId.Move);
+				else if (Input.GetKeyDown(KeyCode.E))
+					SetWorkGizmoId(GizmoId.Rotate);
+				else if (Input.GetKeyDown(KeyCode.R))
+					SetWorkGizmoId(GizmoId.Scale);
+				else if (Input.GetKeyDown(KeyCode.T))
+					SetWorkGizmoId(GizmoId.Universal);
 			}
-
-			if (Input.GetKey(KeyCode.Delete)) {
-				if (_selectedObjects.Count != 0) {
-					RemoveHighlights(_selectedObjects);
-					DeleteObjectList(_selectedObjects);
-					_selectedObjects.Clear();
-					OnSelectionChanged();
-				}
-			}
-			// If the G key was pressed, we change the transform space to Global. Otherwise,
-			// if the L key was pressed, we change it to Local.
-			if (Input.GetKeyDown(KeyCode.G))
-				SetTransformSpace(GizmoSpace.Global);
-			else if (Input.GetKeyDown(KeyCode.L))
-				SetTransformSpace(GizmoSpace.Local);
-
-			// We will change the pivot type when the P key is pressed
-			if (Input.GetKeyDown(KeyCode.P)) {
-				// Retrieve the current transform pivot and activate the other one instead.
-				GizmoObjectTransformPivot currentPivot = _objectMoveGizmo.TransformPivot;
-				if (currentPivot == GizmoObjectTransformPivot.ObjectGroupCenter)
-					SetTransformPivot(GizmoObjectTransformPivot.ObjectMeshPivot);
-				else
-					SetTransformPivot(GizmoObjectTransformPivot.ObjectGroupCenter);
-			}
-
-			// Switch between different gizmo types using the W,E,R,T keys.
-			if (Input.GetKeyDown(KeyCode.W))
-				SetWorkGizmoId(GizmoId.Move);
-			else if (Input.GetKeyDown(KeyCode.E))
-				SetWorkGizmoId(GizmoId.Rotate);
-			else if (Input.GetKeyDown(KeyCode.R))
-				SetWorkGizmoId(GizmoId.Scale);
-			else if (Input.GetKeyDown(KeyCode.T))
-				SetWorkGizmoId(GizmoId.Universal);
-
-			OnSelectionChanged();
+			//OnSelectionChanged();
 		}
 
 

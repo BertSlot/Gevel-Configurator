@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 using UnityEngine.UI;
 using HSVPicker.Examples;
 
@@ -21,6 +22,9 @@ public class SceneObjects : MonoBehaviour {
 	/// Contains RTGizmoManager gameobject for the GizmoManager script
 	/// </summary>
 	private GameObject gizmo;
+
+	private GameObject objectNameObject;
+	private InputField objectNameField;
 
 	/// <summary>
 	/// Contains GizmoManager from gizmo
@@ -62,9 +66,15 @@ public class SceneObjects : MonoBehaviour {
 		//objectListContent = GameObject.Find("Content");
 		manager = gizmo.GetComponent<RTG.GizmoManager>();
 
+		objectNameObject = GameObject.Find("ObjectNameField");
+		objectNameField = objectNameObject.GetComponent<InputField>();
+
 		propertyMenu.gameObject.SetActive(false);
 
 		SetObjectListMenu();
+	}
+	void Update() {
+		manager.AllowKeyboardInputs = !objectNameField.isFocused;
 	}
 
 	void SetObjectListMenu() {
@@ -76,39 +86,43 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// TODO change this to numeric naming like> cube(1), cube(2), cube(3)....cube(99) 
-	// instead of cube(Clone)djfoh, cube(Clone)(Clone)fdfhd.... cube(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)hfjdf
-	// This creates a mess of the scene object list. It cuts of all words past the first so image an object called Energy Facade(Clone)(Clone)(Clone)(Clone)(Clone)gfjsd(Clone)(Clone)gwinf(Clone)(Clone)
-	// shows as Energy   .... not clear which one it is.
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	/// <summary>
-	/// Adds an object to the scene list with a random set of character behind it to identify it in the list to overcome dublicate naming errors.
+	/// Adds an object to the scene list with a "(#)" behind it to identify it in the list to overcome dublicate naming errors.
 	/// </summary>
 	/// <param name="go"></param>
 	public void AddObjectToObjectListMenu(GameObject go) {
-		string characters = "0123456789abcdefghijklmnopqrstuvwxABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-		string code = "";
+		string name = go.name.Replace("(Clone)", "");
+		string objName = name;
+		int count = 1;
 
-		for (int i = 0; i < 5; i++) {
-			int a = Random.Range(0, characters.Length);
-			code = code + characters[a];
+		while (ObjectNameExists(name)) {
+
+			name = string.Format("{0}({1})", objName, count++);
 		}
 
-		foreach (GameObject menuObject in listObjectsList) {
-			if (go.name == menuObject.name) {
-				go.name = go.name + code;
-			}
-		}
+		go.name = name;
 
-		Debug.Log(go.name);
+		//Debug.Log(go.name);
 
 		GameObject childObject = CreateListObject(go.transform);
 		listObjectsList.Add(childObject);
 
 		RenderListObjects();
 		SelectGameObject(childObject, go);
+	}
+
+	/// <summary>
+	/// This function checks if the name given already has an object in the scene list
+	/// </summary>
+	/// <param name="name"> test string </param>
+	/// <returns>Bool. If true, given name already exists in scene list</returns>
+	public bool ObjectNameExists(string name) {
+		foreach (GameObject menuObject in listObjectsList) {
+			if (menuObject.name.Contains(name))
+				return true;
+		}
+		return false;
 	}
 
 	/// <summary>
@@ -293,7 +307,6 @@ public class SceneObjects : MonoBehaviour {
 		// Set object name field listener
 		objectNameField.onValueChanged.AddListener(name => {
 			bool equal = false;
-
 			// Check if name already exists
 			foreach (GameObject menuObject in listObjectsList) {
 				if (objectNameField.text == menuObject.name) {

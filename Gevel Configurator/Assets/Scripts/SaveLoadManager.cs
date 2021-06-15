@@ -260,6 +260,7 @@ public class SaveLoadManager : MonoBehaviour {
 	/// Load File Function for use with Buttons. It starts a coroutine for LoadFile()
 	/// </summary>
 	public void LoadFileFunc() {
+		LoadAssets();
 		StartCoroutine(LoadFile());
 	}
 
@@ -315,15 +316,24 @@ public class SaveLoadManager : MonoBehaviour {
 			} else {
 				MessageBox.Show("No Point Cloud in save file", "Point Cloud Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				// DialogResult = ^^^^^  (Could do something with the DialogResult)
+				// Ask if you want to continue without pointcloud or not?
+
 			}
+
+			// remove current objects
+			foreach (Transform child in parentObject.transform) {
+				SceneManager.RemoveObjectFromObjectListMenu(child.gameObject);
+				Destroy(child.gameObject);
+			}
+
 
 			Dictionary<GameObject, ObjectData> LoadingObjects = new Dictionary<GameObject, ObjectData>();
 
-
-			Debug.Log(loadData.ObjectDataList.Count);
+			//Debug.Log(loadData.ObjectDataList.Count);
 			// Add all GameObjects to a Dictionary paired with their ObjectData so they can be referenced
 			foreach (var objData in loadData.ObjectDataList) {
 				LoadingObjects.Add(GetGameObjectFromObjectData(objData), objData);
+				// Also instantiates all objects
 				// add all stored objects to the list
 			}
 
@@ -335,11 +345,6 @@ public class SaveLoadManager : MonoBehaviour {
 					gameObject.Key.transform.SetParent(LoadingObjects.FirstOrDefault(kvp => kvp.Key.name == gameObject.Value.parentName).Key.transform);
 				}
 			}
-
-			// TODO:
-			// Need List of available resources (inside GetGameObjectFromObjectData(); )
-			// here goes object instantiation
-
 
 		}
 		yield return true;
@@ -425,10 +430,9 @@ public class SaveLoadManager : MonoBehaviour {
 					foreach (GameObject child in children) {
 						// For some reason only Destroy makes it work. when using DeleteObject() it deletes the wrong child object with the same name.
 						if (child.name == objData.originData.meshName) {
-							// This is making sure the all the objects spawned have the same name as the parent so that the can be selected
-							// The names dont have to be different because the addObjectToObjectListMenu() function takes care of duplicate names.
+							// Gives the Child the correct name
 							child.name = objData.objectName;
-							// UnParent the childobjects and set them under the Objects Parent object
+							// UnParent the childobject and set them under the Objects parentObject
 							Destroy(obj);
 							child.transform.SetParent(parentObject.transform);
 							// Add Child to the sceneObjectsList
@@ -452,7 +456,6 @@ public class SaveLoadManager : MonoBehaviour {
 					// - Metallic
 				}
 
-
 				obj.name = objData.objectName;
 				obj.transform.localPosition = objData.position;
 				obj.transform.localRotation = Vector4ToQuaternion(objData.rotation);
@@ -474,7 +477,6 @@ public class SaveLoadManager : MonoBehaviour {
 				return obj;
 			}
 		}
-
 		// If for some reason there is no asset for the origin object
 		// Debug.Log(obj.name);
 		Debug.Log("No Asset Found for:" + objData.originData.originObjectName);
