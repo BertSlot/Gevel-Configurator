@@ -11,10 +11,10 @@ public class PanelOpener : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 		Panel.gameObject.SetActive(false);
 	}
 
-	// Update is called once per frame
-	//void Update(){
-
-	//}
+	// Needed so that when you exit the panel away from the parent panel it stil disables it before the script gets disabled by a higher level panel opener
+	void OnDisable() {
+		Panel.gameObject.SetActive(false);
+	}
 
 	public void OnPointerEnter(PointerEventData pointerEventData) {
 		Panel.gameObject.SetActive(true);

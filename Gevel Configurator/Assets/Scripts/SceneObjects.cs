@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 using UnityEngine.UI;
 using HSVPicker.Examples;
 
@@ -21,6 +22,9 @@ public class SceneObjects : MonoBehaviour {
 	/// Contains RTGizmoManager gameobject for the GizmoManager script
 	/// </summary>
 	private GameObject gizmo;
+
+	private GameObject objectNameObject;
+	private InputField objectNameField;
 
 	/// <summary>
 	/// Contains GizmoManager from gizmo
@@ -62,9 +66,15 @@ public class SceneObjects : MonoBehaviour {
 		//objectListContent = GameObject.Find("Content");
 		manager = gizmo.GetComponent<RTG.GizmoManager>();
 
+		objectNameObject = GameObject.Find("ObjectNameField");
+		objectNameField = objectNameObject.GetComponent<InputField>();
+
 		propertyMenu.gameObject.SetActive(false);
 
 		SetObjectListMenu();
+	}
+	void Update() {
+		manager.AllowKeyboardInputs = !objectNameField.isFocused;
 	}
 
 	void SetObjectListMenu() {
@@ -76,23 +86,24 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
+	/// <summary>
+	/// Adds an object to the scene list with a "(#)" behind it to identify it in the list to overcome dublicate naming errors.
+	/// </summary>
+	/// <param name="go"></param>
 	public void AddObjectToObjectListMenu(GameObject go) {
-		string characters = "0123456789abcdefghijklmnopqrstuvwxABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-		string code = "";
+		string name = go.name.Replace("(Clone)", "");
+		string objName = name;
+		int count = 1;
 
-		for (int i = 0; i < 5; i++) {
-			int a = Random.Range(0, characters.Length);
-			code = code + characters[a];
+		while (ObjectNameExists(name)) {
+
+			name = string.Format("{0}({1})", objName, count++);
 		}
 
-		foreach (GameObject menuObject in listObjectsList) {
-			if (go.name == menuObject.name) {
-				go.name = go.name + code;
-			}
-		}
+		go.name = name;
 
-		Debug.Log(go.name);
+		//Debug.Log(go.name);
 
 		GameObject childObject = CreateListObject(go.transform);
 		listObjectsList.Add(childObject);
@@ -101,6 +112,23 @@ public class SceneObjects : MonoBehaviour {
 		SelectGameObject(childObject, go);
 	}
 
+	/// <summary>
+	/// This function checks if the name given already has an object in the scene list
+	/// </summary>
+	/// <param name="name"> test string </param>
+	/// <returns>Bool. If true, given name already exists in scene list</returns>
+	public bool ObjectNameExists(string name) {
+		foreach (GameObject menuObject in listObjectsList) {
+			if (menuObject.name.Contains(name))
+				return true;
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// Removes the given object from the scene object list
+	/// </summary>
+	/// <param name="go"></param>
 	public void RemoveObjectFromObjectListMenu(GameObject go) {
 		for (int i = 0; i < listObjectsList.Count; i++) {
 			if (listObjectsList[i].name == go.name) {
@@ -114,9 +142,13 @@ public class SceneObjects : MonoBehaviour {
 		RenderListObjects();
 	}
 
+	/// <summary>
+	/// Cleares the entire scene object list
+	/// </summary>
 	void ClearObjectListMenu() {
 
 		foreach (Transform child in objectListContent.transform) {
+			// dont know if this removes the object or just "de-parents" it (Creating an Orphan object)
 			child.SetParent(null, false);
 		}
 		// Set list height to zero
@@ -260,9 +292,10 @@ public class SceneObjects : MonoBehaviour {
 			overview.AddSurfaceGroup(editorGameObject, dropdown.options[dropdown.value].text);
 		});
 
-		foreach (string obj in overview.GetSurfaceGroups(editorGameObject)) {
+		// Does nothing
+		/*foreach (string obj in overview.GetSurfaceGroups(editorGameObject)) {
 			//Debug.Log(obj);
-		}
+		}*/
 
 		// Set object name field
 		GameObject objectNameObject = GameObject.Find("ObjectNameField");
@@ -274,7 +307,6 @@ public class SceneObjects : MonoBehaviour {
 		// Set object name field listener
 		objectNameField.onValueChanged.AddListener(name => {
 			bool equal = false;
-
 			// Check if name already exists
 			foreach (GameObject menuObject in listObjectsList) {
 				if (objectNameField.text == menuObject.name) {

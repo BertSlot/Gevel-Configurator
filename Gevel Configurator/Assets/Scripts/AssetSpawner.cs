@@ -22,7 +22,7 @@ public class AssetSpawner : MonoBehaviour {
 	/// Path to Import_Objects Folder
 	/// </summary>
 	[SerializeField]
-	private string ObjectsFolderPath = "Import_Objects";
+	public string ObjectsFolderPath = "Import_Objects";
 
 	/// <summary>
 	/// AssetPanel prefab

@@ -4,48 +4,60 @@
 using unitycodercom_PointCloudBinaryViewer;
 using PointCloudRuntimeViewer;
 using UnityEngine;
+using UnityEngine.UI;
+using SFB;
 #if !UNITY_SAMSUNGTV && !UNITY_WEBGL
 using System.IO;
 #endif
 
-namespace unitycoder_examples
-{
-    public class LoadBinCacheIfAvailable : MonoBehaviour
-    {
-        public bool loadAtStart = true;
+namespace unitycoder_examples {
+	public class LoadBinCacheIfAvailable : MonoBehaviour {
+		public bool loadAtStart = true;
 
-        [Tooltip("If this file has .bin cached file, we use PointCloudViewerDX11 instead of parsing with RuntimeViewerDX11")]
-        public string fileName = "StreamingAssets/PointCloudViewerSampleData/sample.xyz";
+		[Tooltip("If this file has .bin cached file, we use PointCloudViewerDX11 instead of parsing with RuntimeViewerDX11")]
+		public string fileName = "";
+		[SerializeField]
+		public InputField filePathField;
 
-        public PointCloudViewerDX11 pointCloudViewerDX11;
-        public RuntimeViewerDX11 runtimeViewerDX11;
+		public PointCloudViewerDX11 pointCloudViewerDX11;
+		public RuntimeViewerDX11 runtimeViewerDX11;
 
 #if !UNITY_SAMSUNGTV && !UNITY_WEBGL
-        void Start()
-        {
-            if (loadAtStart == true)
-            {
+		void Start() {
+			if (loadAtStart == true) {
+				StartLoadingPointCloud();
+			}
+		}
 
-                if (Path.IsPathRooted(fileName) == false)
-                {
-                    fileName = Path.Combine(Application.streamingAssetsPath, fileName);
-                }
+		public void GetPointcloudPath() {
+			// make this a coroutine
+			string[] temp = StandaloneFileBrowser.OpenFilePanel("Select Pointcloud", "", "xyz", false);
+			if (temp.Length != 0) { // When canceled the length is 0
+				fileName = temp[0];
+				StartLoadingPointCloud();
+			}
+		}
 
-                var cacheFile = fileName + ".bin";
-                if (File.Exists(cacheFile) == true)
-                {
-                    Debug.Log("Loading cached file: " + cacheFile);
-                    pointCloudViewerDX11.CallReadPointCloudThreaded(cacheFile);
-                }
-                else
-                {
-                    Debug.Log("No cached file available, reading raw data: " + fileName);
-                    runtimeViewerDX11.CallImporterThreaded(fileName);
-                }
-            }
-        }
+		public void StartLoadingPointCloud() {
+
+			// ## pre-openFilePanel ##
+			//fileName = filePathField.text;
+
+			if (Path.IsPathRooted(fileName) == false) {
+				fileName = Path.Combine(Application.streamingAssetsPath, fileName);
+			}
+
+			var cacheFile = fileName + ".bin";
+			if (File.Exists(cacheFile) == true) {
+				Debug.Log("Loading cached file: " + cacheFile);
+				pointCloudViewerDX11.CallReadPointCloudThreaded(cacheFile);
+			} else {
+				Debug.Log("No cached file available, reading raw data: " + fileName);
+				runtimeViewerDX11.CallImporterThreaded(fileName);
+			}
 #endif
 
-    } // class
+		}
+	} // class
 } // namespace
 

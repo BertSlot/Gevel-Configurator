@@ -22,11 +22,11 @@ namespace RTG {
 		/// pressed for example, we will call the 'SetWorkGizmoId' function passing 
 		/// GizmoId.Move as the parameter.
 		/// </summary>
-		private enum GizmoId {
+		public enum GizmoId {
 			Move = 1,
-			Rotate,
-			Scale,
-			Universal
+			Rotate = 2,
+			Scale = 3,
+			Universal = 4
 		}
 
 		/// <summary>
@@ -103,6 +103,8 @@ namespace RTG {
 		/// </summary>
 		//private GameObject 
 
+		public bool AllowKeyboardInputs = true;
+
 		/// <summary>
 		/// Performs all necessary initializations.
 		/// </summary>
@@ -175,81 +177,84 @@ namespace RTG {
 				}
 			}
 
-			// If the Ctrl + C key was pressed we add the currently selected objects to the clipboard list
-			// If the Ctrl + V key was pressed we add the objects currently in the clipboard list to the scene
-			if (Application.isEditor) { // this works when you are using the editor
-				if (Input.GetKeyDown(KeyCode.C)) {
-					if (_selectedObjects.Count != 0) {
-						CopyToClipboard(_selectedObjects);
-					} else {
-						_clipboard.Clear();
+			// TODO add giant if to check if you are in an input field as to not make mistakes by deleting or copying objects
+			if (AllowKeyboardInputs) {
+
+				// If the Ctrl + C key was pressed we add the currently selected objects to the clipboard list
+				// If the Ctrl + V key was pressed we add the objects currently in the clipboard list to the scene
+				if (Application.isEditor) { // this works when you are using the editor
+					if (Input.GetKeyDown(KeyCode.C)) {
+						if (_selectedObjects.Count != 0) {
+							CopyToClipboard(_selectedObjects);
+						} else {
+							_clipboard.Clear();
+						}
+					} else if (Input.GetKeyDown(KeyCode.V)) {
+						if (_clipboard.Count != 0) {
+							RemoveHighlights(_selectedObjects);
+							_selectedObjects.Clear();
+							_selectedObjects.AddRange(Paste());
+							OnSelectionChanged();
+						}
 					}
-				} else if (Input.GetKeyDown(KeyCode.V)) {
-					if (_clipboard.Count != 0) {
+				} else { // This works when you are not using the editor
+					if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl)) {
+						if (_selectedObjects.Count != 0) {
+							CopyToClipboard(_selectedObjects);
+						} else {
+							_clipboard.Clear();
+						}
+					} else if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl)) {
+						if (_clipboard.Count != 0) {
+							RemoveHighlights(_selectedObjects);
+							_selectedObjects.Clear();
+							_selectedObjects.AddRange(Paste());
+							OnSelectionChanged();
+						}
+					}
+				}
+
+				if (Input.GetKey(KeyCode.Delete)) {
+					if (_selectedObjects.Count != 0) {
 						RemoveHighlights(_selectedObjects);
+						DeleteObjectList(_selectedObjects);
 						_selectedObjects.Clear();
-						_selectedObjects.AddRange(Paste());
 						OnSelectionChanged();
 					}
 				}
-			} else { // This works when you are not using the editor
-				if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl)) {
-					if (_selectedObjects.Count != 0) {
-						CopyToClipboard(_selectedObjects);
-					} else {
-						_clipboard.Clear();
-					}
-				} else if (Input.GetKeyDown(KeyCode.V) && Input.GetKey(KeyCode.LeftControl)) {
-					if (_clipboard.Count != 0) {
-						RemoveHighlights(_selectedObjects);
-						_selectedObjects.Clear();
-						_selectedObjects.AddRange(Paste());
-						OnSelectionChanged();
-					}
+				// If the G key was pressed, we change the transform space to Global. Otherwise,
+				// if the L key was pressed, we change it to Local.
+				if (Input.GetKeyDown(KeyCode.G))
+					SetTransformSpace(GizmoSpace.Global);
+				else if (Input.GetKeyDown(KeyCode.L))
+					SetTransformSpace(GizmoSpace.Local);
+
+				// We will change the pivot type when the P key is pressed
+				if (Input.GetKeyDown(KeyCode.P)) {
+					// Retrieve the current transform pivot and activate the other one instead.
+					GizmoObjectTransformPivot currentPivot = _objectMoveGizmo.TransformPivot;
+					if (currentPivot == GizmoObjectTransformPivot.ObjectGroupCenter)
+						SetTransformPivot(GizmoObjectTransformPivot.ObjectMeshPivot);
+					else
+						SetTransformPivot(GizmoObjectTransformPivot.ObjectGroupCenter);
 				}
+
+				// Switch between different gizmo types using the W,E,R,T keys.
+				if (Input.GetKeyDown(KeyCode.W))
+					SetWorkGizmoId(GizmoId.Move);
+				else if (Input.GetKeyDown(KeyCode.E))
+					SetWorkGizmoId(GizmoId.Rotate);
+				else if (Input.GetKeyDown(KeyCode.R))
+					SetWorkGizmoId(GizmoId.Scale);
+				else if (Input.GetKeyDown(KeyCode.T))
+					SetWorkGizmoId(GizmoId.Universal);
 			}
-
-			if (Input.GetKey(KeyCode.Delete)) {
-				if (_selectedObjects.Count != 0) {
-					RemoveHighlights(_selectedObjects);
-					DeleteObjectList(_selectedObjects);
-					_selectedObjects.Clear();
-					OnSelectionChanged();
-				}
-			}
-			// If the G key was pressed, we change the transform space to Global. Otherwise,
-			// if the L key was pressed, we change it to Local.
-			if (Input.GetKeyDown(KeyCode.G))
-				SetTransformSpace(GizmoSpace.Global);
-			else if (Input.GetKeyDown(KeyCode.L))
-				SetTransformSpace(GizmoSpace.Local);
-
-			// We will change the pivot type when the P key is pressed
-			if (Input.GetKeyDown(KeyCode.P)) {
-				// Retrieve the current transform pivot and activate the other one instead.
-				GizmoObjectTransformPivot currentPivot = _objectMoveGizmo.TransformPivot;
-				if (currentPivot == GizmoObjectTransformPivot.ObjectGroupCenter)
-					SetTransformPivot(GizmoObjectTransformPivot.ObjectMeshPivot);
-				else
-					SetTransformPivot(GizmoObjectTransformPivot.ObjectGroupCenter);
-			}
-
-			// Switch between different gizmo types using the W,E,R,T keys.
-			if (Input.GetKeyDown(KeyCode.W))
-				SetWorkGizmoId(GizmoId.Move);
-			else if (Input.GetKeyDown(KeyCode.E))
-				SetWorkGizmoId(GizmoId.Rotate);
-			else if (Input.GetKeyDown(KeyCode.R))
-				SetWorkGizmoId(GizmoId.Scale);
-			else if (Input.GetKeyDown(KeyCode.T))
-				SetWorkGizmoId(GizmoId.Universal);
-
-			OnSelectionChanged();
+			//OnSelectionChanged();
 		}
 
 
 		/// <summary>
-		/// Spawns object using the middle of the scrren as position of the raycast
+		/// Spawns object using the middle of the screen as position of the raycast
 		/// </summary>
 		/// <param name="obj"></param>
 		public void SpawnObjectMiddle(GameObject obj) {
@@ -265,6 +270,7 @@ namespace RTG {
 			Ray ray = Cam.ScreenPointToRay(mousePos);
 
 			GameObject spawnedObj;
+			//Debug.Log(obj.name);
 			if (Physics.Raycast(ray, out RaycastHit hit)) {
 				var Dist = Vector3.Distance(hit.transform.position, Cam.transform.position);
 				Dist /= 2;
@@ -277,9 +283,42 @@ namespace RTG {
 
 			RemoveHighlights(_selectedObjects);
 			_selectedObjects.Clear();
-			_selectedObjects.Add(spawnedObj);
-			scene.AddObjectToObjectListMenu(spawnedObj);
+
+			// for .obj files that have child objects with meshes
+			List<GameObject> children = spawnedObj.GetAllChildren();
+			if (children.Count > 0) { // if the gameobject has no children it doesn't need to loop over anything
+				foreach (GameObject child in children) {
+
+					// For some reason only Destroy makes it work. when using DeleteObject() it deletes the wrong child object with the same name.
+					if (child.GetComponent<MeshRenderer>() == null) {
+						//Debug.Log("annihilate : " + child.name);
+						Destroy(child);
+					} else {
+						// This is making sure the all the objects spawned have the same name as the parent so that the can be selected
+						// The names dont have to be different because the addObjectToObjectListMenu() function takes care of duplicate names.
+						child.name = spawnedObj.name;
+						// UnParent the childobjects and set them under the Objects Parent object
+						child.transform.SetParent(ParentObject.transform);
+
+						// Add children to the sceneObjectsList
+						_selectedObjects.Add(child);
+						scene.AddObjectToObjectListMenu(child);
+
+						AddOrigin(child, obj.name, true);
+					}
+				}
+			}
+
+			if (spawnedObj.GetComponent<Collider>() == null && spawnedObj.GetComponent<MeshCollider>() == null) {
+				//Debug.Log("Annihilate : " + spawnedObj.name);
+				Destroy(spawnedObj);
+			} else {
+				AddOrigin(spawnedObj, obj.name, false);
+				_selectedObjects.Add(spawnedObj);
+				scene.AddObjectToObjectListMenu(spawnedObj);
+			}
 			OnSelectionChanged();
+
 		}
 
 		/// <summary>
@@ -308,16 +347,65 @@ namespace RTG {
 				spawnedObj = Instantiate(obj, location, rotation, ParentObject.transform);
 			}
 
+			RemoveHighlights(_selectedObjects);
 			_selectedObjects.Clear();
-			_selectedObjects.Add(spawnedObj);
-			scene.AddObjectToObjectListMenu(spawnedObj);
+
+
+			// for .obj files that have child objects with meshes
+			List<GameObject> children = spawnedObj.GetAllChildren();
+			if (children.Count > 0) {
+				foreach (GameObject child in children) {
+					// For some reason only Destroy makes it work. when using DeleteObject() it deletes the wrong child object.
+					if (child.GetComponent<MeshRenderer>() == null) {
+						//Debug.Log("annihilate : " + child.name);
+						Destroy(child);
+					} else {
+						// This is making sure the all the objects spawned have the same name as the parent so that the can be selected
+						// The names dont have to be different because the addObjectToObjectListMenu() function takes care of duplicate names.
+						child.name = spawnedObj.name;
+						// UnParent the childobjects and set them under the Objects Parent object
+						child.transform.SetParent(ParentObject.transform);
+
+						// Add children to the sceneObjectsList
+						_selectedObjects.Add(child);
+						scene.AddObjectToObjectListMenu(child);
+
+						AddOrigin(child, obj.name, true);
+					}
+				}
+			}
+
+			if (spawnedObj.GetComponent<Collider>() == null && spawnedObj.GetComponent<MeshCollider>() == null) {
+				//Debug.Log("Annihilate : " + spawnedObj.name);
+				Destroy(spawnedObj);
+
+			} else {
+				AddOrigin(spawnedObj, obj.name, false);
+				_selectedObjects.Add(spawnedObj);
+				scene.AddObjectToObjectListMenu(spawnedObj);
+			}
 			OnSelectionChanged();
+
 		}
 
+		/// <summary>
+		/// This function adds a component of type OriginObject to obj containing information about the object from which it is derived. 
+		/// This info is used for replicating this object while loading from a save file.
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="originName"></param>
+		/// <param name="childOfMultiMesh"></param>
+		private void AddOrigin(GameObject obj, string originName, bool childOfMultiMesh) {
+			OriginObject OriObj = obj.AddComponent<OriginObject>();
+			OriObj.originObjectName = originName;
+			OriObj.originObjectHasMultipleMeshes = childOfMultiMesh;
+			OriObj.meshName = obj.GetMesh().name;
+
+		}
 
 		/*
 		/// <summary>
-		/// An implementatio of the OnGUI function which shows the current transform
+		/// An implementation of the OnGUI function which shows the current transform
 		/// space and transform pivot in the top left corner of the screen.
 		/// </summary>
 		private void OnGUI() {
@@ -350,8 +438,10 @@ namespace RTG {
 				instantiatedObjects.Add(duplicateObject);
 
 				scene.AddObjectToObjectListMenu(duplicateObject);
-			}
 
+			}
+			// for some reason the last object is a duplicate of the first one and causes that object to experience twice the transformation effects
+			instantiatedObjects.RemoveAt(instantiatedObjects.Count - 1);
 			return instantiatedObjects;
 		}
 
@@ -443,8 +533,53 @@ namespace RTG {
 		/// This function is called to change the type of work gizmo. This is
 		/// used in the 'Update' function in response to the user pressing the
 		/// W,E,R,T keys to switch between different gizmo types.
+		/// This specific function allows for it to be called using an interger as ID
 		/// </summary>
-		private void SetWorkGizmoId(GizmoId gizmoId) {
+		public void SetWorkGizmoIdInt(int gizmoId) {
+			// If the specified gizmo id is the same as the current id, there is nothing left to do
+			if ((GizmoId)gizmoId == _workGizmoId)
+				return;
+
+			// Start with a clean slate and disable all gizmos
+			_objectMoveGizmo.Gizmo.SetEnabled(false);
+			_objectRotationGizmo.Gizmo.SetEnabled(false);
+			_objectScaleGizmo.Gizmo.SetEnabled(false);
+			_objectUniversalGizmo.Gizmo.SetEnabled(false);
+
+			// At this point all gizmos are disabled. Now we need to check the gizmo id
+			// and adjust the '_workGizmo' variable.
+			_workGizmoId = (GizmoId)gizmoId;
+			if ((GizmoId)gizmoId == GizmoId.Move)
+				_workGizmo = _objectMoveGizmo;
+			else if ((GizmoId)gizmoId == GizmoId.Rotate)
+				_workGizmo = _objectRotationGizmo;
+			else if ((GizmoId)gizmoId == GizmoId.Scale)
+				_workGizmo = _objectScaleGizmo;
+			else if ((GizmoId)gizmoId == GizmoId.Universal)
+				_workGizmo = _objectUniversalGizmo;
+
+			// If we have any selected objects, we need to make sure the work gizmo is enabled
+			if (_selectedObjects.Count != 0) {
+				// Make sure the work gizmo is enabled.
+				_workGizmo.Gizmo.SetEnabled(true);
+
+				// When working with transform spaces and pivots, the gizmos need to know about the pivot object. 
+				// This piece of information is necessary when the transform space is set to local because in that 
+				// case the gizmo will have its rotation synchronized with the target objects rotation. But because 
+				// there is more than one target object, we need to tell the gizmo which object to use. This is the 
+				// role if the pivot object in this case. This pivot object is also useful when the transform pivot 
+				// is set to 'ObjectMeshPivot' because it will be used to adjust the position of the gizmo. 
+				_workGizmo.SetTargetPivotObject(_selectedObjects[_selectedObjects.Count - 1]);
+			}
+		}
+
+
+		/// <summary>
+		/// This function is called to change the type of work gizmo. This is
+		/// used in the 'Update' function in response to the user pressing the
+		/// W,E,R,T keys to switch between different gizmo types.
+		/// </summary>
+		public void SetWorkGizmoId(GizmoId gizmoId) {
 			// If the specified gizmo id is the same as the current id, there is nothing left to do
 			if (gizmoId == _workGizmoId)
 				return;
@@ -481,7 +616,6 @@ namespace RTG {
 				_workGizmo.SetTargetPivotObject(_selectedObjects[_selectedObjects.Count - 1]);
 			}
 		}
-
 
 
 		/// <summary>
