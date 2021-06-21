@@ -20,6 +20,10 @@ Made in collaboration with "Stichting Happy Balance".
 |:----|:--------|
 | [AssetSpawner.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/AssetSpawner.cs) | Used to load objects from an Import_Folder and display them as panels in the Asset Menu that can be clicked to spawn the object|
 | [GizmoManager.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/GizmoManager.cs) | Used to attach Moving/Rotating/Scaling Gizmos to selected objects and for Copy/Pasting/Instantiating objects |
+| [SaveLoadManager.cs](https://github.com/BertSlot/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SaveLoadManager.cs) | Used to save and load scene objects in a JSON format |
+| [LoadBinCacheIfAvailable.cs](https://github.com/BertSlot/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Plugins/PointCloudTools/Demos/PointCloudViewer/Scripts/LoadBinCacheIfAvailable.cs) | Script to check if cached .bin file of a previously used pointcloud exits and then load using [PointCloudViewerDX11](https://github.com/BertSlot/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Plugins/PointCloudTools/PointCloudViewerDX11/Scripts/PointCloudViewerDX11.cs) instead of [RuntimeViewerDX11](https://github.com/BertSlot/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Plugins/PointCloudTools/PointCloudViewerDX11/Scripts/RuntimeViewerDX11.cs) if the .bin exists |
+| [PointCloudViewerDX11.cs](https://github.com/BertSlot/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Plugins/PointCloudTools/PointCloudViewerDX11/Scripts/PointCloudViewerDX11.cs) | Reads the pointcloud data out of a custom binary file generated before in the RuntimeViewerDX11.cs |
+| [RuntimeViewerDX11.cs](https://github.com/BertSlot/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Plugins/PointCloudTools/PointCloudViewerDX11/Scripts/RuntimeViewerDX11.cs) | Reads and displays pointcloud file at runtime and generates a custom binary for quicker use of the same pointcloud in the future |
 | [Object_overzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/Objects_overzicht.cs)| This script calculates the total surface area per surface group and stores this data in a dictionary that is used to export to an excel file or show in the "overzicht panel" |
 | [SurfaceOverzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SurfaceOverzicht.cs) | This script  manages the Surface overzicht panel in the view dropdown. It makes sure the text is properly aligned and that the toggle button above switches between cm²/m² |
 | [SurfaceAreaGroup.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SurfaceAreaGroup.cs) | This script gets attached to each object and stores the names of the surface groups it is a part of, and whether or not it needs to be counted |
@@ -207,7 +211,7 @@ Shows all objects in the scene in a scrollable viewport on the right side of the
 #### Properties
 Is supposed to show basic information about the object such as:
 - Size, Rotation, Position
-- W.I.P Surface Group
+- Surface Group (Missing multiple selection and custom group names)
 - Background color of the object
 - W.I.P background Image
 - Object Name
@@ -216,7 +220,7 @@ Is supposed to show basic information about the object such as:
 
 Double Clicking on a object preview spawns the object i the scene between the camera and the object you are looking at.
 
-- Search bar
+- Search bar (Press search manualy after typing query)
 - W.I.P Import Button to import new assets into your project
 
 
