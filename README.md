@@ -11,7 +11,7 @@ Made in collaboration with "Stichting Happy Balance".
 - [Common Errors](#common-errors)
 - [Tips](#tips)
 - [Used Assets](#used-assets)
-- [Collaborators](#Collaborators)
+- [Collaborators](#collaborators)
 
 
 ## Files 
@@ -19,7 +19,7 @@ Made in collaboration with "Stichting Happy Balance".
 |File | Content |
 |:----|:--------|
 | [AssetSpawner.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/AssetSpawner.cs) | Used to load objects from an Import_Folder and display them as panels in the Asset Menu that can be clicked to spawn the object|
-| [GizmoManager.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/GizmoManager.cs) | Used to attach Moving/Rotating/Scaling Gizmos to selected objects and for Copy/Pasting objects |
+| [GizmoManager.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/GizmoManager.cs) | Used to attach Moving/Rotating/Scaling Gizmos to selected objects and for Copy/Pasting/Instantiating objects |
 | [Object_overzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/Objects_overzicht.cs)| This script calculates the total surface area per surface group and stores this data in a dictionary that is used to export to an excel file or show in the "overzicht panel" |
 | [SurfaceOverzicht.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SurfaceOverzicht.cs) | This script  manages the Surface overzicht panel in the view dropdown. It makes sure the text is properly aligned and that the toggle button above switches between cm²/m² |
 | [SurfaceAreaGroup.cs](https://github.com/KingPungy/Gevel-Configurator/blob/master/Gevel%20Configurator/Assets/Scripts/SurfaceAreaGroup.cs) | This script gets attached to each object and stores the names of the surface groups it is a part of, and whether or not it needs to be counted |
@@ -130,6 +130,8 @@ Gizmo tools types and shortcuts
 | Transform Space Local  | L |
 | Copy                   | Crtl + C |
 | Paste                  | Crtl + V |
+| Save                   | Ctrl + S |
+| Save as new File       | Ctrl + Shift + S |
 | Delete                 | Del |
 | Alternate Tool Mode    | Hold LShift while using a tool |
 
@@ -159,10 +161,10 @@ Gizmo tools types and shortcuts
 |Button|Use|
 |:-----|:--|
 | New     | W.I.P |
-| Load    | W.I.P |
-| Save    | W.I.P |
-| Save As | W.I.P |
-| Import  | W.I.P |
+| Load    | Opens an "openfilepanel" to select a save file to open into the scene |
+| Save    | Save scene to current opened save file.If there is no current save file acts like "Save As" |
+| Save As | Save scene to new save file |
+| Import  | Opens an "openfilepanel" to load a pointcloud file into the scene |
 | Settings| W.I.P |
 | Quit    | Exit Application |
 
@@ -177,9 +179,9 @@ Gizmo tools types and shortcuts
 |:-----|:--|
 | Redo       | redo's last move/rotate/scale action |
 | Undo       | undo's last move/rotate/scale action |
-| Copy       | W.I.P |
+| Copy       | Copy selected objects |
 | Cut        | W.I.P |
-| Paste      | W.I.P |
+| Paste      | Paste copied objects |
 | Asset Menu | Opens Asset menu |
 
 </details>
@@ -227,10 +229,19 @@ Done:
 ✅ Spawning assets from the asset menu  
 ✅ Object list that shows all objects in the scene   
 ✅ Object Selection Outline using outline asset from unity asset store   
+✅ Correctly Loading .obj files that have multiple meshes  
+✅ Loading in PointClouds via import with a windows "openFilePanel"    
+✅ Loading Screen for loading pointclouds   
+✅ Save/Loading projects in JSON   
+✅ Blocking Shortcuts while naming an object to prevent accidental deletion  
+✅ Object Naming changed from "Cube(Clone)4gf32(Clone)mf834" to "Cube(1), Cube(2) ... Cube(99)" 
 
 
 Todo:  
-⬜ Error Handling    
+⬜ Error Handling   
+⬜ Transform Gizmo Offset bug  
+⬜ Importing .obj files at runtime  
+⬜ Toolbar current tool feedback/highlight    
 ⬜ Export to Excel in build application ( Works in unity Editor but not when build )   
 ⬜ Save the latest resize resolution so that when you go to fullscreen and come back from fullscreen it uses the latest resolution again     
 ⬜ Multiple Selection Outline fix ( Outlines that overlap block eachother from rendering )      
@@ -238,8 +249,7 @@ Todo:
 ⬜ Surface Group Selection ( Selecting multiple groups for an object using [Toggle groups](https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/script-ToggleGroup.html)) 
      
 ⬜ Allow Grouping of objects so that they move as if they were one single object. Also make it posible to tag some of these objects as unscalable to keep proportions      
-⬜ Loading in PointClouds via import    
-⬜ Save/Loading projects      
+     
 ⬜ Start menu for loading projects    
 ⬜ Building to WebGL for browser      
 ⬜ Adding more properties to objects for ease of use in calculations  
