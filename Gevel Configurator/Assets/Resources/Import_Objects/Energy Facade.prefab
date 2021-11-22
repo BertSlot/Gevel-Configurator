@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 9146477152883178679}
   - component: {fileID: 9146477152883178676}
   - component: {fileID: 9146477152883178677}
-  - component: {fileID: 9146477152883178674}
-  - component: {fileID: 9146477152883178675}
   m_Layer: 0
   m_Name: Energy Facade
   m_TagString: Untagged
@@ -30,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 9146477152883178673}
   m_LocalRotation: {x: -0, y: 0.11891521, z: -0, w: 0.9929044}
   m_LocalPosition: {x: 1748.0577, y: 1317, z: 2550.3464}
-  m_LocalScale: {x: 5, y: 158.7, z: 66.40001}
+  m_LocalScale: {x: 3.8, y: 158.7, z: 66.40001}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -62,9 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 2100000, guid: 99a25b5a627577c438146729cdb864ba, type: 2}
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,39 +95,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9146477152883178674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9146477152883178673}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0, g: 1, b: 0, a: 1}
-  outlineWidth: 5
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
---- !u!114 &9146477152883178675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9146477152883178673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09b4f7e9a2badd24283d05b8cc787954, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  surfaceGroups:
-  - Noord
-  - West
-  - Oost
-  - Zuid
-  surfaceOn: 1

@@ -193,7 +193,11 @@ namespace RTG {
 						if (_clipboard.Count != 0) {
 							RemoveHighlights(_selectedObjects);
 							_selectedObjects.Clear();
-							_selectedObjects.AddRange(Paste());
+							foreach (var newObj in Paste()) {
+								if (!_selectedObjects.Contains(newObj)) {
+									_selectedObjects.Add(newObj);
+								}
+							}
 							OnSelectionChanged();
 						}
 					}
@@ -208,7 +212,11 @@ namespace RTG {
 						if (_clipboard.Count != 0) {
 							RemoveHighlights(_selectedObjects);
 							_selectedObjects.Clear();
-							_selectedObjects.AddRange(Paste());
+							foreach (var newObj in Paste()) {
+								if (!_selectedObjects.Contains(newObj)) {
+									_selectedObjects.Add(newObj);
+								}
+							}
 							OnSelectionChanged();
 						}
 					}
@@ -249,7 +257,7 @@ namespace RTG {
 				else if (Input.GetKeyDown(KeyCode.T))
 					SetWorkGizmoId(GizmoId.Universal);
 			}
-			//OnSelectionChanged();
+			OnSelectionChanged();
 		}
 
 
@@ -435,13 +443,12 @@ namespace RTG {
 
 			foreach (var obj in _clipboard) {
 				GameObject duplicateObject = Instantiate(obj, obj.transform.parent);
-				instantiatedObjects.Add(duplicateObject);
-
-				scene.AddObjectToObjectListMenu(duplicateObject);
-
+				// To make sure no duplicates make it through
+				if (!instantiatedObjects.Contains(duplicateObject)) {
+					instantiatedObjects.Add(duplicateObject);
+					scene.AddObjectToObjectListMenu(duplicateObject);
+				}
 			}
-			// for some reason the last object is a duplicate of the first one and causes that object to experience twice the transformation effects
-			instantiatedObjects.RemoveAt(instantiatedObjects.Count - 1);
 			return instantiatedObjects;
 		}
 

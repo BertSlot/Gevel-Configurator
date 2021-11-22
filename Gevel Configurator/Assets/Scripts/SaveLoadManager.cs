@@ -202,11 +202,12 @@ public class SaveLoadManager : MonoBehaviour {
 
 	// Start is called before the first frame update
 	void Start() {
+		// pre-load assets into list
 		LoadAssets();
 	}
 
 	void Update() {
-
+		// Save Shortcuts
 		if (UnityEngine.Application.isEditor) {
 			if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.A) &&
 				Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift)) { // editor save as [Ctrl + Shift + S + A]
@@ -407,12 +408,17 @@ public class SaveLoadManager : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Pre-Load Assets
+	/// Pre-Load Assets into Array for use in loading save-files
 	/// </summary>
 	public void LoadAssets() {
 		assets = Resources.LoadAll(assetSpawner.ObjectsFolderPath, typeof(GameObject));
 	}
 
+	/// <summary>
+	/// Function for obtaining GameObject from ObjectData
+	/// </summary>
+	/// <param name="objData">Deserialized ObjectData</param>
+	/// <returns>UnityEngine.GameObject</returns>
 	public GameObject GetGameObjectFromObjectData(ObjectData objData) {
 
 		// usefull for possible oneliner\______________________________________________________________________________/ could fore go the entire foreach loop
@@ -499,7 +505,6 @@ public class SaveLoadManager : MonoBehaviour {
 
 		return allChildren;
 	}
-
 
 };
 

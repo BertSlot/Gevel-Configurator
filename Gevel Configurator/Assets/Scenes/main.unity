@@ -7524,7 +7524,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 5, y: 15}
+  m_AnchoredPosition: {x: 5, y: 15.0000305}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &215068902
@@ -33456,7 +33456,7 @@ MonoBehaviour:
       _text: Scale gizmo
     - _tooltip: Allows you to change universal gizmo settings.
       _text: Universal gizmo
-    _activeTabIndex: 2
+    _activeTabIndex: 0
   _settings:
     _canBeDisplayed: 1
     _isExpanded: 1
@@ -77095,8 +77095,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1811232562}
   m_HandleRect: {fileID: 1811232561}
   m_Direction: 2
-  m_Value: 1.0000011
-  m_Size: 0.9337485
+  m_Value: 1.0000004
+  m_Size: 0.784077
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
